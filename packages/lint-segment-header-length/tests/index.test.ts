@@ -24,7 +24,7 @@ describe("hl7v2-lint:segment-header-length", () => {
     expect(file.messages[0]).toMatchObject({
       actual: "PID_ADDED",
       message:
-        "The Segment ID `PID_ADDED` is 9 characters long; a Segment ID must be exactly 3 characters.",
+        "The Segment ID is 9 characters long; a Segment ID must be exactly 3 characters.",
       ruleId: "segment-header-length",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme",
@@ -41,7 +41,7 @@ describe("hl7v2-lint:segment-header-length", () => {
     expect(file.messages[0]).toMatchObject({
       actual: "PI",
       message:
-        "The Segment ID `PI` is 2 characters long; a Segment ID must be exactly 3 characters.",
+        "The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters.",
     });
   });
 
@@ -70,7 +70,7 @@ describe("hl7v2-lint:segment-header-length", () => {
     expect(file.messages[0]).toMatchObject({
       actual: "PIDAFD",
       message:
-        "The Segment ID `PIDAFD` is 6 characters long; a Segment ID must be exactly 3 characters.",
+        "The Segment ID is 6 characters long; a Segment ID must be exactly 3 characters.",
     });
   });
 
@@ -86,10 +86,10 @@ describe("hl7v2-lint:segment-header-length", () => {
 
     expect(file.messages).toHaveLength(2);
     expect(file.messages[0].message).toBe(
-      "The Segment ID `PIDAFD` is 6 characters long; a Segment ID must be exactly 3 characters."
+      "The Segment ID is 6 characters long; a Segment ID must be exactly 3 characters."
     );
     expect(file.messages[1].message).toBe(
-      "The Segment ID `NK` is 2 characters long; a Segment ID must be exactly 3 characters."
+      "The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters."
     );
   });
 
@@ -104,7 +104,7 @@ describe("hl7v2-lint:segment-header-length", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
-      "The Segment ID `PIDLONG` is 7 characters long; a Segment ID must be exactly 3 characters."
+      "The Segment ID is 7 characters long; a Segment ID must be exactly 3 characters."
     );
   });
 

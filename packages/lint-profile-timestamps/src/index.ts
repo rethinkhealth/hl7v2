@@ -11,30 +11,20 @@ import { parseDT, parseDTM, parseTM } from "@glion/util-timestamp";
 import { visit } from "@glion/util-visit";
 import { lintRule } from "unified-lint-rule";
 
-const pad2 = (value: number) => String(value).padStart(2, "0");
-
 const messages = {
-  dayOutOfRange: (
-    value: string,
-    issue: Extract<TimestampIssue, { code: "day-out-of-range" }>
-  ) =>
-    `The value \`${value}\` has the day \`${pad2(issue.day)}\`; month \`${pad2(issue.month)}\` of \`${String(issue.year).padStart(4, "0")}\` has ${issue.daysInMonth} days.`,
-  hourOutOfRange: (value: string, hour: number) =>
-    `The value \`${value}\` has the hour \`${pad2(hour)}\`; an hour is \`00\` to \`23\`.`,
-  invalidDT: (value: string) =>
-    `The value \`${value}\` is not a date; a DT value has the form \`YYYY[MM[DD]]\`.`,
-  invalidDTM: (value: string) =>
-    `The value \`${value}\` is not a date and time; a DTM value has the form \`YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]\`.`,
-  invalidTM: (value: string) =>
-    `The value \`${value}\` is not a time; a TM value has the form \`HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]\`.`,
-  minuteOutOfRange: (value: string, minute: number) =>
-    `The value \`${value}\` has the minute \`${pad2(minute)}\`; a minute is \`00\` to \`59\`.`,
-  monthOutOfRange: (value: string, month: number) =>
-    `The value \`${value}\` has the month \`${pad2(month)}\`; a month is \`01\` to \`12\`.`,
-  offsetOutOfRange: (value: string, offset: string) =>
-    `The value \`${value}\` has the offset \`${offset}\`; an offset is at most 14 hours, with minutes \`00\` to \`59\`.`,
-  secondOutOfRange: (value: string, second: number) =>
-    `The value \`${value}\` has the second \`${pad2(second)}\`; a second is \`00\` to \`59\`.`,
+  dayOutOfRange:
+    "The day is past the end of its month; a date must name a day its month has.",
+  hourOutOfRange: "The hour is out of range; an hour is `00` to `23`.",
+  invalidDT: "The value is not a date; a DT value has the form `YYYY[MM[DD]]`.",
+  invalidDTM:
+    "The value is not a date and time; a DTM value has the form `YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]`.",
+  invalidTM:
+    "The value is not a time; a TM value has the form `HH[MM[SS[.S[S[S[S]]]]]][+/-ZZZZ]`.",
+  minuteOutOfRange: "The minute is out of range; a minute is `00` to `59`.",
+  monthOutOfRange: "The month is out of range; a month is `01` to `12`.",
+  offsetOutOfRange:
+    "The offset is out of range; an offset is at most 14 hours, with minutes `00` to `59`.",
+  secondOutOfRange: "The second is out of range; a second is `00` to `59`.",
 } as const;
 
 /** `""`, the explicit null HL7v2 sends to delete a value. */
@@ -127,46 +117,42 @@ function parse(datatype: Datatype, value: string): ParseResult<unknown> {
   }
 }
 
-function invalidFormat(datatype: Datatype, value: string): string {
+function invalidFormat(datatype: Datatype): string {
   switch (datatype) {
     case "DT": {
-      return messages.invalidDT(value);
+      return messages.invalidDT;
     }
     case "TM": {
-      return messages.invalidTM(value);
+      return messages.invalidTM;
     }
     case "DTM": {
-      return messages.invalidDTM(value);
+      return messages.invalidDTM;
     }
   }
 }
 
-function messageFor(
-  datatype: Datatype,
-  value: string,
-  issue: TimestampIssue
-): string {
+function messageFor(datatype: Datatype, issue: TimestampIssue): string {
   switch (issue.code) {
     case "invalid-format": {
-      return invalidFormat(datatype, value);
+      return invalidFormat(datatype);
     }
     case "month-out-of-range": {
-      return messages.monthOutOfRange(value, issue.month);
+      return messages.monthOutOfRange;
     }
     case "day-out-of-range": {
-      return messages.dayOutOfRange(value, issue);
+      return messages.dayOutOfRange;
     }
     case "hour-out-of-range": {
-      return messages.hourOutOfRange(value, issue.hour);
+      return messages.hourOutOfRange;
     }
     case "minute-out-of-range": {
-      return messages.minuteOutOfRange(value, issue.minute);
+      return messages.minuteOutOfRange;
     }
     case "second-out-of-range": {
-      return messages.secondOutOfRange(value, issue.second);
+      return messages.secondOutOfRange;
     }
     case "offset-out-of-range": {
-      return messages.offsetOutOfRange(value, issue.offset);
+      return messages.offsetOutOfRange;
     }
   }
 }
@@ -220,10 +206,10 @@ const hl7v2LintTimestamps = lintRule<Root>(
         if (result.success) {
           return;
         }
-        const message = file.message(
-          messageFor(datatype, value, result.issue),
-          { ancestors: [...ancestors, node], place: node.position }
-        );
+        const message = file.message(messageFor(datatype, result.issue), {
+          ancestors: [...ancestors, node],
+          place: node.position,
+        });
         message.actual = value;
       }
     );

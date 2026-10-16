@@ -76,13 +76,13 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F^EXTRA
 Reported message:
 
 ```
-Field `PID-8` (Administrative Sex) has 2 components; it allows at most 1 component.
+The field repetition has 2 components; its datatype allows at most 1 component.
 ```
 
 The limit comes from the field's datatype in the message's version. `PID-3` is a `CX` field, which defines 10 components in v2.5, so a repetition with 11 is reported as:
 
 ```
-Field `PID-3` (Patient Identifier List) has 11 components; it allows at most 10 components.
+The field repetition has 11 components; its datatype allows at most 10 components.
 ```
 
 ## Part of Glion

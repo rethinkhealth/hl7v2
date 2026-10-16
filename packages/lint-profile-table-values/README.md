@@ -76,10 +76,10 @@ EVN|ZZZ
 Reported message:
 
 ```
-Field `EVN-1` (Event Type Code) is `ZZZ`; it must be a code of table `HL70003` (Event type).
+The value is not in table `HL70003` (Event type); the field requires a code from it.
 ```
 
-A field without a name in its profile is reported by its ID alone. One message is reported per offending repetition, with `actual` set to the value and `expected` to the table's codes.
+The message is placed on the repetition that holds the value. One message is reported per offending repetition, with `actual` set to the value and `expected` to the table's codes.
 
 ## Part of Glion
 

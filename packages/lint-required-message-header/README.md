@@ -72,7 +72,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported message:
 
 ```
-The first segment is `PID`; a message must start with the message header segment (`MSH`).
+The first segment is not the message header segment; a message must start with the message header segment (`MSH`).
 ```
 
 A segment with an empty Segment ID first, such as an input that starts with the field separator:
@@ -84,7 +84,7 @@ A segment with an empty Segment ID first, such as an input that starts with the 
 Reported message:
 
 ```
-The first segment has an empty Segment ID; a message must start with the message header segment (`MSH`).
+The first segment is not the message header segment; a message must start with the message header segment (`MSH`).
 ```
 
 An empty input (`""`), which parses to a tree with no segments, is reported as:

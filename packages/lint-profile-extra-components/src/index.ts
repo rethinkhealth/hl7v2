@@ -9,15 +9,8 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  tooManyComponents: (
-    field: string,
-    name: string,
-    count: number,
-    max: number
-  ) =>
-    `Field \`${field}\` (${name}) has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
-  tooManyComponentsWithoutName: (field: string, count: number, max: number) =>
-    `Field \`${field}\` has ${pluralize("component", count, true)}; it allows at most ${pluralize("component", max, true)}.`,
+  tooManyComponents: (count: number, max: number) =>
+    `The field repetition has ${pluralize("component", count, true)}; its datatype allows at most ${pluralize("component", max, true)}.`,
 } as const;
 
 /**
@@ -26,7 +19,7 @@ const messages = {
  *
  * A primitive datatype defines one component. Empty fields are not checked.
  *
- * Reads `id` and `datatype` from `field.data`, so
+ * Reads `datatype` from `field.data`, so
  * `@glion/annotate-profile-fields` MUST run before it.
  *
  * @example
@@ -50,10 +43,10 @@ const hl7v2LintExtraComponents = lintRule<Root>(
 
     visit(tree, "field", (field, ancestors) => {
       const { data } = field;
-      if (data?.id === undefined || isEmptyNode(field)) {
+      if (isEmptyNode(field)) {
         return SKIP;
       }
-      const datatype = data.datatype && ctx.datatypes.get(data.datatype);
+      const datatype = data?.datatype && ctx.datatypes.get(data.datatype);
       if (!datatype) {
         return SKIP;
       }
@@ -65,15 +58,10 @@ const hl7v2LintExtraComponents = lintRule<Root>(
       for (const repetition of field.children) {
         const count = repetition.children.length;
         if (count > max) {
-          const message = file.message(
-            data.name === undefined
-              ? messages.tooManyComponentsWithoutName(data.id, count, max)
-              : messages.tooManyComponents(data.id, data.name, count, max),
-            {
-              ancestors: [...ancestors, field, repetition],
-              place: repetition.position ?? field.position,
-            }
-          );
+          const message = file.message(messages.tooManyComponents(count, max), {
+            ancestors: [...ancestors, field, repetition],
+            place: repetition.position ?? field.position,
+          });
           message.actual = String(count);
         }
       }

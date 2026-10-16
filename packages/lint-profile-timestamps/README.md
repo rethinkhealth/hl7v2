@@ -88,7 +88,7 @@ PID|1||123||Doe^John||19000229
 Reported message:
 
 ```
-The value `19000229` has the day `29`; month `02` of `1900` has 28 days.
+The day is past the end of its month; a date must name a day its month has.
 ```
 
 `IN1-12` (DT) is written with ISO 8601 separators:
@@ -101,7 +101,7 @@ IN1|1|PLAN|123|||||||||2026-01-01
 Reported message:
 
 ```
-The value `2026-01-01` is not a date; a DT value has the form `YYYY[MM[DD]]`.
+The value is not a date; a DT value has the form `YYYY[MM[DD]]`.
 ```
 
 In v2.5, where PID-7 is a TS, the value is TS.1, and the message is placed on the component PID-7.1.

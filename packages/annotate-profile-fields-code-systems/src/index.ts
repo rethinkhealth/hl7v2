@@ -71,7 +71,7 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
       const [tableRef] = entries[i] as (typeof entries)[number];
       if (result.status === "rejected") {
         const msg = file.message(
-          `Failed to load code system for table '${tableRef}'`
+          `The code system for table \`${tableRef}\` cannot be loaded; codes of this table are not annotated.`
         );
         msg.source = "hl7v2-annotate-profile-fields-code-systems";
         msg.cause = result.reason;

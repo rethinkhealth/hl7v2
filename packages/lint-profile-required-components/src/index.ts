@@ -10,8 +10,7 @@ import { lintRule } from "unified-lint-rule";
 const messages = {
   absentComponent: (component: string, name: string) =>
     `Component \`${component}\` (${name}) is not present; it is required.`,
-  emptyComponent: (component: string, name: string) =>
-    `Component \`${component}\` (${name}) is empty; it is required.`,
+  emptyComponent: "The component is empty; it is required.",
 } as const;
 
 /**
@@ -78,7 +77,7 @@ const hl7v2LintRequiredComponents = lintRule<Root>(
               place: repetition.position,
             });
           } else if (isEmptyNode(component)) {
-            file.message(messages.emptyComponent(componentId, profile.name), {
+            file.message(messages.emptyComponent, {
               ancestors: [...ancestors, field, repetition, component],
               place: component.position,
             });

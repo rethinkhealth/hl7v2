@@ -92,7 +92,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Field `MSH-9` (Message Type) has 5 components; it allows at most 3 components."
+      "The field repetition has 5 components; its datatype allows at most 3 components."
     );
     expect(errors[0].actual).toBe("5");
     expect(errors[0].source).toBe("hl7v2-lint");
@@ -115,7 +115,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Field `PID-1` (Set ID - PID) has 2 components; it allows at most 1 component."
+      "The field repetition has 2 components; its datatype allows at most 1 component."
     );
   });
 
@@ -235,7 +235,7 @@ describe("hl7v2LintExtraComponents", () => {
     );
     expect(errors).toHaveLength(1);
     expect(errors[0].message).toBe(
-      "Field `MSH-9` (Message Type) has 4 components; it allows at most 3 components."
+      "The field repetition has 4 components; its datatype allows at most 3 components."
     );
   });
 
@@ -254,30 +254,10 @@ describe("hl7v2LintExtraComponents", () => {
     expect(file.messages).toHaveLength(0);
   });
 
-  // A profile of a site's own may give a field an ID but no name.
-  it("reports a field that has no name by its ID alone", async () => {
-    const field = f(c("a"), c("b"));
-    field.data = { datatype: "ST", id: "ZPD-1" };
-    const tree = m(msh("2.7.1"), s("ZPD", field));
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2AnnotateProfileContext)
-      .use(hl7v2AnnotateProfileFields)
-      .use(hl7v2LintExtraComponents)
-      .run(tree, file);
-
-    expect(file.messages).toHaveLength(1);
-    expect(file.messages[0]?.message).toBe(
-      "Field `ZPD-1` has 2 components; it allows at most 1 component."
-    );
-    expect(file.messages[0]?.actual).toBe("2");
-  });
-
-  // The rule names each field it reports by its ID.
-  it("does not report a field that has no element ID", async () => {
-    const field = f(c("a"), c("b"));
-    field.data = { datatype: "ST", name: "Site Code" };
+  // `^^` holds three components, none with a value: an empty field.
+  it("does not check an empty field, whatever its number of components", async () => {
+    const field = f(c(""), c(""), c(""));
+    field.data = { datatype: "ST", id: "ZPD-1", name: "Site Code" };
     const tree = m(msh("2.7.1"), s("ZPD", field));
     const file = new VFile();
 

@@ -57,7 +57,7 @@ describe("hl7v2LintRequiredComponents", () => {
     const messages = await lint(msh("2.5", "ADT^^ADT_A01"));
 
     expect(messages.map((message) => message.message)).toEqual([
-      "Component `MSH-9.2` (Trigger Event) is empty; it is required.",
+      "The component is empty; it is required.",
     ]);
   });
 
@@ -119,7 +119,7 @@ describe("hl7v2LintRequiredComponents", () => {
     const messages = await lint(msh("2.5"), "PID|1||12345^^^HOSP~^^^HOSP");
 
     expect(messages.map((message) => message.message)).toEqual([
-      "Component `PID-3.1` (ID Number) is empty; it is required.",
+      "The component is empty; it is required.",
     ]);
   });
 

@@ -138,10 +138,9 @@ describe("hl7v2-lint:message-version", () => {
       fatal: false,
       file: "",
       message:
-        "The version in `MSH-12` (Version ID) is empty; a message must declare its HL7v2 version.",
+        "The version is empty; a message must declare its HL7v2 version.",
       name: "1:1",
-      reason:
-        "The version in `MSH-12` (Version ID) is empty; a message must declare its HL7v2 version.",
+      reason: "The version is empty; a message must declare its HL7v2 version.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -184,10 +183,10 @@ describe("hl7v2-lint:message-version", () => {
       fatal: false,
       file: "",
       message:
-        "The version in `MSH-12` (Version ID) is `foo`; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
+        "The version is not a version number; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
       name: "1:1",
       reason:
-        "The version in `MSH-12` (Version ID) is `foo`; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
+        "The version is not a version number; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -226,10 +225,10 @@ describe("hl7v2-lint:message-version", () => {
       fatal: false,
       file: "",
       message:
-        "The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`.",
       name: "1:1",
       reason:
-        "The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -261,7 +260,7 @@ describe("hl7v2-lint:message-version", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].reason).toBe(
-      "The version in `MSH-12` (Version ID) is `2.5`; it must satisfy `>=2.6`."
+      "The version is outside the supported range; it must satisfy `>=2.6`."
     );
     expect(file.messages[0].actual).toBe("2.5");
     expect(file.messages[0].expected).toStrictEqual([">=2.6"]);
@@ -285,7 +284,7 @@ describe("hl7v2-lint:message-version", () => {
       file: "",
       line: 1,
       message:
-        "The version in `MSH-12` (Version ID) is empty; a message must declare its HL7v2 version.",
+        "The version is empty; a message must declare its HL7v2 version.",
       name: "1:274-1:274",
       place: {
         end: {
@@ -299,8 +298,7 @@ describe("hl7v2-lint:message-version", () => {
           offset: 273,
         },
       },
-      reason:
-        "The version in `MSH-12` (Version ID) is empty; a message must declare its HL7v2 version.",
+      reason: "The version is empty; a message must declare its HL7v2 version.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -436,7 +434,7 @@ describe("hl7v2-lint:message-version", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].reason).toBe(
-      "The version in `MSH-12` (Version ID) is `2.2`; it must satisfy `<3.0.0 >=2.3`."
+      "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`."
     );
     expect(file.messages[0].place).toStrictEqual({
       end: { column: 74, line: 1, offset: 73 },

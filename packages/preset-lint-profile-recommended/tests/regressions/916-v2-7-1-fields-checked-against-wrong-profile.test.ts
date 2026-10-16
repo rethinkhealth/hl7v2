@@ -38,7 +38,7 @@ describe("a valid v2.7.1 ADT^A01", () => {
     // table-values checks the family name against PID-5's table 0200, which
     // the standard applies to XPN.7 (Name Type Code).
     expect(file.messages.map(String)).toEqual([
-      "3:25-3:33: Field `PID-5` (Patient Name) is `Doe`; it must be a code of table `HL70200` (Name Type).",
+      "3:25-3:33: The value is not in table `HL70200` (Name Type); the field requires a code from it.",
     ]);
   });
 });

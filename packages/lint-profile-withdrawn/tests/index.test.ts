@@ -52,7 +52,7 @@ describe("hl7v2LintWithdrawn", () => {
 
       expect(rest).toEqual([]);
       expect(message?.message).toBe(
-        "`AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty."
+        "The data element has a value; it is withdrawn in v2.7 and must be empty."
       );
       expect(message?.actual).toBe("20240101");
       expect(message?.expected).toEqual(["", '""']);
@@ -94,7 +94,7 @@ describe("hl7v2LintWithdrawn", () => {
       const messages = await lint(msh("2.6"), "DG1|1|^I9|250.00");
 
       expect(messages.map((message) => message.message)).toEqual([
-        "`DG1-2` (Diagnosis Coding Method) has a value; it is withdrawn in v2.6 and must be empty.",
+        "The data element has a value; it is withdrawn in v2.6 and must be empty.",
       ]);
     });
 
@@ -121,7 +121,7 @@ describe("hl7v2LintWithdrawn", () => {
       );
 
       expect(messages.map((message) => message.message)).toEqual([
-        "`DG1-2` (Diagnosis Coding Method) has a value; it is withdrawn in v2.6 and must be empty.",
+        "The data element has a value; it is withdrawn in v2.6 and must be empty.",
       ]);
     });
 
@@ -154,7 +154,7 @@ describe("hl7v2LintWithdrawn", () => {
         messages.map((message) => [message.message, message.actual])
       ).toEqual([
         [
-          "`XPN.6` (Degree (e.g., MD)) has a value; it is withdrawn in v2.7 and must be empty.",
+          "The data element has a value; it is withdrawn in v2.7 and must be empty.",
           "MD",
         ],
       ]);
@@ -197,7 +197,7 @@ describe("hl7v2LintWithdrawn", () => {
 
       expect(rest).toEqual([]);
       expect(message?.message).toBe(
-        "`ZPD.2` (Site Code) has a value; it is withdrawn in v2.7 and must be empty."
+        "The data element has a value; it is withdrawn in v2.7 and must be empty."
       );
       expect(message?.actual).toBe("B");
       expect(message?.place).toEqual({
@@ -215,19 +215,6 @@ describe("hl7v2LintWithdrawn", () => {
     });
   });
 
-  // The rule names each element it reports by its ID; an element whose data
-  // carries an optionality but no ID is not one it can name.
-  it("does not report a withdrawn element that has no element ID", async () => {
-    const tree = parseHL7v2([msh("2.7"), "ZPD|1|X"].join("\r"));
-    const field = select(tree, "ZPD.2");
-    expect(field?.node.type).toBe("field");
-    if (field) {
-      field.node.data = { name: "Site Code", optionality: "W" };
-    }
-
-    expect(await run(tree)).toEqual([]);
-  });
-
   // One report per withdrawn element: the components of a reported element,
   // withdrawn or not, are not reported again.
   it("reports a withdrawn field once when one of its components is withdrawn too", async () => {
@@ -242,7 +229,7 @@ describe("hl7v2LintWithdrawn", () => {
     const messages = await run(tree);
 
     expect(messages.map((message) => message.message)).toEqual([
-      "`ZPD-2` (Site Code) has a value; it is withdrawn in v2.7 and must be empty.",
+      "The data element has a value; it is withdrawn in v2.7 and must be empty.",
     ]);
   });
 
@@ -282,27 +269,8 @@ describe("hl7v2LintWithdrawn", () => {
     const messages = await run(tree);
 
     expect(messages.map((message) => message.message)).toEqual([
-      "`CWE.1` (Identifier) has a value; it is withdrawn in v2.7 and must be empty.",
+      "The data element has a value; it is withdrawn in v2.7 and must be empty.",
     ]);
-  });
-
-  // A profile of a site's own may give an element an ID but no name.
-  it("reports a withdrawn element that has no name by its ID alone", async () => {
-    const tree = parseHL7v2([msh("2.7"), "ZPD|1|X"].join("\r"));
-    const field = select(tree, "ZPD.2");
-    expect(field?.node.type).toBe("field");
-    if (field) {
-      field.node.data = { id: "ZPD-2", optionality: "W" };
-    }
-
-    const [message, ...rest] = await run(tree);
-
-    expect(rest).toEqual([]);
-    expect(message?.message).toBe(
-      "`ZPD-2` has a value; it is withdrawn in v2.7 and must be empty."
-    );
-    expect(message?.actual).toBe("X");
-    expect(message?.expected).toEqual(["", '""']);
   });
 
   // The report names the version that withdraws the element, so without

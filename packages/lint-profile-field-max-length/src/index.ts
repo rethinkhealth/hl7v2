@@ -7,10 +7,8 @@ import pluralize from "pluralize";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  tooLong: (field: string, name: string, length: number, max: number) =>
-    `Field \`${field}\` (${name}) is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
-  tooLongWithoutName: (field: string, length: number, max: number) =>
-    `Field \`${field}\` is ${pluralize("character", length, true)} long; it allows at most ${pluralize("character", max, true)}.`,
+  tooLong: (length: number, max: number) =>
+    `The value is ${pluralize("character", length, true)} long; the field allows at most ${pluralize("character", max, true)}.`,
 } as const;
 
 /**
@@ -35,26 +33,17 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
   },
   (tree, file) => {
     visit(tree, "field", (field, ancestors) => {
-      const { data } = field;
-      if (data?.id === undefined) {
-        return SKIP;
-      }
       // A field without a LEN has no maximum length.
-      const { maxLength = Number.POSITIVE_INFINITY } = data;
+      const maxLength = field.data?.maxLength ?? Number.POSITIVE_INFINITY;
 
       // HL7v2 applies LEN to each repetition, not to the whole field.
       for (const repetition of field.children) {
         const length = getLength(repetition);
         if (length > maxLength) {
-          const message = file.message(
-            data.name === undefined
-              ? messages.tooLongWithoutName(data.id, length, maxLength)
-              : messages.tooLong(data.id, data.name, length, maxLength),
-            {
-              ancestors: [...ancestors, field, repetition],
-              place: repetition.position ?? field.position,
-            }
-          );
+          const message = file.message(messages.tooLong(length, maxLength), {
+            ancestors: [...ancestors, field, repetition],
+            place: repetition.position ?? field.position,
+          });
           message.actual = String(length);
         }
       }

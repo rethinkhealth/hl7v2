@@ -455,7 +455,7 @@ describe("hl7v2LintSegmentOrder", () => {
 
       expect(rest).toEqual([]);
       expect(message?.message).toBe(
-        "Segment `XXX` is out of place; the event schema does not allow it at this point."
+        "The segment is out of place; the event schema does not allow it at this point."
       );
       expect(message?.actual).toBe("XXX");
       expect(message?.expected).toBeUndefined();
@@ -482,48 +482,55 @@ describe("hl7v2LintSegmentOrder", () => {
           )
         )
       ).toEqual([
-        "Segment `PID` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
     });
 
     // PV1 is in no group of LAB. It follows an OBX, so it is read in OBX's
-    // groups, ORDER > RESULT, and the report names them.
-    it("names the segment groups an out-of-place segment is read in", async () => {
-      expect(
-        reasons(
-          await lintAgainst(
-            LAB,
-            MSH,
-            "PID|1",
-            "OBR|1",
-            "OBX|1",
-            "PV1|1",
-            "OBX|2"
-          )
-        )
-      ).toEqual([
-        "Segment `PV1` is out of place; the event schema does not allow it at this point in segment group `ORDER > RESULT`.",
+    // groups, ORDER > RESULT.
+    it("reports an out-of-place segment read in segment groups", async () => {
+      const messages = await lintAgainst(
+        LAB,
+        MSH,
+        "PID|1",
+        "OBR|1",
+        "OBX|1",
+        "PV1|1",
+        "OBX|2"
+      );
+
+      expect(reasons(messages)).toEqual([
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
+      expect(messages[0]?.actual).toBe("PV1");
     });
 
-    // `|1` has no characters before its first field separator. The Segment ID
-    // is empty, so it is described in words.
+    // `|1` has no characters before its first field separator: an empty
+    // Segment ID.
     it("reports a segment with an empty Segment ID", async () => {
       const messages = await lintAgainst(MSH_PID, MSH, "|1", "PID|1");
 
       expect(reasons(messages)).toEqual([
-        "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
       expect(messages[0]?.actual).toBe("");
     });
 
-    // The same, after an OBX of LAB: read in OBX's groups, which it names.
-    it("names the segment groups a segment with an empty Segment ID is read in", async () => {
-      expect(
-        reasons(await lintAgainst(LAB, MSH, "PID|1", "OBR|1", "OBX|1", "|1"))
-      ).toEqual([
-        "A segment with an empty Segment ID is out of place; the event schema does not allow it at this point in segment group `ORDER > RESULT`.",
+    // The same, after an OBX of LAB: read in OBX's groups.
+    it("reports a segment with an empty Segment ID read in segment groups", async () => {
+      const messages = await lintAgainst(
+        LAB,
+        MSH,
+        "PID|1",
+        "OBR|1",
+        "OBX|1",
+        "|1"
+      );
+
+      expect(reasons(messages)).toEqual([
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
+      expect(messages[0]?.actual).toBe("");
     });
 
     // PV1 and PID are swapped inside a PATIENT group of a grouped tree (see
@@ -538,7 +545,7 @@ describe("hl7v2LintSegmentOrder", () => {
         )
       ).toEqual([
         "Segment `PID` is missing; the event schema requires it at this point.",
-        "Segment `PID` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
     });
 
@@ -564,7 +571,7 @@ describe("hl7v2LintSegmentOrder", () => {
         reasons(await lintAgainst(MSH_PID_PV1, MSH, "PIDX|1", "PV1|1"))
       ).toEqual([
         "Segment `PID` is missing; the event schema requires it at this point.",
-        "Segment `PIDX` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
     });
 
@@ -575,9 +582,9 @@ describe("hl7v2LintSegmentOrder", () => {
         reasons(await lintAgainst(MSH_PID_PV1, MSH, "AAA|1", "BBB|1"))
       ).toEqual([
         "Segment `PID` is missing; the event schema requires it at this point.",
-        "Segment `AAA` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
         "Segment `PV1` is missing; the event schema requires it at this point.",
-        "Segment `BBB` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
     });
 
@@ -594,7 +601,7 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(reasons(messages)).toEqual([
         "Segment `EVN` is missing; the event schema requires it at this point.",
         "Segment `PV1` is missing; the event schema requires it at this point.",
-        "Segment `EVN` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
       expect(messages[1]?.place).toEqual({ column: 1, line: 3, offset: 75 });
     });
@@ -663,7 +670,7 @@ describe("hl7v2LintSegmentOrder", () => {
         "Segment `PID` is missing; the event schema requires it at this point."
       );
       expect(messages[20]?.reason).toBe(
-        "Segment `BBB` is out of place; the event schema does not allow it at this point."
+        "The segment is out of place; the event schema does not allow it at this point."
       );
       expect(messages[21]?.reason).toBe(
         "The message has 4 more missing or out-of-place segments; the rule reports the first 21."
@@ -793,7 +800,7 @@ describe("hl7v2LintSegmentOrder", () => {
 
       expect(rest).toEqual([]);
       expect(message?.reason).toBe(
-        "Segment `XXX` is out of place; the event schema does not allow it at this point."
+        "The segment is out of place; the event schema does not allow it at this point."
       );
       expect(message?.actual).toBe("XXX");
       expect(message?.expected).toEqual(["PID"]);
@@ -938,7 +945,7 @@ describe("hl7v2LintSegmentOrder", () => {
       expect(seen).toEqual([tree, file]);
       expect(reasons(file.messages)).toEqual([
         "Segment `PID` is missing; the event schema requires it at this point.",
-        "Segment `PV1` is out of place; the event schema does not allow it at this point.",
+        "The segment is out of place; the event schema does not allow it at this point.",
       ]);
     });
 

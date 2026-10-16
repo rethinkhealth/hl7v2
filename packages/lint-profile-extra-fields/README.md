@@ -76,7 +76,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported message:
 
 ```
-Segment `MSH` has 22 fields; it allows at most 21 fields.
+The segment has 22 fields; it allows at most 21 fields.
 ```
 
 The version is taken from the annotated profile context. A segment is reported once, however many fields it has past its last.

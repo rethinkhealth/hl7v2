@@ -77,7 +77,7 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported message:
 
 ```
-Field `MSH-10` (Message Control ID) is 28 characters long; it allows at most 20 characters.
+The value is 28 characters long; the field allows at most 20 characters.
 ```
 
 A composite value such as `DOE^JANE` counts as 7 characters, not 8.

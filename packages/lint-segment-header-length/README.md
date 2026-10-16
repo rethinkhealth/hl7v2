@@ -72,7 +72,7 @@ PID1|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F
 Reported message:
 
 ```
-The Segment ID `PID1` is 4 characters long; a Segment ID must be exactly 3 characters.
+The Segment ID is 4 characters long; a Segment ID must be exactly 3 characters.
 ```
 
 A two-character segment name:
@@ -84,7 +84,7 @@ MS|^~\&|...
 Reported message:
 
 ```
-The Segment ID `MS` is 2 characters long; a Segment ID must be exactly 3 characters.
+The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters.
 ```
 
 A segment with an empty Segment ID, such as a line that starts with the field separator, is reported as:

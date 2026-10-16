@@ -56,7 +56,7 @@ describe("hl7v2LintBackwardCompatible", () => {
 
       expect(rest).toEqual([]);
       expect(message?.message).toBe(
-        "`DG1-4` (Diagnosis Description) has a value; v2.5.1 keeps it only for backward compatibility."
+        "The data element has a value; v2.5.1 keeps it only for backward compatibility."
       );
       expect(message?.actual).toBe("DIABETES");
       expect(message?.expected).toEqual(["", '""']);
@@ -82,7 +82,7 @@ describe("hl7v2LintBackwardCompatible", () => {
       const inV251 = await lint(msh("2.5.1"), "DG1|1|I9|250.00");
 
       expect(inV23.map((message) => message.message)).toEqual([
-        "`DG1-2` (Diagnosis Coding Method) has a value; v2.3 keeps it only for backward compatibility.",
+        "The data element has a value; v2.3 keeps it only for backward compatibility.",
       ]);
       expect(inV251).toEqual([]);
     });
@@ -100,7 +100,7 @@ describe("hl7v2LintBackwardCompatible", () => {
         messages.map((message) => [message.message, message.actual])
       ).toEqual([
         [
-          "`XPN.6` (Degree (e.g., MD)) has a value; v2.6 keeps it only for backward compatibility.",
+          "The data element has a value; v2.6 keeps it only for backward compatibility.",
           "MD",
         ],
       ]);
@@ -119,7 +119,7 @@ describe("hl7v2LintBackwardCompatible", () => {
         messages.map((message) => [message.message, message.actual])
       ).toEqual([
         [
-          "`TS.2` (Degree of Precision) has a value; v2.5.1 keeps it only for backward compatibility.",
+          "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
           "D",
         ],
       ]);
@@ -183,36 +183,6 @@ describe("hl7v2LintBackwardCompatible", () => {
     });
   });
 
-  // The rule names each element it reports by its ID; an element whose data
-  // carries an optionality but no ID is not one it can name.
-  it("does not report a backward-compatible element that has no element ID", async () => {
-    const tree = parseHL7v2([msh("2.5.1"), "ZPD|1|X"].join("\r"));
-    const field = select(tree, "ZPD.2");
-    if (field) {
-      field.node.data = { name: "Site Code", optionality: "B" };
-    }
-
-    expect(await run(tree)).toEqual([]);
-  });
-
-  // A profile of a site's own may give an element an ID but no name.
-  it("reports a backward-compatible element that has no name by its ID alone", async () => {
-    const tree = parseHL7v2([msh("2.5.1"), "ZPD|1|X"].join("\r"));
-    const field = select(tree, "ZPD.2");
-    if (field) {
-      field.node.data = { id: "ZPD-2", optionality: "B" };
-    }
-
-    const [message, ...rest] = await run(tree);
-
-    expect(rest).toEqual([]);
-    expect(message?.message).toBe(
-      "`ZPD-2` has a value; v2.5.1 keeps it only for backward compatibility."
-    );
-    expect(message?.actual).toBe("X");
-    expect(message?.expected).toEqual(["", '""']);
-  });
-
   // One report per backward-compatible element: the components of a
   // reported element are not reported again.
   it("reports a backward-compatible field once when one of its components is backward compatible too", async () => {
@@ -227,7 +197,7 @@ describe("hl7v2LintBackwardCompatible", () => {
     const messages = await run(tree);
 
     expect(messages.map((message) => message.message)).toEqual([
-      "`ZPD-2` (Site Code) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
     ]);
   });
 
@@ -267,7 +237,7 @@ describe("hl7v2LintBackwardCompatible", () => {
     const messages = await run(tree);
 
     expect(messages.map((message) => message.message)).toEqual([
-      "`CWE.1` (Identifier) has a value; v2.5.1 keeps it only for backward compatibility.",
+      "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
     ]);
   });
 
