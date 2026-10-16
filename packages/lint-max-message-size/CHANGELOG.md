@@ -1,5 +1,14 @@
 # @rethinkhealth/hl7v2-lint-max-message-size
 
+## 0.27.0
+
+### Patch Changes
+
+- [#982](https://github.com/rethinkhealth/glion/pull/982) [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad) Thanks [@meleksomai](https://github.com/meleksomai)! - Fix the size `@glion/lint-max-message-size` measures for a file with no value or a `Uint8Array` value.
+
+  - Measure a file with no value as 0 bytes, not 9
+  - Measure a `Uint8Array` value by its bytes, not by its numbers written out with commas
+
 ## 0.26.0
 
 No changes in this release.
