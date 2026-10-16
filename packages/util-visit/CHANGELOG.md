@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-util-visit
 
+## 0.27.1
+
+### Patch Changes
+
+- [#994](https://github.com/rethinkhealth/glion/pull/994) [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0) Thanks [@meleksomai](https://github.com/meleksomai)! - `visit` walks the tree itself instead of through `unist-util-visit-parents`, with the same visiting order, ancestors, and visitor results. A walk no longer creates a function per node, and the processors built on it run up to four times faster on large messages.
+
+  With a type test, the walk no longer enters a node that cannot contain that type in an HL7v2 tree: `visit(tree, "segment", …)` does not walk the fields of each segment. Nodes of a type `@glion/ast` does not define are still entered.
+
 ## 0.27.0
 
 ### Minor Changes

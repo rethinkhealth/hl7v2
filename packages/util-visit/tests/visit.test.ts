@@ -171,6 +171,85 @@ describe("visit", () => {
     });
   });
 
+  describe("a type test", () => {
+    // Each tree here breaks the HL7v2 hierarchy on purpose: the node out of
+    // place is visited only when the walk enters its parent.
+    const names = (tree: Nodes, type: string) => {
+      const visited: string[] = [];
+      visit(tree, type as Nodes["type"], (node) => {
+        const { name } = node as { name?: string };
+        visited.push(name ?? node.type);
+      });
+      return visited;
+    };
+
+    it("does not enter a segment to look for segments", () => {
+      const pid = s("PID", f("a"));
+      (pid.children as Nodes[]).push(s("ZPI"));
+
+      expect(names(m(pid), "segment")).toStrictEqual(["PID"]);
+    });
+
+    it("enters a segment for a test function that matches segments", () => {
+      const pid = s("PID", f("a"));
+      (pid.children as Nodes[]).push(s("ZPI"));
+      const visited: string[] = [];
+      visit(
+        m(pid),
+        (node) => node.type === "segment",
+        (node) => {
+          visited.push((node as Segment).name);
+        }
+      );
+
+      expect(visited).toStrictEqual(["PID", "ZPI"]);
+    });
+
+    it("does not enter a field to look for fields", () => {
+      const field = f("a");
+      (field.children as Nodes[]).push(f("inner"));
+      const visited: Nodes[] = [];
+      visit(m(s("PID", field)), "field", (node) => {
+        visited.push(node);
+      });
+
+      expect(visited).toStrictEqual([field]);
+    });
+
+    it("finds a group in a group", () => {
+      const inner = g("INNER", s("PID"));
+      const outer = g("OUTER", inner);
+
+      expect(names(m(outer), "group")).toStrictEqual(["OUTER", "INNER"]);
+    });
+
+    it("finds segments in groups", () => {
+      expect(
+        names(
+          m(s("MSH"), g("PATIENT", s("PID"), g("VISIT", s("PV1")))),
+          "segment"
+        )
+      ).toStrictEqual(["MSH", "PID", "PV1"]);
+    });
+
+    it("enters a node of a type @glion/ast does not define", () => {
+      const custom = {
+        children: [s("ZPI")],
+        type: "custom",
+      } as unknown as Nodes;
+
+      expect(names(m(custom as Segment), "segment")).toStrictEqual(["ZPI"]);
+    });
+
+    it("enters every node to look for a type @glion/ast does not define", () => {
+      const custom = { type: "custom" } as unknown as Nodes;
+      const field = f("a");
+      (field.children as Nodes[]).push(custom);
+
+      expect(names(m(s("PID", field)), "custom")).toStrictEqual(["custom"]);
+    });
+  });
+
   describe("starting from non-root nodes", () => {
     it("should work when starting from segment", () => {
       const segment = s("PID", f(c("value1")), f(c("value2")));
