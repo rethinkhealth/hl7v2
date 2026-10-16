@@ -4,9 +4,12 @@
 // entry chunk, so importing the package would load the paths of all of them;
 // this glob over the indexes holds one path per directory, and a directory's
 // index loads the first time one of its profiles does.
-const indexes = import.meta.glob<
-  Readonly<Record<string, () => Promise<unknown>>>
->("../profiles/**/index.ts", { import: "default" });
+const indexes = import.meta.glob<ProfileIndex>("../profiles/**/index.ts", {
+  import: "default",
+});
+
+/** A directory's index: each profile's `./<name>.json` mapped to its import. */
+type ProfileIndex = Readonly<Record<string, () => Promise<unknown>>>;
 
 // A file of a version itself, such as its segments.json, is one of a few per
 // version, so it loads in one lazy step.
@@ -14,10 +17,10 @@ const versionFiles = import.meta.glob<unknown>("../profiles/v*/*.json", {
   import: "default",
 });
 
-type ProfileIndex = Readonly<Record<string, () => Promise<unknown>>>;
-
 // Keyed by bundled paths only, so its size is bounded by the bundle, whatever
-// paths a message leads callers to ask for.
+// paths a message leads callers to ask for. A load of a path whose import is
+// still in flight shares that import. A rejected import stays rejected for the
+// life of the process.
 const imports = new Map<string, Promise<unknown>>();
 
 /** The promise of `importer()`, started on the first call for `path`. */
@@ -43,10 +46,15 @@ const once = (
  *   `"../profiles/v2.5/segments.json"`.
  */
 export const lazyImport = async <T>(path: string): Promise<T | undefined> => {
+  // `path` carries a version and a name read from a message, and indexes the
+  // plain objects the globs return. Every key starts with `../` or `./`, so no
+  // path reaches a member of `Object.prototype` such as `constructor`.
   const importVersionFile = versionFiles[path];
   if (importVersionFile) {
     return (await once(path, importVersionFile)) as T;
   }
+  // "../profiles/v2.5/fields/PID.json" is "./PID.json" in the index of
+  // "../profiles/v2.5/fields/index.ts".
   const slash = path.lastIndexOf("/");
   const indexPath = `${path.slice(0, slash)}/index.ts`;
   const importIndex = indexes[indexPath];
