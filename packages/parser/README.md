@@ -63,7 +63,7 @@ Options accept a partial `Delimiters` object, so only the characters you want to
 
 ### Escape sequences
 
-A value's escape sequences are decoded while the message is tokenized. `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` become the field, component, repetition, subcomponent, and escape delimiters the message declares, `\.br\` becomes the segment delimiter, and `\Xdd\` becomes the characters its pairs of hexadecimal digits name. `\H\` and `\N\` are removed. Any other sequence stays as written.
+A value's escape sequences are decoded while the message is tokenized. `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` become the field, component, repetition, subcomponent, and escape delimiters the message declares, `\.br\` becomes the segment delimiter, and `\Xdd\` becomes the characters its pairs of hexadecimal digits name. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, and any other sequence, stays as written.
 
 ```ts
 import { unified } from "unified";

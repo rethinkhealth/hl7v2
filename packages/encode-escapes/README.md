@@ -62,7 +62,7 @@ Nothing (`undefined`). Mutates the AST in-place.
 
 ## Behavior
 
-The plugin visits every `subcomponent` node and rewrites `node.value`, substituting delimiter and control characters with their HL7v2 escape sequences:
+The plugin visits every `subcomponent` node and rewrites `node.value`, substituting delimiter and control characters with their HL7v2 escape sequences. A formatting command such as `\H\`, `\N\`, or `\.sp 2\` is written as it is.
 
 | Input                         | Output                         |
 | ----------------------------- | ------------------------------ |

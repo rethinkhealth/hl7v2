@@ -3,6 +3,7 @@ import type { Delimiters } from "@glion/ast";
 const HEX_RADIX = 16;
 const HEX_PAIR_LENGTH = 2;
 const HEX_DIGITS = /^[0-9a-f]+$/i;
+const FORMATTING_COMMAND = /^(?:H|N|\.[a-z]{2} ?[+-]?\d*)$/i;
 const CONTROL_CHARACTER_LIMIT = 0x20;
 
 /**
@@ -10,9 +11,9 @@ const CONTROL_CHARACTER_LIMIT = 0x20;
  *
  * Decodes `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` to the delimiter each stands
  * for, `\.br\` to the segment delimiter, and `\Xdd…\` to the characters its
- * pairs of hexadecimal digits name. Removes `\H\` and `\N\`. Leaves any other
- * sequence, an `\X…\` whose content is not hexadecimal digits, and an escape
- * character without a closing one, as it is.
+ * pairs of hexadecimal digits name. Leaves a formatting command (`\H\`, `\N\`,
+ * `\.sp\`, …), any other sequence, an `\X…\` whose content is not hexadecimal
+ * digits, and an escape character without a closing one, as it is.
  *
  * @param value - The value as it is on the wire.
  * @param d - The delimiters of the message.
@@ -62,10 +63,6 @@ export function decodeEscapes(value: string, d: Delimiters): string {
           decoded += d.segment;
           break;
         }
-        case "H":
-        case "N": {
-          break;
-        }
         default: {
           decoded +=
             code.startsWith("X") && HEX_DIGITS.test(code.slice(1))
@@ -101,8 +98,10 @@ function decodeHexSequence(hex: string): string {
  *
  * Writes the field, component, repetition, subcomponent, and escape
  * delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter
- * as `\.br\`, and any other character below U+0020 as `\Xdd\`.
- * `decodeEscapes(encodeEscapes(value, d), d)` is `value`.
+ * as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting
+ * command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …) is written as it is.
+ * `decodeEscapes(encodeEscapes(value, d), d)` is `value` unless `value` holds
+ * a literal `\.br\`.
  *
  * @param value - The value to write.
  * @param d - The delimiters of the message.
@@ -113,6 +112,11 @@ export function encodeEscapes(value: string, d: Delimiters): string {
   let copied = 0;
 
   for (let i = 0; i < value.length; i += 1) {
+    const commandEnd = formattingCommandEnd(value, i, d);
+    if (commandEnd !== -1) {
+      i = commandEnd;
+      continue;
+    }
     const sequence = escapeSequence(value, i, d);
     if (sequence !== undefined) {
       encoded += value.slice(copied, i) + sequence;
@@ -121,6 +125,25 @@ export function encodeEscapes(value: string, d: Delimiters): string {
   }
 
   return copied === 0 ? value : encoded + value.slice(copied);
+}
+
+/**
+ * The index of the escape character that closes the formatting command
+ * starting at `index`, or `-1` when no formatting command starts there.
+ */
+function formattingCommandEnd(
+  value: string,
+  index: number,
+  d: Delimiters
+): number {
+  if (value[index] !== d.escape) {
+    return -1;
+  }
+  const end = value.indexOf(d.escape, index + 1);
+  if (end === -1) {
+    return -1;
+  }
+  return FORMATTING_COMMAND.test(value.slice(index + 1, end)) ? end : -1;
 }
 
 /**

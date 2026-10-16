@@ -64,10 +64,16 @@ describe(decodeEscapes, () => {
     );
   });
 
-  it("removes the highlight escapes", () => {
+  it("keeps the highlight commands as they are", () => {
     expect(
       decodeEscapes("\\H\\Important\\N\\ value\\F\\pipe", DEFAULT_DELIMITERS)
-    ).toBe("Important value|pipe");
+    ).toBe("\\H\\Important\\N\\ value|pipe");
+  });
+
+  it("keeps a formatting command as it is", () => {
+    expect(
+      decodeEscapes("a\\.sp 2\\b\\.in+4\\c\\.ce\\d", DEFAULT_DELIMITERS)
+    ).toBe("a\\.sp 2\\b\\.in+4\\c\\.ce\\d");
   });
 
   it("leaves an escape character without a closing one untouched", () => {
@@ -100,6 +106,18 @@ describe(encodeEscapes, () => {
     );
   });
 
+  it("writes a formatting command as it is", () => {
+    expect(
+      encodeEscapes("\\H\\a|b\\N\\ \\.sp 2\\c\\.in+4\\d", DEFAULT_DELIMITERS)
+    ).toBe("\\H\\a\\F\\b\\N\\ \\.sp 2\\c\\.in+4\\d");
+  });
+
+  it("encodes an escape character that does not start a formatting command", () => {
+    expect(encodeEscapes("a\\Q\\b\\.sp|2\\c\\", DEFAULT_DELIMITERS)).toBe(
+      "a\\E\\Q\\E\\b\\E\\.sp\\F\\2\\E\\c\\E\\"
+    );
+  });
+
   it("returns a value without special characters as it is", () => {
     expect(encodeEscapes("PlainValue123", DEFAULT_DELIMITERS)).toBe(
       "PlainValue123"
@@ -116,6 +134,7 @@ describe(encodeEscapes, () => {
         fc.string({ unit: "grapheme" }),
         fc.constantFrom(DEFAULT_DELIMITERS, CUSTOM_DELIMITERS),
         (value, d) => {
+          fc.pre(!value.includes(`${d.escape}.br${d.escape}`));
           expect(decodeEscapes(encodeEscapes(value, d), d)).toBe(value);
         }
       )

@@ -120,6 +120,12 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(value).toBe("before\\F\\after");
   });
 
+  it("writes a formatting command as it is", async () => {
+    const tree = m(s("PID", f("\\H\\a|b\\N\\ \\.sp 2\\c")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("\\H\\a\\F\\b\\N\\ \\.sp 2\\c");
+  });
+
   it("does not double-encode already-escaped values", async () => {
     // If a value contains literal backslash (the escape char),
     // it should be encoded as \E\ — not left as-is
