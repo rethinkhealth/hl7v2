@@ -1,8 +1,7 @@
-// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Root } from "@glion/ast";
+import type { Component, Root, Subcomponent } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
 import type { Optionality } from "@glion/utils";
 import type { Plugin } from "unified";
@@ -61,6 +60,48 @@ declare module "@glion/ast" {
   }
 }
 
+type Datatypes = ProfileContext["datatypes"];
+type DatatypeDefinition = NonNullable<ReturnType<Datatypes["get"]>>;
+
+const findDatatype = (datatypes: Datatypes, id: string | undefined) =>
+  id === undefined ? undefined : datatypes.get(id);
+
+/**
+ * Annotates each component or subcomponent `datatype` defines with its row,
+ * and the subcomponents of each component whose datatype is composite.
+ */
+function annotateComponents(
+  children: readonly (Component | Subcomponent)[],
+  datatype: DatatypeDefinition,
+  datatypes: Datatypes
+): void {
+  for (const [sequence, profile] of datatype.componentsBySequence) {
+    const child = children[sequence - 1];
+    if (child === undefined) {
+      continue;
+    }
+
+    const childDatatype = findDatatype(datatypes, profile.datatypeId);
+    Object.assign((child.data ??= {}), {
+      id: `${datatype.id}.${sequence}`,
+      ...profile,
+      kind: childDatatype?.kind,
+      title: childDatatype?.title,
+    });
+    switch (child.type) {
+      case "component": {
+        if (childDatatype?.kind === "composite") {
+          annotateComponents(child.children, childDatatype, datatypes);
+        }
+        break;
+      }
+      case "subcomponent": {
+        break;
+      }
+    }
+  }
+}
+
 /**
  * Unified plugin that annotates FieldRepetition, Component, and Subcomponent
  * nodes with datatype profile metadata using a stop-at-primitive cascade.
@@ -85,71 +126,23 @@ export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
       return tree;
     }
 
-    const findDatatype = (id: string | undefined) =>
-      id === undefined ? undefined : datatypes.get(id);
-
     visit(tree, "field", (field) => {
-      const datatype = findDatatype(field.data?.datatype);
+      const datatype = findDatatype(datatypes, field.data?.datatype);
       if (datatype === undefined) {
         return SKIP;
       }
 
-      visit(field, "field-repetition", (repetition) => {
+      for (const repetition of field.children) {
         Object.assign((repetition.data ??= {}), {
           datatypeId: datatype.id,
           kind: datatype.kind,
           table: field.data?.table,
           title: datatype.title,
         });
-      });
-      if (datatype.kind !== "composite") {
-        return SKIP;
+        if (datatype.kind === "composite") {
+          annotateComponents(repetition.children, datatype, datatypes);
+        }
       }
-
-      visit(field, "component", (component, _, componentInfo) => {
-        const profile = datatype.componentsBySequence.get(
-          componentInfo.sequence
-        );
-        if (profile === undefined) {
-          return SKIP;
-        }
-
-        const componentDatatype = findDatatype(profile.datatypeId);
-        Object.assign((component.data ??= {}), {
-          id: `${datatype.id}.${componentInfo.sequence}`,
-          ...profile,
-          kind: componentDatatype?.kind,
-          title: componentDatatype?.title,
-        });
-        if (componentDatatype?.kind !== "composite") {
-          return SKIP;
-        }
-
-        visit(
-          component,
-          "subcomponent",
-          (subcomponent, __, subcomponentInfo) => {
-            const subcomponentProfile =
-              componentDatatype.componentsBySequence.get(
-                subcomponentInfo.sequence
-              );
-            if (subcomponentProfile === undefined) {
-              return;
-            }
-
-            const subcomponentDatatype = findDatatype(
-              subcomponentProfile.datatypeId
-            );
-            Object.assign((subcomponent.data ??= {}), {
-              id: `${componentDatatype.id}.${subcomponentInfo.sequence}`,
-              ...subcomponentProfile,
-              kind: subcomponentDatatype?.kind,
-              title: subcomponentDatatype?.title,
-            });
-          }
-        );
-        return SKIP;
-      });
       return SKIP;
     });
 
