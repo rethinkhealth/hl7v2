@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-annotate-profile-datatypes
 
+## 0.27.0
+
+### Patch Changes
+
+- [#988](https://github.com/rethinkhealth/glion/pull/988) [`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e) Thanks [@meleksomai](https://github.com/meleksomai)! - The annotators annotate each field, component, and subcomponent the profile defines by its sequence number, read from its place in the segment, field repetition, or component. They no longer read `info.sequence` from `@glion/util-visit`. The annotations are unchanged.
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e), [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/annotate-profile-fields@0.27.0
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+  - @glion/utils@0.27.0
+
 ## 0.26.0
 
 ### Patch Changes

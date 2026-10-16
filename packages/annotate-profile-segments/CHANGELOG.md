@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-annotate-profile-segments
 
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies [[`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+
 ## 0.26.0
 
 ### Patch Changes

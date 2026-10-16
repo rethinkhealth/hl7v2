@@ -1,5 +1,15 @@
 # @glion/annotate-profile-tables
 
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e), [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/annotate-profile-datatypes@0.27.0
+  - @glion/util-visit@0.27.0
+  - @glion/annotate-profile-context@0.27.0
+  - @glion/ast@0.27.0
+
 ## 0.26.0
 
 ### Patch Changes

@@ -1,5 +1,29 @@
 # @rethinkhealth/hl7v2-preset-lint-profile-recommended
 
+## 0.27.0
+
+### Minor Changes
+
+- [#977](https://github.com/rethinkhealth/glion/pull/977) [`7470329`](https://github.com/rethinkhealth/glion/commit/747032939dec8b334465c63ce654aaf460b20830) Thanks [@meleksomai](https://github.com/meleksomai)! - The preset runs `@glion/lint-profile-timestamps` as a warning, so a message with a date or time that is not valid, such as `PID-7` `19000229`, now reports it.
+
+### Patch Changes
+
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e), [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad), [`7470329`](https://github.com/rethinkhealth/glion/commit/747032939dec8b334465c63ce654aaf460b20830), [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad)]:
+  - @glion/annotate-profile-datatypes@0.27.0
+  - @glion/annotate-profile-fields@0.27.0
+  - @glion/lint-profile-backward-compatible@0.27.0
+  - @glion/lint-profile-extra-components@0.27.0
+  - @glion/lint-profile-extra-fields@0.27.0
+  - @glion/lint-profile-field-max-length@0.27.0
+  - @glion/lint-profile-field-repetition@0.27.0
+  - @glion/lint-profile-required-components@0.27.0
+  - @glion/lint-profile-required-fields@0.27.0
+  - @glion/lint-profile-segment-order@0.27.0
+  - @glion/lint-profile-table-values@0.27.0
+  - @glion/lint-profile-timestamps@0.27.0
+  - @glion/lint-profile-withdrawn@0.27.0
+  - @glion/annotate-profile-context@0.27.0
+
 ## 0.26.0
 
 ### Patch Changes
