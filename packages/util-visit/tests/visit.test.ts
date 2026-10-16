@@ -1,7 +1,6 @@
 import type { Group, Nodes, Segment } from "@glion/ast";
 import { c, f, g, m, s } from "@glion/builder";
 
-import type { VisitInfo } from "../src";
 import { EXIT, SKIP, visit } from "../src";
 
 describe("visit", () => {
@@ -122,85 +121,33 @@ describe("visit", () => {
     ]);
   });
 
-  describe("visitInfo structure", () => {
-    it("should provide correct info with index, sequence, and depth", () => {
+  describe("ancestors", () => {
+    it("gives each node its ancestors from the root to its parent", () => {
       const ast = m(
         s("MSH", f(c("value1")), f("value2")),
         g("PATIENT_GROUP", s("PID", f(c("value3")))),
         s("NK1")
       );
-      const infos: { info: VisitInfo; ancestors: Nodes[] }[] = [];
-      visit(ast, "component", (_node, ancestors, info) => {
-        infos.push({ ancestors: [...ancestors], info: { ...info } });
+      const chains: string[][] = [];
+      visit(ast, "component", (_node, ancestors) => {
+        chains.push(ancestors.map((ancestor) => ancestor.type));
       });
 
-      // Should find 3 components total
-      expect(infos).toHaveLength(3);
-
-      // First component (value1) in MSH field 1
-      const first = infos[0];
-      expect(first?.info.depth).toBe(5); // root > segment > field > field-repetition > component
-      expect(first?.info.index).toBe(0);
-      expect(first?.info.sequence).toBe(1);
-      expect(first?.ancestors).toHaveLength(4); // parents, not including self
-
-      // Check ancestors
-      expect(first?.ancestors[0]?.type).toBe("root");
-      expect(first?.ancestors[1]?.type).toBe("segment");
-      expect(first?.ancestors[2]?.type).toBe("field");
-      expect(first?.ancestors[3]?.type).toBe("field-repetition");
-
-      // Second component (value2) in MSH field 2
-      const second = infos[1];
-      expect(second?.info.depth).toBe(5);
-      expect(second?.info.index).toBe(0); // First component in its field-repetition
-      expect(second?.info.sequence).toBe(1);
-
-      // Third component (value3) in PID field 1 inside PATIENT_GROUP
-      const third = infos[2];
-      expect(third?.info.depth).toBe(6); // root > group > segment > field > field-repetition > component
-      expect(third?.ancestors).toHaveLength(5);
-      expect(third?.ancestors[1]?.type).toBe("group");
-    });
-
-    it("should provide metadata for segments", () => {
-      const ast = m(
-        s("MSH", f(c()), f()),
-        g("PATIENT_GROUP", s("PID", f())),
-        s("NK1")
-      );
-      const names: string[] = [];
-      visit(ast, "segment", (_node, _ancestors, info) => {
-        if (info.metadata?.name) {
-          names.push(info.metadata.name as string);
-        }
-      });
-      expect(names).toStrictEqual(["MSH", "PID", "NK1"]);
-    });
-
-    it("should provide metadata for groups", () => {
-      const ast = m(
-        s("MSH", f(c()), f()),
-        g("PATIENT_GROUP", s("PID", f())),
-        s("NK1")
-      );
-      visit(ast, "group", (_node, _ancestors, info) => {
-        expect(info.metadata?.name).toBe("PATIENT_GROUP");
-      });
+      expect(chains).toStrictEqual([
+        ["root", "segment", "field", "field-repetition"],
+        ["root", "segment", "field", "field-repetition"],
+        ["root", "group", "segment", "field", "field-repetition"],
+      ]);
     });
 
     it("should have empty ancestors for root node", () => {
-      const ast = m(
-        s("MSH", f(c()), f()),
-        g("PATIENT_GROUP", s("PID", f())),
-        s("NK1")
-      );
-      visit(ast, "root", (_node, ancestors, info) => {
+      const ast = m(s("MSH", f(c()), f()));
+      let visited = false;
+      visit(ast, "root", (_node, ancestors) => {
         expect(ancestors).toStrictEqual([]);
-        expect(info.depth).toBe(1);
-        expect(info.index).toBe(0);
-        expect(info.sequence).toBe(1);
+        visited = true;
       });
+      expect(visited).toBeTruthy();
     });
 
     it("should track parent hierarchy correctly via ancestors", () => {
@@ -221,21 +168,6 @@ describe("visit", () => {
           expect(parent.name).toBe("PATIENT_GROUP");
         }
       });
-    });
-
-    it("should correctly track depth in nested structure", () => {
-      const ast = m(
-        s("MSH", f(c()), f()),
-        g("PATIENT_GROUP", s("PID", f())),
-        s("NK1")
-      );
-      const depths: number[] = [];
-      visit(ast, (_node, _ancestors, info) => {
-        depths.push(info.depth);
-      });
-      // Should start at 1 and increment as we go deeper
-      expect(depths[0]).toBe(1); // root
-      expect(Math.max(...depths)).toBeGreaterThanOrEqual(5);
     });
   });
 
@@ -277,103 +209,61 @@ describe("visit", () => {
       ]);
     });
 
-    it("should have correct depth when starting from non-root", () => {
+    it("gives ancestors from the node the visit starts at", () => {
       const field = f(c("value"));
-      visit(field, "component", (_node, ancestors, info) => {
-        expect(ancestors).toHaveLength(2); // field > field-repetition
-        expect(info.depth).toBe(3); // field=1, field-repetition=2, component=3
-        expect(info.index).toBe(0);
-        expect(info.sequence).toBe(1);
+      const chains: string[][] = [];
+      visit(field, "component", (_node, ancestors) => {
+        chains.push(ancestors.map((ancestor) => ancestor.type));
       });
+      expect(chains).toStrictEqual([["field", "field-repetition"]]);
     });
   });
 
-  describe("metadata availability", () => {
-    it("should not have metadata when not applicable", () => {
-      const field = f(c("value"));
-      visit(field, "field", (_node, _ancestors, info) => {
-        expect(info.metadata).toBeUndefined();
-      });
-    });
-  });
-
-  describe("index and sequence tracking for siblings", () => {
-    it("should correctly track field indices (0-based) and sequences (1-based)", () => {
-      const segment = s("PID", f(c("field1")), f(c("field2")), f(c("field3")));
-      const indices: number[] = [];
-      const sequences: number[] = [];
-      visit(segment, "field", (_node, _ancestors, info) => {
-        indices.push(info.index);
-        sequences.push(info.sequence);
-      });
-      // index is 0-based array position
-      expect(indices).toStrictEqual([0, 1, 2]);
-      // sequence is 1-based: fields get 1, 2, 3
-      expect(sequences).toStrictEqual([1, 2, 3]);
-    });
-
-    it("should correctly track component indices and sequences", () => {
-      const field = f(c("comp1"), c("comp2"), c("comp3"));
-      const indices: number[] = [];
-      const sequences: number[] = [];
-      visit(field, "component", (_node, _ancestors, info) => {
-        indices.push(info.index);
-        sequences.push(info.sequence);
-      });
-      expect(indices).toStrictEqual([0, 1, 2]);
-      expect(sequences).toStrictEqual([1, 2, 3]);
-    });
-
-    it("gives the position a node has when it is visited, after earlier siblings are removed", () => {
+  describe("a visitor that changes its parent's children", () => {
+    it("continues at the index it returns, after removing the current node", () => {
       const segment = s("PID", f("a"), f("b"), f("c"), f("d"));
       const last = segment.children.at(-1);
-      visit(segment, "field", (node, ancestors, info) => {
+      visit(segment, "field", (node, ancestors) => {
         if (node === last) {
           return;
         }
-        (ancestors.at(-1) as Segment).children.splice(info.index, 1);
-        return info.index;
+        const parent = ancestors.at(-1) as Segment;
+        const index = parent.children.indexOf(node);
+        parent.children.splice(index, 1);
+        return index;
       });
       expect(segment.children).toStrictEqual([last]);
     });
 
-    it("gives the position a node has when it is visited, after a sibling is inserted", () => {
+    it("visits a sibling inserted after the current node", () => {
       const segment = s("PID", f("a"), f("b"));
       const [first, second] = segment.children;
       const inserted = f("inserted");
-      const sequences: [Nodes, number][] = [];
-      visit(segment, "field", (node, ancestors, info) => {
-        sequences.push([node, info.sequence]);
+      const visited: Nodes[] = [];
+      visit(segment, "field", (node, ancestors) => {
+        visited.push(node);
         if (node === first) {
           (ancestors.at(-1) as Segment).children.splice(1, 0, inserted);
         }
       });
-      expect(sequences).toStrictEqual([
-        [first, 1],
-        [inserted, 2],
-        [second, 3],
-      ]);
+      expect(visited).toStrictEqual([first, inserted, second]);
     });
 
-    it("gives the position a node has when it is visited, after its parent's visitor prepends a sibling", () => {
+    it("visits a child its parent's visitor prepends", () => {
       const segment = s("PID", f("a"), f("b"));
       const [first, second] = segment.children;
       const prepended = f("prepended");
-      const sequences: [Nodes, number][] = [];
-      visit(segment, (node, _ancestors, info) => {
+      const visited: Nodes[] = [];
+      visit(segment, (node) => {
         if (node === segment) {
           segment.children.unshift(prepended);
           return;
         }
         if (node.type === "field") {
-          sequences.push([node, info.sequence]);
+          visited.push(node);
         }
       });
-      expect(sequences).toStrictEqual([
-        [prepended, 1],
-        [first, 2],
-        [second, 3],
-      ]);
+      expect(visited).toStrictEqual([prepended, first, second]);
     });
   });
 
@@ -401,15 +291,20 @@ describe("visit", () => {
     it("should handle deeply nested structures", () => {
       const ast = m(g("GROUP1", g("GROUP2", s("PID", f(c("value"))))));
 
-      let maxDepth = 0;
-      visit(ast, (_node, _ancestors, info) => {
-        if (info.depth > maxDepth) {
-          maxDepth = info.depth;
-        }
+      let deepest: string[] = [];
+      visit(ast, "subcomponent", (_node, ancestors) => {
+        deepest = ancestors.map((ancestor) => ancestor.type);
       });
 
-      // Should track depth correctly even in deeply nested structure
-      expect(maxDepth).toBeGreaterThanOrEqual(6);
+      expect(deepest).toStrictEqual([
+        "root",
+        "group",
+        "group",
+        "segment",
+        "field",
+        "field-repetition",
+        "component",
+      ]);
     });
 
     it("should handle test object with explicit undefined value", () => {
@@ -579,55 +474,6 @@ describe("visit", () => {
       });
 
       expect(visitedNames).toStrictEqual(["MSH"]);
-    });
-  });
-
-  describe("integration tests", () => {
-    it("should give fields 1-based sequence", () => {
-      const ast = m(
-        s(
-          "MSH",
-          f("1") // MSH.1
-        )
-      );
-
-      let visited = false;
-      visit(ast, "field", (_node, _ancestors, info) => {
-        expect(info.index).toBe(0); // First field in children array
-        expect(info.sequence).toBe(1); // 1-based sequence
-        expect(info.depth).toBe(3); // root=1, segment=2, field=3
-        visited = true;
-      });
-
-      expect(visited).toBeTruthy();
-    });
-
-    it("should track sequence correctly across filtered nodes", () => {
-      const ast = m(
-        s(
-          "MSH",
-          f(), // MSH.1 - empty
-          f(), // MSH.2 - empty
-          f("3"), // MSH.3 - has content
-          f() // MSH.4 - empty
-        )
-      );
-
-      let visited = false;
-      visit(
-        ast,
-        // This test matches only non-empty fields
-        (node) => node.type === "field" && node.children.length > 0,
-        (_node, _ancestors, info) => {
-          // Sequence reflects position in parent (1-based), not filtered position
-          expect(info.sequence).toBe(3); // MSH.3
-          expect(info.depth).toBe(3);
-          expect(info.index).toBe(2);
-          visited = true;
-        }
-      );
-
-      expect(visited).toBeTruthy();
     });
   });
 });

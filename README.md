@@ -133,7 +133,7 @@ Linting rules and presets for HL7v2 message quality and conformance.
 #### Utilities
 
 - **[@glion/utils][glion-utils]** — shared helpers for delimiter detection, normalization, and other HL7v2-specific operations.
-- **[@glion/util-visit][glion-util-visit]** — a visitor pattern for traversing HL7v2 ASTs with full path context, metadata extraction, and control flow actions.
+- **[@glion/util-visit][glion-util-visit]** — a visitor for traversing HL7v2 ASTs with each node's ancestors and control flow actions.
 - **[@glion/util-query][glion-util-query]** — canonical path querying with syntax like `MSH.9.3` or `ORDER.ORC.1` for `select`, `selectAll`, `value`, `format`, and `matches`.
 - **[@glion/util-charset][glion-util-charset]** — encode and decode HL7v2 wire bytes as UTF-8 (fatal — a non-UTF-8 feed fails loudly instead of being silently corrupted).
 - **[@glion/util-semver][glion-util-semver]** — tiny, fast HL7v2 version and range comparators.
