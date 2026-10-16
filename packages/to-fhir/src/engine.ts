@@ -91,6 +91,7 @@ function setAt(
   let cursor = body;
   for (const [position, step] of steps.entries()) {
     const parsed = TARGET_STEP.exec(step);
+    // Stryker disable next-line ConditionalExpression,BlockStatement,StringLiteral: assertSchema rejects a target that is not an element path, so this guard never fires
     if (!parsed) {
       throw new Error(
         `Element target \`${path}\` is not a FHIR element path; this is a bug in @glion/to-fhir, please report it.`
@@ -107,6 +108,7 @@ function setAt(
       cursor = cursor[key] as Record<string, unknown>;
       continue;
     }
+    // Stryker disable next-line ArithmeticOperator: equivalent; compact() closes the holes, so an index decides order and not position
     const slot = Number(parsed[2]) - 1;
     cursor[key] ??= [];
     const list = cursor[key] as unknown[];
@@ -225,6 +227,7 @@ function translateCode(
   into: { fhirPath: string; target: Built }
 ): string | undefined {
   const map = run.schema.vocabularies[vocabulary];
+  // Stryker disable next-line ConditionalExpression,BlockStatement,StringLiteral: assertSchema rejects a concept map the schema does not define, so this guard never fires
   if (map === undefined) {
     throw new Error(
       `Element rule names concept map \`${vocabulary}\`, which the schema does not define; this is a bug in @glion/to-fhir, please report it.`
@@ -411,6 +414,7 @@ function applyElement(
 
   if (element.datatype !== undefined) {
     const rows = run.schema.datatypes[element.datatype];
+    // Stryker disable next-line ConditionalExpression,BlockStatement,StringLiteral: assertSchema rejects a datatype map the schema does not define, so this guard never fires
     if (rows === undefined) {
       throw new Error(
         `Element rule names datatype map \`${element.datatype}\`, which the schema does not define; this is a bug in @glion/to-fhir, please report it.`
@@ -483,6 +487,7 @@ function buildInstance(
   const once = `${state.position}@${key}`;
   for (const anchor of anchorsIn(instance.node, rule.anchor)) {
     const anchorPath = run.index.pathOf(anchor);
+    // Stryker disable next-line ConditionalExpression,BlockStatement: indexPaths walked every segment this returns, so this guard never fires
     if (anchorPath === undefined) {
       continue;
     }
@@ -617,6 +622,11 @@ function account(run: Run, resources: number): void {
   const unmapped = content.filter(
     (leaf) => !(run.read.has(leaf.path) || run.consulted.has(leaf.path))
   );
+  // A field a condition read and an element then wrote is read, not consulted,
+  // so that the three counts partition the populated leaves.
+  const consultedOnly = [...run.consulted].filter(
+    (path) => !run.read.has(path)
+  );
 
   for (const leaf of unmapped) {
     reportUnmapped(run, leaf, anchored, bySegment);
@@ -632,7 +642,7 @@ function account(run: Run, resources: number): void {
 
   run.file.data.provenance = run.provenance;
   run.file.data.fhirCoverage = {
-    consulted: run.consulted.size,
+    consulted: consultedOnly.length,
     populated: content.length,
     read: run.read.size,
     resources,

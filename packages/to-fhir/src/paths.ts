@@ -47,6 +47,7 @@ export function scopeSteps(path: string): ScopeStep[] {
   }
   return path.split(".").map((step) => {
     const parsed = SCOPE_STEP.exec(step);
+    // Stryker disable next-line ConditionalExpression,BlockStatement,StringLiteral: every path compared here is one indexPaths built, so this guard never fires
     if (!parsed) {
       throw new Error(
         `Group path \`${path}\` has the step \`${step}\`, which does not name a group instance; this is a bug in @glion/to-fhir, please report it.`

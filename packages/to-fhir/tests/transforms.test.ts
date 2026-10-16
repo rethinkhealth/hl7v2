@@ -68,3 +68,12 @@ describe("hl7-datetime", () => {
     });
   });
 });
+
+describe("hl7-datetime to the hour", () => {
+  it("fills the minute and second HL7v2 left off", () => {
+    expect(applyTransform("hl7-datetime", "2026101408")).toStrictEqual({
+      ok: true,
+      value: "2026-10-14T08:00:00",
+    });
+  });
+});

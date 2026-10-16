@@ -2,6 +2,9 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { TranslationSchemaError } from "../src/schema-check";
+import { oruR01 } from "../src/schema/oru-r01";
+import type { ResourceRule, TranslationSchema } from "../src/types";
 import { bundleOf, compile } from "./processor";
 
 const message = readFileSync(
@@ -73,6 +76,30 @@ describe("hl7v2ToFhir", () => {
       )?.reason
     ).toBe(
       "Segment map `PID[Patient]` produces one resource per `PATIENT_RESULT.PATIENT` group, and the message carries `PID` outside any such group."
+    );
+  });
+
+  it("rejects a faulty schema before it reads a message", async () => {
+    const faulty: TranslationSchema = {
+      ...oruR01,
+      resources: oruR01.resources.map((rule): ResourceRule =>
+        rule.anchor === "PV1"
+          ? {
+              ...rule,
+              elements: [
+                {
+                  assign: "finished",
+                  target: "status",
+                  when: { valued: "PV1-45" },
+                },
+              ],
+            }
+          : rule
+      ),
+    };
+
+    await expect(compile(message, faulty)).rejects.toThrow(
+      TranslationSchemaError
     );
   });
 
