@@ -4,7 +4,7 @@
 
 Proposed (2026-10-15)
 
-Amends ADR 0026 decision 5. Answers #978.
+Amends ADR 0026 decisions 5 and 6. Answers #978.
 
 ## Context
 
@@ -16,7 +16,9 @@ Naming the node in the text has costs that its place and ancestors do not:
 - **The name has to follow a notation.** HL7v2 writes `PID-5`, and `@glion/util-query` writes `PID.5` (#956). It has to decide whether to show a repetition, and whether a segment inside a segment group is named with its groups (ADR 0029). Every rule that writes a name makes these decisions again.
 - **Causes multiply.** A finding that names its segment needs a separate message for an empty Segment ID (ADR 0026 decision 6) and another for a segment inside a group, so one cause becomes four entries in the catalog.
 
-`@glion/lint-profile-timestamps` (#977) reports a value and names no element (``The value `20250229` has the day `29`; month `02` of `2025` has 28 days.``), and its findings lose nothing: the place and ancestors say where the value is.
+Quoting the content in place of the name has a cost of its own. A withdrawn PID-19 quoted in full prints a Social Security number, and `@glion/lint-profile-timestamps` already prints a date of birth with its day, month, and year. A finding's text is written to logs, CI output, and editors, where message content does not belong; ADR 0018 §6 already keeps message bodies out of thrown errors.
+
+`@glion/lint-profile-timestamps` (#977) names no element, and its findings lose nothing: the place and ancestors say where the value is.
 
 ## Decision
 
@@ -24,16 +26,19 @@ Naming the node in the text has costs that its place and ancestors do not:
 
 2. **A finding about an element that is not in the message names it.** The element has no node to locate it, so the finding is placed on the closest node that exists, and the text names what is missing, from the profile or the event schema: ``Field `PID-5` (Patient Name) is not present; it is required.``
 
-3. **A display names the node from the finding, in one place.** A reporter that shows `PID-5` next to a finding derives it from `ancestors`: `format(node, ancestors)` from `@glion/util-query` gives the path, and `node.data.name` gives the element's name where an annotator set it. No rule builds a name for display.
+3. **The text never contains content from the message.** No value, no part of a value, and no Segment ID read from the message appears in it, whatever the field holds. The text describes the content instead: its length, a count, which part is out of range, whether it is empty. The content travels in `actual`, for a caller that chooses to show or log it. Names from the profile or the event schema (`PID-5 (Patient Name)`, table `HL70003`, a required Segment ID) are not message content and may appear.
 
-4. **The text still uses HL7v2 terms.** The kind of node (segment, field, field repetition, component, data element) and what it is checked against (datatype, table, event schema, version) are written in the standard's words. A value is still quoted, and an empty value still described in words (ADR 0026 decision 6).
+4. **A display names the node from the finding, in one place.** A finding's `ancestors` end with the node it is placed on. A reporter that shows `PID-5` next to it derives the path from them: `format(ancestors.at(-1), ancestors.slice(0, -1))` from `@glion/util-query`, and `node.data.name` gives the element's name where an annotator set it. No rule builds a name for display.
+
+5. **The text still uses HL7v2 terms.** The kind of node (segment, field, field repetition, component, data element) and what it is checked against (datatype, table, event schema, version) are written in the standard's words. An empty value is still described in words (ADR 0026 decision 6).
 
 ## Consequences
 
 - Rules stop building element names. A rule needs neither the segment above a node nor the node's position among its siblings to write its message, so `VisitInfo` leaves `@glion/util-visit`, and #978 is not built.
 - Causes that differed only by the name of the node become one: an out-of-place segment has one message whether its Segment ID is empty or it sits in a segment group.
 - The annotators still read each element's position, because the profile defines fields and components by sequence number. They read it from the order of the parent's children.
-- A finding read without its place, such as one line of a log that drops `place`, does not say where the node is. A display that shows findings to a person prints the place, or the path from `format(node, ancestors)`.
+- A log of finding texts holds no message content, so it can be kept and shared where the messages cannot.
+- A finding read without its place, such as one line of a log that drops `place`, does not say where the node is. A tree built in code, or read back from JSON without positions, has no `place` either; only `ancestors` locate its findings. A display that shows findings to a person prints the place, or the path from `format()` (decision 4).
 - The text of the rules that named their node changes. Each is released as a patch, since the `ruleId` is the contract (ADR 0026 decision 1).
 
 ## Alternatives considered
