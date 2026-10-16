@@ -88,8 +88,16 @@ function annotateComponents(
       kind: childDatatype?.kind,
       title: childDatatype?.title,
     });
-    if (child.type === "component" && childDatatype?.kind === "composite") {
-      annotateComponents(child.children, childDatatype, datatypes);
+    switch (child.type) {
+      case "component": {
+        if (childDatatype?.kind === "composite") {
+          annotateComponents(child.children, childDatatype, datatypes);
+        }
+        break;
+      }
+      case "subcomponent": {
+        break;
+      }
     }
   }
 }
