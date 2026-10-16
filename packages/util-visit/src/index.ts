@@ -1,13 +1,15 @@
 /**
- * HL7v2 AST visitor over `unist-util-visit-parents`, typed for `@glion/ast`.
+ * HL7v2 AST visitor, typed for `@glion/ast`, with the semantics of
+ * `unist-util-visit-parents`.
  *
  * @module
  */
 
 import type { Nodes } from "@glion/ast";
-import { visitParents } from "unist-util-visit-parents";
+import { EXIT, SKIP } from "unist-util-visit-parents";
+import type { VisitorResult } from "unist-util-visit-parents";
 
-import type { Test, Visitor } from "./types";
+import type { Predicate, Test, Visitor } from "./types";
 import { createTest } from "./utils";
 
 export type { VisitorResult } from "unist-util-visit-parents";
@@ -57,21 +59,48 @@ export function visit<T extends Nodes>(
     visitor = arg3;
   }
 
-  const predicate = createTest(test as Test<Nodes>);
+  walk(tree, [], createTest(test as Test<Nodes>), visitor as Visitor<Nodes>);
+}
 
-  // The caller's test runs in the visitor, not as visit-parents' test: it may
-  // read `ancestors`, which visit-parents gives only to the visitor.
-  visitParents(tree, (node, ancestors) => {
-    if (!predicate(node, ancestors)) {
-      // Returning nothing means "continue": visit-parents still walks into
-      // this node's children, so `visit(tree, "field", …)` reaches the fields
-      // of segments it does not match.
-      return;
+/**
+ * Visits `node`, then its children in order, and returns the visitor's result
+ * for `node`, or the first EXIT a descendant's visitor returns.
+ *
+ * Reads `children` after the visitor runs, and after each child, so a visitor
+ * may change its own children or its parent's.
+ */
+function walk(
+  node: Nodes,
+  ancestors: Nodes[],
+  predicate: Predicate,
+  visitor: Visitor<Nodes>
+): VisitorResult {
+  const result = predicate(node, ancestors)
+    ? visitor(node, ancestors)
+    : undefined;
+  const action = Array.isArray(result) ? result[0] : result;
+
+  if (action === EXIT || action === SKIP || !("children" in node)) {
+    return result;
+  }
+
+  const childAncestors = [...ancestors, node];
+  let index = 0;
+
+  while (index < node.children.length) {
+    const child = node.children[index] as Nodes;
+    const childResult = walk(child, childAncestors, predicate, visitor);
+    const childAction = Array.isArray(childResult)
+      ? childResult[0]
+      : childResult;
+    const next = Array.isArray(childResult) ? childResult[1] : childResult;
+
+    if (childAction === EXIT) {
+      return childResult;
     }
 
-    // visit-parents reads the visitor's return value to decide what to visit
-    // next (CONTINUE, SKIP, EXIT, an index, or both), so the caller's result
-    // is passed through unchanged.
-    return visitor(node as T, ancestors);
-  });
+    index = typeof next === "number" ? next : index + 1;
+  }
+
+  return result;
 }
