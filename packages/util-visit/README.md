@@ -48,7 +48,7 @@ Visit nodes in an HL7v2 AST tree, in document order.
 - `tree` (`Nodes`) — Tree to traverse. Can be any node type, not just `Root`.
 - `test` (`string | Partial<Nodes> | Test`, optional) — Filter:
   - `string` — Match nodes by type (e.g., `"segment"`).
-  - `Partial<Nodes>` — Match nodes whose own properties equal (`===`) each value (e.g., `{ name: "PATIENT_GROUP" }`). A property the node does not own reads as `undefined`: an `undefined` value matches an absent property, and a key naming an inherited member (`constructor`, `toString`) matches no node.
+  - `Partial<Nodes>` — Match nodes whose own properties equal (`===`) each value (e.g., `{ id: "PATIENT" }`). A property the node does not own reads as `undefined`: an `undefined` value matches an absent property, and a key naming an inherited member (`constructor`, `toString`) matches no node.
   - `Test` — Custom function `(node, ancestors) => boolean`.
 - `visitor` (`Visitor`) — Function called for each matching node.
 
@@ -95,15 +95,15 @@ The visitor can return:
 A visitor that removes the current node returns its former index to continue with the sibling that moved into its place:
 
 ```typescript
-visit(segment, "field", (field, ancestors) => {
-  if (isEmptyNode(field)) {
-    const parent = ancestors.at(-1) as Segment;
-    const index = parent.children.indexOf(field);
-    parent.children.splice(index, 1);
-    return index;
-  }
+visit(tree, { type: "segment", name: "NTE" }, (segment, ancestors) => {
+  const parent = ancestors.at(-1) as Root | Group;
+  const index = parent.children.indexOf(segment);
+  parent.children.splice(index, 1);
+  return index;
 });
 ```
+
+`indexOf` scans the parent's children, so removing many children of one parent this way costs time in the square of their number. To remove many, filter `parent.children` once from the parent's visitor instead.
 
 ### Exports
 
@@ -127,8 +127,9 @@ import type {
 ### Filter by properties
 
 ```typescript
-visit(tree, { name: "PATIENT_GROUP" }, (group) => {
-  console.log(group.type); // "group"
+// A group's `id` is its key in paths; its `name` is the title for display
+visit(tree, { type: "group", id: "PATIENT" }, (group) => {
+  console.log(group.name); // "Patient"
 });
 ```
 
