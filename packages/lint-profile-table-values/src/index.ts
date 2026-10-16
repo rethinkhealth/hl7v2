@@ -5,8 +5,8 @@ import { SKIP, visit } from "@glion/util-visit";
 import { lintRule } from "unified-lint-rule";
 
 const messages = {
-  notInTable: (value: string, table: string, description: string) =>
-    `The value \`${value}\` is not in table \`${table}\` (${description}); the field requires a code from it.`,
+  notInTable: (table: string, description: string) =>
+    `The value is not in table \`${table}\` (${description}); the field requires a code from it.`,
 } as const;
 
 /**
@@ -57,7 +57,7 @@ const hl7v2LintTableValues = lintRule<Root>(
           }
 
           const message = file.message(
-            messages.notInTable(value, profile.table, table.description),
+            messages.notInTable(profile.table, table.description),
             {
               ancestors: [...ancestors, segment, field, repetition],
               place: repetition.position ?? field.position,

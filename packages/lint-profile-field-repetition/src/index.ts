@@ -32,21 +32,17 @@ const hl7v2LintFieldRepetition = lintRule<Root>(
   },
   (tree, file) => {
     visit(tree, "field", (field, ancestors) => {
-      const { data } = field;
+      const limit = field.data?.repetitions;
       const count = field.children.length;
       // A limit of "unbounded" is never exceeded.
-      if (
-        data?.id === undefined ||
-        typeof data.repetitions !== "number" ||
-        count <= data.repetitions
-      ) {
+      if (typeof limit !== "number" || count <= limit) {
         return SKIP;
       }
 
-      const message = file.message(
-        messages.tooManyRepetitions(count, data.repetitions),
-        { ancestors: [...ancestors, field], place: field.position }
-      );
+      const message = file.message(messages.tooManyRepetitions(count, limit), {
+        ancestors: [...ancestors, field],
+        place: field.position,
+      });
       message.actual = String(count);
       return SKIP;
     });

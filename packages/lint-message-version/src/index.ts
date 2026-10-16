@@ -19,10 +19,10 @@ const messages = {
     "The message has no `MSH-12` (Version ID); a message must declare its HL7v2 version.",
   notMessage: (kind: string) =>
     `The input is a ${kind}; the version can be read only from \`MSH-12\` (Version ID) of a whole message.`,
-  unparsableVersion: (version: string) =>
-    `The version is \`${version}\`; a version must be numbers separated by dots, such as \`2.5\` or \`2.5.1\`.`,
-  unsupportedVersion: (version: string, expression: string) =>
-    `The version is \`${version}\`; it must satisfy \`${expression}\`.`,
+  unparsableVersion:
+    "The version is not a version number; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
+  unsupportedVersion: (expression: string) =>
+    `The version is outside the supported range; it must satisfy \`${expression}\`.`,
 } as const;
 
 const isMessage = (node: Node): node is Root => node.type === "root";
@@ -71,7 +71,7 @@ const hl7v2LintMessageVersion = lintRule<Node, MessageVersionLintOptions>(
     try {
       isValid = satisfies(result.value, options.expression);
     } catch (caughtError) {
-      const message = file.message(messages.unparsableVersion(result.value), {
+      const message = file.message(messages.unparsableVersion, {
         ancestors,
         cause: ensureError(caughtError),
         place,
@@ -82,7 +82,7 @@ const hl7v2LintMessageVersion = lintRule<Node, MessageVersionLintOptions>(
 
     if (!isValid) {
       const message = file.message(
-        messages.unsupportedVersion(result.value, options.expression),
+        messages.unsupportedVersion(options.expression),
         { ancestors, place }
       );
       message.actual = result.value;

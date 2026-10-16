@@ -4,8 +4,8 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
 "adt-a01-basic.hl7
   segments: MSH(12) EVN(2) PID(13) PV1(3)
   diagnostics: 2
-    - [backward-compatible] The value \`A01\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-555-1234\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [backward-compatible] EVN.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13.1: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matches snapshot 2`] = `
@@ -13,7 +13,7 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
   "diagnosticCount": 2,
   "diagnostics": [
     {
-      "message": "The value \`A01\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 8,
@@ -30,7 +30,7 @@ exports[`QR1: message conformance > adt-a01-basic.hl7 — pipeline output matche
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-555-1234\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 89,
@@ -129,24 +129,24 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
 "adt-a01-full.hl7
   segments: MSH(16) EVN(5) PID(22) PD1(4) NK1(5) PV1(44) PV2(3) DG1(6) IN1(12)
   diagnostics: 18
-    - [required-fields] The field is empty; it is required.
-    - [field-max-length] The value is 6 characters long; the field allows at most 2 characters.
-    - [field-max-length] The value is 28 characters long; the field allows at most 8 characters.
-    - [timestamps] The value \`456 OAK AVE\` is not a date; a DT value has the form \`YYYY[MM[DD]]\`.
-    - [extra-components] The field repetition has 5 components; its datatype allows at most 1 component.
-    - [backward-compatible] The value \`A01\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`217-555-9876\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`217-555-4321\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`217-555-0000\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`123-45-6789\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`1234567890^ATTENDING^DOCTOR^A^^^MD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`217-555-6543\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`SPRINGFIELD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`GRP12345\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`R\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [required-fields] DG1.2: The field is empty; it is required.
+    - [field-max-length] PV1.39[1]: The value is 6 characters long; the field allows at most 2 characters.
+    - [field-max-length] IN1.12[1]: The value is 28 characters long; the field allows at most 8 characters.
+    - [timestamps] IN1.12[1]: The value is not a date; a DT value has the form \`YYYY[MM[DD]]\`.
+    - [extra-components] IN1.12[1]: The field repetition has 5 components; its datatype allows at most 1 component.
+    - [backward-compatible] EVN.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[2].1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PID.14.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PID.19: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PD1.4: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] NK1.5.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PV1.7.7: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PV1.8.7: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] PV1.17.7: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] IN1.4.3: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] IN1.7.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] IN1.9.3: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches snapshot 2`] = `
@@ -205,7 +205,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`456 OAK AVE\` is not a date; a DT value has the form \`YYYY[MM[DD]]\`.",
+      "message": "The value is not a date; a DT value has the form \`YYYY[MM[DD]]\`.",
       "place": {
         "end": {
           "column": 146,
@@ -239,7 +239,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`A01\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 8,
@@ -256,7 +256,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`217-555-9876\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 150,
@@ -273,7 +273,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`217-555-4321\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 170,
@@ -290,7 +290,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`217-555-0000\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 190,
@@ -307,7 +307,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`123-45-6789\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 286,
@@ -324,7 +324,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`1234567890^ATTENDING^DOCTOR^A^^^MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 42,
@@ -341,7 +341,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`217-555-6543\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 83,
@@ -358,7 +358,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 80,
@@ -375,7 +375,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 112,
@@ -392,7 +392,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 159,
@@ -409,7 +409,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`SPRINGFIELD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 67,
@@ -426,7 +426,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`GRP12345\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 87,
@@ -443,7 +443,7 @@ exports[`QR1: message conformance > adt-a01-full.hl7 — pipeline output matches
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`R\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 100,
@@ -793,11 +793,11 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
 "dft-p03-charge.hl7
   segments: MSH(12) EVN(2) PID(8) PV1(18) FT1(27)
   diagnostics: 5
-    - [field-max-length] The value is 4 characters long; the field allows at most 3 characters.
-    - [field-max-length] The value is 8 characters long; the field allows at most 2 characters.
-    - [extra-components] The field repetition has 7 components; its datatype allows at most 6 components.
-    - [backward-compatible] The value \`P03\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`1\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [field-max-length] PV1.10[1]: The value is 4 characters long; the field allows at most 3 characters.
+    - [field-max-length] PV1.18[1]: The value is 8 characters long; the field allows at most 2 characters.
+    - [extra-components] FT1.27[1]: The field repetition has 7 components; its datatype allows at most 6 components.
+    - [backward-compatible] EVN.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] FT1.9: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output matches snapshot 2`] = `
@@ -856,7 +856,7 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`P03\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 8,
@@ -873,7 +873,7 @@ exports[`QR1: message conformance > dft-p03-charge.hl7 — pipeline output match
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`1\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 63,
@@ -1020,7 +1020,7 @@ exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline outp
 "edge-crlf-line-endings.hl7
   segments: MSH(12) PID(8) PV1(3)
   diagnostics: 1
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point."
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-crlf-line-endings.hl7 — pipeline output matches snapshot 2`] = `
@@ -1101,8 +1101,8 @@ exports[`QR1: message conformance > edge-custom-delimiters.hl7 — pipeline outp
 "edge-custom-delimiters.hl7
   segments: MSH(12) PID(8)
   diagnostics: 2
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
-    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] (message): Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-custom-delimiters.hl7 — pipeline output matches snapshot 2`] = `
@@ -1182,14 +1182,14 @@ exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output 
 "edge-empty-segments.hl7
   segments: MSH(12) PID(14) PV1(38) OBX(13)
   diagnostics: 8
-    - [no-trailing-empty-field] The segment ends with 13 empty fields; a segment should end at its last field with a value.
-    - [no-trailing-empty-field] The segment ends with 38 empty fields; a segment should end at its last field with a value.
-    - [required-fields] The field is empty; it is required.
-    - [required-fields] The field is empty; it is required.
-    - [required-fields] The field is empty; it is required.
-    - [required-fields] The field is empty; it is required.
-    - [required-fields] The field is empty; it is required.
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point."
+    - [no-trailing-empty-field] PID: The segment ends with 13 empty fields; a segment should end at its last field with a value.
+    - [no-trailing-empty-field] PV1: The segment ends with 38 empty fields; a segment should end at its last field with a value.
+    - [required-fields] PID.3: The field is empty; it is required.
+    - [required-fields] PID.5: The field is empty; it is required.
+    - [required-fields] PV1.2: The field is empty; it is required.
+    - [required-fields] OBX.3: The field is empty; it is required.
+    - [required-fields] OBX.11: The field is empty; it is required.
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-empty-segments.hl7 — pipeline output matches snapshot 2`] = `
@@ -1436,8 +1436,8 @@ exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline out
 "edge-escaped-delimiters.hl7
   segments: MSH(12) PID(8) OBX(11)
   diagnostics: 2
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
-    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] (message): Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-escaped-delimiters.hl7 — pipeline output matches snapshot 2`] = `
@@ -1532,20 +1532,20 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
 "edge-field-repetitions.hl7
   segments: MSH(12) PID(13)
   diagnostics: 14
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
-    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point.
-    - [backward-compatible] The value \`555-0001\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0002\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0003\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0004\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0005\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0006\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0007\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0008\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0009\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0010\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0011\` is in a data element that v2.5 keeps only for backward compatibility.
-    - [backward-compatible] The value \`555-0012\` is in a data element that v2.5 keeps only for backward compatibility."
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] (message): Segment \`PV1\` is missing; the event schema requires it at this point.
+    - [backward-compatible] PID.13.1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[2].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[3].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[4].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[5].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[6].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[7].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[8].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[9].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[10].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[11].1: The data element has a value; v2.5 keeps it only for backward compatibility.
+    - [backward-compatible] PID.13[12].1: The data element has a value; v2.5 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline output matches snapshot 2`] = `
@@ -1573,7 +1573,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0001\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 89,
@@ -1590,7 +1590,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0002\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 98,
@@ -1607,7 +1607,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0003\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 107,
@@ -1624,7 +1624,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0004\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 116,
@@ -1641,7 +1641,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0005\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 125,
@@ -1658,7 +1658,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0006\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 134,
@@ -1675,7 +1675,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0007\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 143,
@@ -1692,7 +1692,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0008\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 152,
@@ -1709,7 +1709,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0009\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 161,
@@ -1726,7 +1726,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0010\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 170,
@@ -1743,7 +1743,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0011\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 179,
@@ -1760,7 +1760,7 @@ exports[`QR1: message conformance > edge-field-repetitions.hl7 — pipeline outp
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`555-0012\` is in a data element that v2.5 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 188,
@@ -1853,8 +1853,8 @@ exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output match
 "edge-non-ascii.hl7
   segments: MSH(12) PID(11) NK1(3)
   diagnostics: 2
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
-    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] (message): Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-non-ascii.hl7 — pipeline output matches snapshot 2`] = `
@@ -1955,8 +1955,8 @@ exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matc
 "edge-z-segments.hl7
   segments: MSH(12) PID(8) ZVN(3) ZPD(5)
   diagnostics: 2
-    - [segment-order] Segment \`EVN\` is missing; the event schema requires it at this point.
-    - [segment-order] Segment \`PV1\` is missing; the event schema requires it at this point."
+    - [segment-order] (message): Segment \`EVN\` is missing; the event schema requires it at this point.
+    - [segment-order] (message): Segment \`PV1\` is missing; the event schema requires it at this point."
 `;
 
 exports[`QR1: message conformance > edge-z-segments.hl7 — pipeline output matches snapshot 2`] = `
@@ -2057,12 +2057,12 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
 "mdm-t02-document.hl7
   segments: MSH(12) EVN(2) PID(8) PV1(3) TXA(17) OBX(11)
   diagnostics: 6
-    - [required-fields] The field is empty; it is required.
-    - [field-max-length] The value is 22 characters long; the field allows at most 2 characters.
-    - [extra-components] The field repetition has 3 components; its datatype allows at most 1 component.
-    - [extra-components] The field repetition has 3 components; its datatype allows at most 1 component.
-    - [backward-compatible] The value \`T02\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [required-fields] TXA.12: The field is empty; it is required.
+    - [field-max-length] TXA.17[1]: The value is 22 characters long; the field allows at most 2 characters.
+    - [extra-components] TXA.2[1]: The field repetition has 3 components; its datatype allows at most 1 component.
+    - [extra-components] TXA.17[1]: The field repetition has 3 components; its datatype allows at most 1 component.
+    - [backward-compatible] EVN.1: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] TXA.11.7: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output matches snapshot 2`] = `
@@ -2138,7 +2138,7 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`T02\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 8,
@@ -2155,7 +2155,7 @@ exports[`QR1: message conformance > mdm-t02-document.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 99,
@@ -2300,9 +2300,9 @@ exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matche
 "orm-o01-order.hl7
   segments: MSH(12) PID(11) PV1(3) ORC(12) OBR(16)
   diagnostics: 3
-    - [backward-compatible] The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`BLOOD\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [backward-compatible] ORC.12.7: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] OBR.15: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] OBR.16.7: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matches snapshot 2`] = `
@@ -2310,7 +2310,7 @@ exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matche
   "diagnosticCount": 3,
   "diagnostics": [
     {
-      "message": "The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 75,
@@ -2327,7 +2327,7 @@ exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matche
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`BLOOD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 86,
@@ -2344,7 +2344,7 @@ exports[`QR1: message conformance > orm-o01-order.hl7 — pipeline output matche
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`MD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 113,
@@ -2492,9 +2492,9 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
 "oru-r01-lab.hl7
   segments: MSH(12) PID(8) ORC(5) OBR(26) OBX(11) OBX(11) OBX(11) OBX(11) OBX(11)
   diagnostics: 3
-    - [field-max-length] The value is 2 characters long; the field allows at most 1 character.
-    - [table-values] The value \`HM\` is not in table \`HL70123\` (Result Status); the field requires a code from it.
-    - [backward-compatible] The value \`BLOOD\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [field-max-length] OBR.25[1]: The value is 2 characters long; the field allows at most 1 character.
+    - [table-values] OBR.25[1]: The value is not in table \`HL70123\` (Result Status); the field requires a code from it.
+    - [backward-compatible] OBR.15: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches snapshot 2`] = `
@@ -2519,7 +2519,7 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`HM\` is not in table \`HL70123\` (Result Status); the field requires a code from it.",
+      "message": "The value is not in table \`HL70123\` (Result Status); the field requires a code from it.",
       "place": {
         "end": {
           "column": 121,
@@ -2536,7 +2536,7 @@ exports[`QR1: message conformance > oru-r01-lab.hl7 — pipeline output matches 
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`BLOOD\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 78,
@@ -2754,13 +2754,13 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
 "siu-s12-schedule.hl7
   segments: MSH(12) SCH(12) PID(8) PV1(3) AIG(4)
   diagnostics: 7
-    - [required-fields] Field \`SCH-16\` (Filler Contact Person) is not present; it is required.
-    - [required-fields] Field \`SCH-20\` (Entered By Person) is not present; it is required.
-    - [extra-components] The field repetition has 7 components; its datatype allows at most 6 components.
-    - [segment-order] Segment \`RGS\` of segment group \`RESOURCES\` is missing; the event schema requires it at this point.
-    - [backward-compatible] The value \`30\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`MIN\` is in a data element that v2.5.1 keeps only for backward compatibility.
-    - [backward-compatible] The value \`^^30^20260325140000^20260325143000\` is in a data element that v2.5.1 keeps only for backward compatibility."
+    - [required-fields] SCH: Field \`SCH-16\` (Filler Contact Person) is not present; it is required.
+    - [required-fields] SCH: Field \`SCH-20\` (Entered By Person) is not present; it is required.
+    - [extra-components] AIG.3[1]: The field repetition has 7 components; its datatype allows at most 6 components.
+    - [segment-order] (message): Segment \`RGS\` of segment group \`RESOURCES\` is missing; the event schema requires it at this point.
+    - [backward-compatible] SCH.9: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] SCH.10: The data element has a value; v2.5.1 keeps it only for backward compatibility.
+    - [backward-compatible] SCH.11: The data element has a value; v2.5.1 keeps it only for backward compatibility."
 `;
 
 exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output matches snapshot 2`] = `
@@ -2829,7 +2829,7 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`30\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 50,
@@ -2846,7 +2846,7 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`MIN\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 54,
@@ -2863,7 +2863,7 @@ exports[`QR1: message conformance > siu-s12-schedule.hl7 — pipeline output mat
       "source": "hl7v2-lint",
     },
     {
-      "message": "The value \`^^30^20260325140000^20260325143000\` is in a data element that v2.5.1 keeps only for backward compatibility.",
+      "message": "The data element has a value; v2.5.1 keeps it only for backward compatibility.",
       "place": {
         "end": {
           "column": 89,

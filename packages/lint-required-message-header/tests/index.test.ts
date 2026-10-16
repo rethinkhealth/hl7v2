@@ -37,7 +37,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "The first segment is `PID`; a message must start with the message header segment (`MSH`)."
+      "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
     );
     expect(file.messages[0]?.actual).toBe("PID");
     expect(file.messages[0]?.expected).toEqual(["MSH"]);
@@ -51,7 +51,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "The first segment is `PID`; a message must start with the message header segment (`MSH`)."
+      "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
     );
     expect(file.messages[0]?.actual).toBe("PID");
     expect(file.messages[0]?.expected).toEqual(["MSH"]);
@@ -96,7 +96,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "The first segment is `PID`; a message must start with the message header segment (`MSH`)."
+      "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
     );
     expect(file.messages[0]?.actual).toBe("PID");
     expect(file.messages[0]?.expected).toEqual(["MSH"]);
@@ -110,7 +110,7 @@ describe("hl7v2-lint:required-message-header", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]?.message).toBe(
-      "The first segment has an empty Segment ID; a message must start with the message header segment (`MSH`)."
+      "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
     );
     expect(file.messages[0]?.actual).toBe("");
     expect(file.messages[0]?.expected).toEqual(["MSH"]);

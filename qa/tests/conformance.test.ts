@@ -13,7 +13,9 @@
  * it's automatically tested. Files prefixed with "invalid-" are excluded —
  * those are consumed by the diagnostics test suite (QR2).
  */
+import type { Nodes } from "@glion/ast";
 import { parseHL7v2 } from "@glion/hl7v2";
+import { format } from "@glion/util-query";
 import type { VFile } from "vfile";
 
 import { discoverFixtures, readFixture } from "../src/fixtures";
@@ -34,7 +36,11 @@ interface SegmentJson {
  *
  *     adt-a01-basic.hl7
  *       segments: MSH(12) EVN(2) PID(13) PV1(3)
- *       diagnostics: 0
+ *       diagnostics: 1
+ *         - [required-fields] PID.3: The field is empty; it is required.
+ *
+ * The path is derived from the finding's ancestors, which end with the node
+ * it is placed on (ADR 0030).
  */
 function summarize(filename: string, file: VFile): string {
   const result = file.result as (
@@ -59,7 +65,10 @@ function summarize(filename: string, file: VFile): string {
     lines.push(`  diagnostics: ${file.messages.length}`);
     for (const msg of file.messages) {
       const rule = msg.ruleId ? `[${msg.ruleId}]` : "";
-      lines.push(`    - ${rule} ${msg.message}`);
+      const ancestors = (msg.ancestors ?? []) as Nodes[];
+      const node = ancestors.at(-1);
+      const path = node ? format(node, ancestors.slice(0, -1)) : null;
+      lines.push(`    - ${rule} ${path ?? "(message)"}: ${msg.message}`);
     }
   }
 

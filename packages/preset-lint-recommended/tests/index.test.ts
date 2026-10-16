@@ -58,7 +58,7 @@ describe("hl7v2-preset-lint-recommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
-      "The Segment ID `PIDTOOLONG` is 10 characters long; a Segment ID must be exactly 3 characters."
+      "The Segment ID is 10 characters long; a Segment ID must be exactly 3 characters."
     );
     expect(file.messages[0].fatal).toBeTruthy();
   });
@@ -78,7 +78,7 @@ describe("hl7v2-preset-lint-recommended", () => {
     expect(header).toMatchObject({
       fatal: true,
       message:
-        "The first segment is `PID`; a message must start with the message header segment (`MSH`).",
+        "The first segment is not the message header segment; a message must start with the message header segment (`MSH`).",
     });
   });
 
@@ -110,7 +110,7 @@ describe("hl7v2-preset-lint-recommended", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].message).toBe(
-      "The first segment is `ZA1`; a message must start with the message header segment (`MSH`)."
+      "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
     );
     expect(file.messages[0].ruleId).toBe("segment-required-message-header");
     expect(file.messages[0].fatal).toBe(true);
@@ -174,7 +174,8 @@ describe("hl7v2-preset-lint-recommended", () => {
       actual: "3.0",
       expected: ["<3.0.0 >=2.3"],
       fatal: true,
-      message: "The version is `3.0`; it must satisfy `<3.0.0 >=2.3`.",
+      message:
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`.",
     });
   });
 

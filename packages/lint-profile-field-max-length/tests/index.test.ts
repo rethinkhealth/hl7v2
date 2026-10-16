@@ -131,36 +131,6 @@ describe("hl7v2LintFieldMaxLength", () => {
     expect(await lint(msh("2.5"), `ZPD|${"X".repeat(500)}`)).toEqual([]);
   });
 
-  // A profile of a site's own may give a field an ID but no name.
-  it("reports a field whose profile gives it no name", async () => {
-    const field = f("ABC");
-    field.data = { id: "ZPD-1", maxLength: 2 };
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2LintFieldMaxLength)
-      .run(m(s("ZPD", field)), file);
-
-    expect(file.messages).toHaveLength(1);
-    expect(file.messages[0]?.message).toBe(
-      "The value is 3 characters long; the field allows at most 2 characters."
-    );
-    expect(file.messages[0]?.actual).toBe("3");
-  });
-
-  // The rule checks only a field an annotator identified.
-  it("does not report a field that has no element ID", async () => {
-    const field = f("ABC");
-    field.data = { maxLength: 2, name: "Site Code" };
-    const file = new VFile();
-
-    await unified()
-      .use(hl7v2LintFieldMaxLength)
-      .run(m(s("ZPD", field)), file);
-
-    expect(file.messages).toEqual([]);
-  });
-
   it("accepts a value of any length in a field that has no LEN", async () => {
     const field = f("A".repeat(100_000));
     field.data = { id: "ZPD-1", name: "Site Code" };

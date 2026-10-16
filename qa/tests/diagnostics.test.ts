@@ -81,7 +81,7 @@ describe("QR2: diagnostic precision", () => {
 
       expect(headerDiag).toBeDefined();
       expect(headerDiag!.message).toBe(
-        "The first segment is `PID`; a message must start with the message header segment (`MSH`)."
+        "The first segment is not the message header segment; a message must start with the message header segment (`MSH`)."
       );
       expectOffsetContains(source, headerDiag!, "PID");
     });
@@ -98,7 +98,7 @@ describe("QR2: diagnostic precision", () => {
 
       expect(versionDiag).toBeDefined();
       expect(versionDiag!.message).toBe(
-        "The version is `1.0`; it must satisfy `<3.0.0 >=2.3`."
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`."
       );
 
       // Offset should point to the "1.0" value in the source
@@ -133,13 +133,13 @@ describe("QR2: diagnostic precision", () => {
 
       // PIDX — 4 chars, too long
       expect(headerDiags[0]!.message).toBe(
-        "The Segment ID `PIDX` is 4 characters long; a Segment ID must be exactly 3 characters."
+        "The Segment ID is 4 characters long; a Segment ID must be exactly 3 characters."
       );
       expectOffsetContains(source, headerDiags[0]!, "PIDX");
 
       // PV — 2 chars, too short
       expect(headerDiags[1]!.message).toBe(
-        "The Segment ID `PV` is 2 characters long; a Segment ID must be exactly 3 characters."
+        "The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters."
       );
       expectOffsetContains(source, headerDiags[1]!, "PV|");
     });

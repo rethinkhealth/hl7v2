@@ -6719,7 +6719,7 @@ exports[`apply > parses MSH + PID and decodes escapes, then stringifies to JSON 
   "history": [],
   "messages": [
     [1:46-1:53: Component \`MSH-9.3\` (Message Structure) is not present; it is required.],
-    [2:49-2:50: The value \`M\` is not a date and time; a DTM value has the form \`YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]\`.],
+    [2:49-2:50: The value is not a date and time; a DTM value has the form \`YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]\`.],
     [2:1: Segment \`EVN\` is missing; the event schema requires it at this point.],
     [2:50: Segment \`PV1\` is missing; the event schema requires it at this point.],
   ],

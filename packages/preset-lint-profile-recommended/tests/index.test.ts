@@ -153,7 +153,7 @@ describe("hl7v2PresetLintProfileRecommended", () => {
     const withdrawn = file.messages.filter((msg) => msg.ruleId === "withdrawn");
     expect(withdrawn.map((msg) => [msg.message, msg.fatal])).toEqual([
       [
-        "The value `MD` is in a data element withdrawn in v2.7; a withdrawn data element must be empty.",
+        "The data element has a value; it is withdrawn in v2.7 and must be empty.",
         true,
       ],
     ]);

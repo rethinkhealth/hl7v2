@@ -224,13 +224,12 @@ describe("hl7v2AnnotateProfileFieldsCodeSystems", () => {
     }
 
     expect(getField(tree, "PID", 7).data?.codeSystem).toBeUndefined();
-    const msgs = file.messages.filter(
+    const first = file.messages.find(
       (msg) => msg.source === "hl7v2-annotate-profile-fields-code-systems"
     );
-    expect(msgs.length).toBeGreaterThan(0);
-    expect(msgs[0]!.message).toBe(
+    expect(first?.message).toBe(
       "The code system for table `HL70361` cannot be loaded; codes of this table are not annotated."
     );
-    expect(msgs[0]!.cause).toBe(loadError);
+    expect(first?.cause).toBe(loadError);
   });
 });

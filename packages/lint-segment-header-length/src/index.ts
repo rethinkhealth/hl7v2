@@ -6,8 +6,8 @@ import { SKIP, visitParents } from "unist-util-visit-parents";
 const messages = {
   emptySegmentId:
     "The segment has an empty Segment ID; a Segment ID must be exactly 3 characters.",
-  segmentIdLength: (segmentId: string) =>
-    `The Segment ID \`${segmentId}\` is ${pluralize("character", segmentId.length, true)} long; a Segment ID must be exactly 3 characters.`,
+  segmentIdLength: (length: number) =>
+    `The Segment ID is ${pluralize("character", length, true)} long; a Segment ID must be exactly 3 characters.`,
 } as const;
 
 /**
@@ -33,7 +33,7 @@ const hl7v2LintSegmentHeaderLength = lintRule<Root, undefined>(
         return SKIP;
       }
 
-      const message = file.message(messages.segmentIdLength(node.name), {
+      const message = file.message(messages.segmentIdLength(node.name.length), {
         ancestors: [...parents, node],
         place: node.position,
       });

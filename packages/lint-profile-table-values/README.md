@@ -76,7 +76,7 @@ EVN|ZZZ
 Reported message:
 
 ```
-The value `ZZZ` is not in table `HL70003` (Event type); the field requires a code from it.
+The value is not in table `HL70003` (Event type); the field requires a code from it.
 ```
 
 The message is placed on the repetition that holds the value. One message is reported per offending repetition, with `actual` set to the value and `expected` to the table's codes.

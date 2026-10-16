@@ -33,12 +33,8 @@ const hl7v2LintFieldMaxLength = lintRule<Root>(
   },
   (tree, file) => {
     visit(tree, "field", (field, ancestors) => {
-      const { data } = field;
-      if (data?.id === undefined) {
-        return SKIP;
-      }
       // A field without a LEN has no maximum length.
-      const { maxLength = Number.POSITIVE_INFINITY } = data;
+      const maxLength = field.data?.maxLength ?? Number.POSITIVE_INFINITY;
 
       // HL7v2 applies LEN to each repetition, not to the whole field.
       for (const repetition of field.children) {

@@ -231,7 +231,7 @@ describe("hl7v2LintRequiredFields", () => {
     expect(error?.ancestors).toStrictEqual([tree, pid]);
   });
   // A profile of a site's own may define a required field without a name.
-  it("reports a required field whose profile gives it no name", async () => {
+  it("names a missing required field whose profile gives it no name by its ID alone", async () => {
     const tree = m(msh("2.5"), s("ZPD", f("")));
     const file = new VFile();
     await unified().use(hl7v2AnnotateProfileContext).run(tree, file);

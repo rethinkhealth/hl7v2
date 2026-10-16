@@ -15,8 +15,8 @@ import { lintRule } from "unified-lint-rule";
 const EXPLICIT_NULL = '""';
 
 const messages = {
-  backwardCompatible: (value: string, version: string) =>
-    `The value \`${value}\` is in a data element that v${version} keeps only for backward compatibility.`,
+  backwardCompatible: (version: string) =>
+    `The data element has a value; v${version} keeps it only for backward compatibility.`,
 } as const;
 
 /**
@@ -59,8 +59,7 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
     ): boolean => {
       const { data } = node;
       if (
-        data?.id === undefined ||
-        data.optionality !== Optionality.BackwardCompatible ||
+        data?.optionality !== Optionality.BackwardCompatible ||
         isEmptyNode(node)
       ) {
         return false;
@@ -68,10 +67,10 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
 
       const value = toHl7v2(node, delimiters(tree));
       if (value !== EXPLICIT_NULL) {
-        const message = file.message(
-          messages.backwardCompatible(value, version),
-          { ancestors, place: node.position }
-        );
+        const message = file.message(messages.backwardCompatible(version), {
+          ancestors,
+          place: node.position,
+        });
         message.actual = value;
         message.expected = ["", EXPLICIT_NULL];
       }

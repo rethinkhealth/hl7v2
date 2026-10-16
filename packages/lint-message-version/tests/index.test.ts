@@ -183,10 +183,10 @@ describe("hl7v2-lint:message-version", () => {
       fatal: false,
       file: "",
       message:
-        "The version is `foo`; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
+        "The version is not a version number; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
       name: "1:1",
       reason:
-        "The version is `foo`; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
+        "The version is not a version number; a version must be numbers separated by dots, such as `2.5` or `2.5.1`.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -224,9 +224,11 @@ describe("hl7v2-lint:message-version", () => {
       expected: ["<3.0.0 >=2.3"],
       fatal: false,
       file: "",
-      message: "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
+      message:
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`.",
       name: "1:1",
-      reason: "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`.",
+      reason:
+        "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`.",
       ruleId: "message-version",
       source: "hl7v2-lint",
       url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme",
@@ -258,7 +260,7 @@ describe("hl7v2-lint:message-version", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].reason).toBe(
-      "The version is `2.5`; it must satisfy `>=2.6`."
+      "The version is outside the supported range; it must satisfy `>=2.6`."
     );
     expect(file.messages[0].actual).toBe("2.5");
     expect(file.messages[0].expected).toStrictEqual([">=2.6"]);
@@ -432,7 +434,7 @@ describe("hl7v2-lint:message-version", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0].reason).toBe(
-      "The version is `2.2`; it must satisfy `<3.0.0 >=2.3`."
+      "The version is outside the supported range; it must satisfy `<3.0.0 >=2.3`."
     );
     expect(file.messages[0].place).toStrictEqual({
       end: { column: 74, line: 1, offset: 73 },

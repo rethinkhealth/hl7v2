@@ -19,7 +19,7 @@ const messages = {
  *
  * A primitive datatype defines one component. Empty fields are not checked.
  *
- * Reads `id` and `datatype` from `field.data`, so
+ * Reads `datatype` from `field.data`, so
  * `@glion/annotate-profile-fields` MUST run before it.
  *
  * @example
@@ -43,10 +43,10 @@ const hl7v2LintExtraComponents = lintRule<Root>(
 
     visit(tree, "field", (field, ancestors) => {
       const { data } = field;
-      if (data?.id === undefined || isEmptyNode(field)) {
+      if (isEmptyNode(field)) {
         return SKIP;
       }
-      const datatype = data.datatype && ctx.datatypes.get(data.datatype);
+      const datatype = data?.datatype && ctx.datatypes.get(data.datatype);
       if (!datatype) {
         return SKIP;
       }
