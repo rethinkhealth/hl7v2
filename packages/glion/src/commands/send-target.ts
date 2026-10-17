@@ -12,7 +12,7 @@
 import type { NodeSocketOptions } from "@glion/mllp-client/node";
 
 import { discoverConfig } from "../config/discover";
-import { loadConfig } from "../config/load";
+import { defaultConfig, loadConfig } from "../config/load";
 import { DEFAULT_PORT } from "../config/schema";
 import type { ResolvedConfig } from "../config/schema";
 import { GlionError } from "../errors";
@@ -93,12 +93,12 @@ export function deriveLocalTarget(
  * `--port` defaults to {@link DEFAULT_PORT}: the port is a protocol constant,
  * while the host is the identity of the system that receives the message and
  * is never assumed. With `--local`, the target comes from the project's
- * config, with `--host`/`--port` overriding; `config` is `null` when the
- * project has none.
+ * config, with `--host`/`--port` overriding — including the config a project
+ * without a config file runs on.
  */
 export function resolveTarget(
   args: SendArgs,
-  config: ConnectableConfig | null
+  config: ConnectableConfig
 ): TargetResult {
   if (!args.local) {
     if (args.host === undefined) {
@@ -111,30 +111,26 @@ export function resolveTarget(
     return { host: args.host, ok: true, port: args.port ?? DEFAULT_PORT };
   }
 
-  if (config === null) {
-    return {
-      ok: false,
-      reason:
-        "No glion config file found, so --local has no target to read. Pass --config <path>, or --host/--port without --local.",
-    };
-  }
   return deriveLocalTarget(config, { host: args.host, port: args.port });
 }
 
 /**
- * The project's config, `--config` when given and otherwise the one
- * discovered in `cwd`, or `null` when there is none.
+ * The project's config: `--config` when given, otherwise the one discovered in
+ * `cwd`, otherwise the defaults a project without a config file runs on.
  *
- * @throws {GlionError} The config could not be compiled, imported, or
+ * The defaults need no cache directory, so a send from a directory that has no
+ * config writes nothing to it.
+ *
+ * @throws {GlionError} The config could not be found, compiled, imported, or
  *   validated.
  */
 async function loadProjectConfig(
   args: SendArgs,
   cwd: string
-): Promise<ResolvedConfig | null> {
+): Promise<ResolvedConfig> {
   const configPath = args.configPath ?? (await discoverConfig(cwd));
   if (configPath === null) {
-    return null;
+    return defaultConfig({ cwd, mode: "dev" });
   }
   const cacheDir = await ensureCacheDir(cwd);
   return loadConfig({ cacheDir, cwd, explicitPath: configPath, mode: "dev" });
@@ -160,13 +156,13 @@ export async function resolveProject(
       return resolved;
     }
     target = { host: resolved.host, port: resolved.port };
-    const { tls: configured, ...client } = config?.client ?? {};
+    const { tls: configured, ...client } = config.client ?? {};
     const tls = await loadTls(
       clientTls({
         configured,
         local: args.local,
         loopback: LOOPBACK.has(target.host),
-        server: config?.tls,
+        server: config.tls,
       })
     );
     return { client, ok: true, target, tls };

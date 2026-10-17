@@ -142,9 +142,9 @@ Output adapts to the destination: a terminal receives a human-readable exchange 
 
 `client.tls` as an object overrides the derived settings field by field: `ca` when an authority issued the server's certificate, `servername` when it names another host, `cert` and `key` when the server asks for a client certificate. `client.tls: true` dials over TLS against the runtime's trusted CAs alone, and `false` dials plain TCP.
 
-### Zero-config mode
+### Without a config file
 
-Both commands work without a `glion.config.ts` when the app file is at `./glion.app.ts` at the project root. The TUI shows a `zero-config` badge to indicate no config was loaded. Create a `glion.config.ts` when you need custom ports, TLS, or additional watch paths.
+A `glion.config.ts` is optional. With none, glion runs the app at `./glion.app.ts` or `./src/glion.app.ts` on the defaults: port `2575`, bound to `127.0.0.1` under `glion dev` and `0.0.0.0` under `glion start`. `glion send --local` targets those same defaults, so a project needs a config file only to change them — custom ports, TLS, additional watch paths, or the `client` block.
 
 ### Cross-runtime invocation
 

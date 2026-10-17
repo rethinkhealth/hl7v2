@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Readable } from "node:stream";
@@ -176,7 +176,7 @@ describe("runSend (integration, fake socket)", () => {
     expect(json.port).toBe(2600);
   });
 
-  it("errors (exit 2) under --local when the project has no config", async () => {
+  it("targets the defaults under --local when the project has no config", async () => {
     const dir = await mkdtemp(join(tmpdir(), "glion-send-empty-"));
     tempDirs.push(dir);
     const { state, stderr, stdout } = capture();
@@ -189,10 +189,30 @@ describe("runSend (integration, fake socket)", () => {
       stdout,
     });
 
-    expect(code).toBe(2);
-    const json = JSON.parse(state.out);
-    expect(json.kind).toBe("invalid");
-    expect(json.message).toContain("No glion config file found");
+    expect(code).toBe(0);
+    expect(JSON.parse(state.out)).toMatchObject({
+      host: "127.0.0.1",
+      ok: true,
+      port: 2575,
+    });
+  });
+
+  it("writes no cache directory for a send from a project without a config", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "glion-send-nocache-"));
+    tempDirs.push(dir);
+    const { stderr, stdout } = capture();
+    await runSend({
+      argv: ["--local"],
+      cwd: dir,
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from(ADT),
+      stdout,
+    });
+
+    await expect(stat(join(dir, ".glion"))).rejects.toMatchObject({
+      code: "ENOENT",
+    });
   });
 
   it("errors (exit 2) when the config is invalid", async () => {
