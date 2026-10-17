@@ -90,6 +90,8 @@ glion send [<file>] [flags]
 
 The message is read from `<file>`, or from stdin when `<file>` is omitted or is `-`. It is parsed and re-serialized to its canonical, CR-delimited form before transmission, so editor line endings are normalized. A value the message's own delimiters cannot write is refused before dialing rather than sent mangled: when every escape sequence for one of its characters would hold a delimiter, there is no way to put the value on the wire — delimiters that are ASCII punctuation can write every character. Whether the message is valid is the receiver's call — it answers with a NAK — so `glion send` does not pre-validate.
 
+One source holds one message. `glion send` does not split a source: where one message ends and the next begins is a framing question that does not belong to this command. So a source is refused, rather than guessed at, unless it is one message — it must begin with a message header segment (`MSH`) and carry only one.
+
 | Flag             | Description                                                                                         |
 | ---------------- | --------------------------------------------------------------------------------------------------- |
 | `--host <host>`  | Target host. Required.                                                                              |

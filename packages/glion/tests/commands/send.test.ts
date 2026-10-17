@@ -1,6 +1,8 @@
+import type { Group, Root, Segment } from "@glion/ast";
+import { parseHL7v2 } from "@glion/parser";
 import { describe, expect, it } from "vitest";
 
-import { parseSendArgs } from "../../src/commands/send";
+import { parseSendArgs, prepareRequest } from "../../src/commands/send";
 
 describe("parseSendArgs", () => {
   describe("message source", () => {
@@ -345,6 +347,74 @@ describe("parseSendArgs", () => {
         error: "`glion send` takes one message source.",
         ok: false,
       });
+    });
+  });
+});
+
+/** A segment with no fields: only its Segment ID is read here. */
+function segment(name: string): Segment {
+  return { children: [], name, type: "segment" };
+}
+
+describe("prepareRequest", () => {
+  it("summarizes the message it will put on the wire", () => {
+    const tree = parseHL7v2(
+      "MSH|^~\\&|APP|FAC|||20260101||ADT^A01|MSG1|P|2.5\rPID|||1"
+    );
+    expect(prepareRequest(tree)).toMatchObject({
+      ok: true,
+      request: { controlId: "MSG1", segmentCount: 2 },
+    });
+  });
+
+  it("counts the segments inside a group, with the rest", () => {
+    // A tree grouped by `@glion/transform-profile-groups` holds its segments
+    // inside `group` nodes; the segments of the message are the same ones, so
+    // a grouped message is one message and its count includes them.
+    const group: Group = {
+      children: [segment("OBR"), segment("OBX")],
+      id: "ORDER_OBSERVATION",
+      name: "Order Observation",
+      type: "group",
+    };
+    const tree: Root = {
+      children: [segment("MSH"), group, segment("PID")],
+      type: "root",
+    };
+    expect(prepareRequest(tree)).toMatchObject({
+      ok: true,
+      request: { segmentCount: 4 },
+    });
+  });
+
+  it("refuses a source with no segments", () => {
+    expect(prepareRequest({ children: [], type: "root" })).toMatchObject({
+      hint: "A message begins with its message header segment; check what comes before it in the source.",
+      ok: false,
+      reason:
+        "The source does not begin with a message header segment (`MSH`).",
+    });
+  });
+
+  it("refuses a source holding a second message header segment", () => {
+    const tree: Root = {
+      children: [segment("MSH"), segment("PID"), segment("MSH")],
+      type: "root",
+    };
+    expect(prepareRequest(tree)).toMatchObject({
+      ok: false,
+      reason: "The source holds more than one message.",
+    });
+  });
+
+  it("refuses a message its own delimiters cannot write", () => {
+    // MSH-1 `X` and MSH-2 `E~\&`: the escape character in MSH-3 is written
+    // `\E\` or `\X5C\`, and both hold a delimiter.
+    const tree = parseHL7v2("MSHXE~\\&XAPP\\bXFAC");
+    expect(prepareRequest(tree)).toMatchObject({
+      ok: false,
+      reason:
+        "The value holds a character that must be written as an escape sequence, and every escape sequence for it holds one of the message's delimiters. With delimiters that are ASCII punctuation, every character can be written.",
     });
   });
 });

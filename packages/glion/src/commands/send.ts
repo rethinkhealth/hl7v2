@@ -9,7 +9,7 @@
 import { readFile } from "node:fs/promises";
 
 import { AckException } from "@glion/ack";
-import type { Root } from "@glion/ast";
+import type { Group, Root } from "@glion/ast";
 import {
   MllpClient,
   MllpClientError,
@@ -344,6 +344,21 @@ async function readStream(stream: NodeJS.ReadableStream): Promise<string> {
   return data;
 }
 
+/** The Segment IDs under `parent`, in order, including those inside groups. */
+function segmentIds(parent: Root | Group): string[] {
+  const ids: string[] = [];
+  for (const child of parent.children) {
+    if (child.type === "segment") {
+      ids.push(child.name);
+    } else if (child.type === "group") {
+      for (const id of segmentIds(child)) {
+        ids.push(id);
+      }
+    }
+  }
+  return ids;
+}
+
 /** The message text a source holds, or why it could not be read. */
 type ReadResult =
   | { ok: true; text: string }
@@ -519,7 +534,12 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   const tree = parseHL7v2(read.text);
   const prepared = prepareRequest(tree);
   if (!prepared.ok) {
-    return emit({ kind: "invalid", message: prepared.reason, target });
+    return emit({
+      hint: prepared.hint,
+      kind: "invalid",
+      message: prepared.reason,
+      target,
+    });
   }
   const { request } = prepared;
   const timeoutMs = args.timeoutMs ?? DEFAULT_SEND_TIMEOUT_MS;
@@ -560,15 +580,33 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
 /** The request a message becomes on the wire, or why it cannot be sent. */
 type RequestResult =
   | { ok: true; request: SendRequestSummary }
-  | { ok: false; reason: string };
+  | { ok: false; reason: string; hint?: string };
 
 /**
  * The request `tree` becomes on the wire, or why it cannot be sent.
  *
- * Writing the message is what can fail: the delimiters MSH-1 and MSH-2 declare
- * may leave a character of its own with no escape sequence to write it.
+ * Refuses a source that is not one message: HL7v2 gives a message exactly one
+ * message header segment, as its first segment. Refuses a message the
+ * delimiters MSH-1 and MSH-2 declare cannot write. Never splits a source into
+ * messages.
  */
-function prepareRequest(tree: Root): RequestResult {
+export function prepareRequest(tree: Root): RequestResult {
+  const ids = segmentIds(tree);
+  if (ids[0] !== "MSH") {
+    return {
+      hint: "A message begins with its message header segment; check what comes before it in the source.",
+      ok: false,
+      reason:
+        "The source does not begin with a message header segment (`MSH`).",
+    };
+  }
+  if (ids.filter((id) => id === "MSH").length > 1) {
+    return {
+      hint: "Send one message per invocation; `glion send` does not split a source into messages.",
+      ok: false,
+      reason: "The source holds more than one message.",
+    };
+  }
   try {
     const canonical = toHl7v2(tree);
     return {
@@ -576,7 +614,7 @@ function prepareRequest(tree: Root): RequestResult {
       request: {
         byteCount: ENCODER.encode(canonical).length,
         controlId: value(tree, "MSH.10.1")?.value ?? "",
-        segmentCount: tree.children.length,
+        segmentCount: ids.length,
       },
     };
   } catch (error) {
