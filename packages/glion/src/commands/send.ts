@@ -9,6 +9,7 @@
 import { readFile } from "node:fs/promises";
 
 import { AckException } from "@glion/ack";
+import type { Root } from "@glion/ast";
 import {
   MllpClient,
   MllpClientError,
@@ -259,6 +260,16 @@ async function readStream(stream: NodeJS.ReadableStream): Promise<string> {
   return data;
 }
 
+/**
+ * The number of message header segments in `tree`. HL7v2 gives a message
+ * exactly one, so more than one means the source holds more than one message.
+ */
+function messageHeaders(tree: Root): number {
+  return tree.children.filter(
+    (child) => child.type === "segment" && child.name === "MSH"
+  ).length;
+}
+
 /** The message text a source holds, or why it could not be read. */
 type ReadResult =
   | { ok: true; text: string }
@@ -420,6 +431,14 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   // bytes (line endings in particular); whether the message is a *valid* HL7v2
   // message is the receiver's call, surfaced as a NAK. We do not pre-validate.
   const tree = parseHL7v2(read.text);
+  if (messageHeaders(tree) > 1) {
+    return emit({
+      hint: "Send one message per invocation; `glion send` does not split a source into messages.",
+      kind: "invalid",
+      message: "The source holds more than one message.",
+      target,
+    });
+  }
   const canonical = toHl7v2(tree);
   const request = {
     byteCount: ENCODER.encode(canonical).length,
