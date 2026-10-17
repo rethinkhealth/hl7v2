@@ -1,6 +1,6 @@
 {
   "name": "@glion/lint-profile-withdrawn",
-  "version": "0.27.1",
+  "version": "0.28.0",
   "description": "Lint rule that reports a value in an element HL7v2 has withdrawn",
   "keywords": [
     "health",

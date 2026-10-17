@@ -1,6 +1,6 @@
 {
   "name": "@glion/annotate-profile-fields-code-systems",
-  "version": "0.27.1",
+  "version": "0.28.0",
   "description": "Experimental unified plugin to annotate HL7v2 field-level coded values with UTG code system metadata",
   "keywords": [
     "annotate",

@@ -1,5 +1,12 @@
 # @rethinkhealth/hl7v2-builder
 
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.28.0
+
 ## 0.27.1
 
 ### Patch Changes
