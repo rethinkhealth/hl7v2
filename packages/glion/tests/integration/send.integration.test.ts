@@ -281,8 +281,8 @@ describe("runSend (integration, fake socket)", () => {
     expect(json.cause).toContain("MSH-10");
   });
 
-  it("reports INVALID_MESSAGE (exit 2) when the message contains a reserved VT byte", async () => {
-    const withVt = `${ADT}\rNTE|1||free\u000Btext`;
+  it("reports INVALID_MESSAGE (exit 2) when a Segment ID contains a reserved VT byte", async () => {
+    const withVt = `${ADT}\rNT\u000BE|1||free text`;
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],

@@ -52,10 +52,9 @@ export interface Context {
    *
    * Note: this is the same object reference as the tree returned by
    * `tree()`. After `tree()` resolves, transformers may have enriched
-   * it in-place (e.g., decoded escapes, resolved message structure).
-   * The routing fields (messageType, triggerEvent, etc.) are cached
-   * as separate string properties and always reflect the original
-   * wire values regardless of transforms.
+   * it in-place (e.g., resolved message structure). The routing fields
+   * (messageType, triggerEvent, etc.) are cached as separate string
+   * properties and keep the values as parsed regardless of transforms.
    */
   readonly ast: Root;
 

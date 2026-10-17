@@ -162,16 +162,16 @@ Available in every middleware and handler. The pipeline is lazy: only the parse 
 
 ### Async methods
 
-| Method               | Triggers                | Description                                           |
-| -------------------- | ----------------------- | ----------------------------------------------------- |
-| `await ctx.tree()`   | `run()` (transform)     | Transformed AST — escape decoding, annotations, lint. |
-| `await ctx.result()` | `run()` + `stringify()` | Compiled output (e.g. JSON from `hl7v2Jsonify`).      |
+| Method               | Triggers                | Description                                      |
+| -------------------- | ----------------------- | ------------------------------------------------ |
+| `await ctx.tree()`   | `run()` (transform)     | Transformed AST — annotations, lint, grouping.   |
+| `await ctx.result()` | `run()` + `stringify()` | Compiled output (e.g. JSON from `hl7v2Jsonify`). |
 
 Both are cached — subsequent calls return the same value instantly.
 
 ### `ctx.ast` vs `await ctx.tree()`
 
-Use `ctx.ast` when you only need the raw message structure — reading MSH fields, building ACK/NAK responses, route filter functions, or middleware that doesn't need escape-decoded values:
+Use `ctx.ast` when the parsed message is enough — reading MSH fields, building ACK/NAK responses, route filter functions, or middleware that doesn't need annotations. The parser has already decoded escape sequences, so every value is content:
 
 ```ts
 // Fast — no pipeline cost.
@@ -181,13 +181,13 @@ app.use((ctx, next) => {
 });
 ```
 
-Use `await ctx.tree()` when you need the fully processed tree — business logic that reads decoded field values, or handlers that inspect annotations or resolved message structures:
+Use `await ctx.tree()` when you need the fully processed tree — handlers that inspect annotations, lint findings, or resolved message structures:
 
 ```ts
 // Triggers transform pipeline on first call.
 app.on("ADT^A01", async (ctx) => {
   const tree = await ctx.tree();
-  // tree has escape sequences decoded, message structure resolved, etc.
+  // tree has annotations, message structure resolved, etc.
   return { raw: "..." };
 });
 ```

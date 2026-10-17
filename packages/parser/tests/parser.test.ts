@@ -1,4 +1,10 @@
-import type { Component, Field, FieldRepetition, Segment } from "@glion/ast";
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Root,
+  Segment,
+} from "@glion/ast";
 
 import { parseHL7v2 } from "../src/parser";
 
@@ -695,3 +701,40 @@ function getComponentValue(
 
   return comp.children?.[0]?.value ?? null;
 }
+
+describe("parser escape sequences", () => {
+  const first = (root: Root, segment: number, field: number) =>
+    (root.children[segment] as Segment).children[field]?.children[0]
+      ?.children[0]?.children[0]?.value;
+
+  it("decodes escape sequences into subcomponent values", () => {
+    const root = parseHL7v2("MSH|^~\\&|a\\S\\b\\T\\c\\E\\d");
+
+    expect(first(root, 0, 2)).toBe("a^b&c\\d");
+  });
+
+  it("keeps the encoding characters MSH-2 declares", () => {
+    const root = parseHL7v2("MSH|^~\\&|SENDER");
+
+    expect(first(root, 0, 1)).toBe("^~\\&");
+  });
+
+  it("decodes with the escape character MSH-2 declares", () => {
+    const root = parseHL7v2("MSH|^~#&|a#F#b");
+
+    expect(first(root, 0, 2)).toBe("a|b");
+  });
+
+  it("keeps a decoded segment delimiter inside its value", () => {
+    const root = parseHL7v2("PID|1|line1\\.br\\line2");
+
+    expect(root.children).toHaveLength(1);
+    expect(first(root, 0, 1)).toBe("line1\rline2");
+  });
+
+  it("keeps escape sequences when decodeEscapes is false", () => {
+    const root = parseHL7v2("PID|1|a\\F\\b", { decodeEscapes: false });
+
+    expect(first(root, 0, 1)).toBe("a\\F\\b");
+  });
+});

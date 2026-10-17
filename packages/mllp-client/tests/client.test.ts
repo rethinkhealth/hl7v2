@@ -337,14 +337,11 @@ describe("MllpClient", () => {
     });
 
     it("rejects INVALID_MESSAGE and stays usable when a message carries a reserved byte", async () => {
-      // Given a message whose content carries FS, which MLLP reserves as the
-      // end of a block. It parses and serializes; only framing refuses it.
+      // Given a message whose Segment ID carries FS, which MLLP reserves as
+      // the end of a block. It parses and serializes; only framing refuses it.
       const { client, remote } = await connectedClient();
       const reserved = parseHL7v2(
-        adtA01().text.replace(
-          "Doe^John",
-          `Doe${String.fromCodePoint(0x1c)}^John`
-        )
+        adtA01().text.replace("PID|", `P${String.fromCodePoint(0x1c)}D|`)
       );
 
       // When
@@ -359,6 +356,26 @@ describe("MllpClient", () => {
         code: "AA",
       });
       expect(remote.received).toHaveLength(1);
+      await client.close();
+    });
+
+    it("sends a control character in a value as an escape sequence", async () => {
+      // Given a message whose content carries FS, which the serializer writes
+      // as `\X1C\`, so nothing reserved by MLLP reaches the wire.
+      const { client, remote } = await connectedClient();
+      const tree = parseHL7v2(
+        adtA01().text.replace(
+          "Doe^John",
+          `Doe${String.fromCodePoint(0x1c)}^John`
+        )
+      );
+
+      // When
+      const reply = await client.send(tree);
+
+      // Then
+      expect(reply).toMatchObject({ code: "AA" });
+      expect(remote.received[0]).toContain("Doe\\X1C\\^John");
       await client.close();
     });
 
@@ -1568,11 +1585,12 @@ describe("MllpClient — an application that overlaps sends", () => {
   });
 
   it("delivers the rest of a series when one message cannot be sent", async () => {
-    // Given a series whose second message carries a reserved MLLP byte
+    // Given a series whose second message carries a reserved MLLP byte in a
+    // Segment ID
     const { client, remote } = await connectedClient();
     const first = adtA01();
     const unsendable = parseHL7v2(
-      adtA01().text.replace("Doe^John", `Doe${String.fromCodePoint(0x1c)}^John`)
+      adtA01().text.replace("PID|", `P${String.fromCodePoint(0x1c)}D|`)
     );
     const third = adtA01();
 

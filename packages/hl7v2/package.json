@@ -43,7 +43,6 @@
   },
   "dependencies": {
     "@glion/ast": "workspace:*",
-    "@glion/decode-escapes": "workspace:*",
     "@glion/jsonify": "workspace:*",
     "@glion/parser": "workspace:*",
     "@glion/preset-lint-profile-recommended": "workspace:*",

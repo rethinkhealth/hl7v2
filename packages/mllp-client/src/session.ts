@@ -35,8 +35,8 @@ export interface MllpSession {
    * remote system sends back, unframed. `timeoutMs` bounds the write and the
    * wait for the reply; it does not cover the opening.
    *
-   * @throws {MllpInvalidMessageError} The message contains a reserved MLLP
-   *   byte, so nothing was written.
+   * @throws {MllpInvalidMessageError} The serialized message contains a
+   *   reserved MLLP byte, so nothing was written.
    * @throws {MllpConnectionFailedError} The session never opened.
    * @throws {MllpConnectionTimeoutError} The session never opened in time.
    * @throws {MllpSendTimeoutError} Nothing came back within `timeoutMs`. The

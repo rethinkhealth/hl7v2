@@ -120,6 +120,40 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(value).toBe("before\\F\\after");
   });
 
+  it("writes a formatting command as it is", async () => {
+    const tree = m(s("PID", f("\\H\\a|b\\N\\ \\.sp 2\\c")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("\\H\\a\\F\\b\\N\\ \\.sp 2\\c");
+  });
+
+  it("writes a locally defined sequence and a character set switch as they are", async () => {
+    const tree = m(s("PID", f("\\Zsite 7\\a|b\\C2842\\c\\M2442\\d")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("\\Zsite 7\\a\\F\\b\\C2842\\c\\M2442\\d");
+  });
+
+  it("leaves a subcomponent without a value as it is", async () => {
+    const tree = m(s("PID", f("x")));
+    const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
+      ?.children[0]?.children[0];
+    Object.assign(subcomponent ?? {}, { value: undefined });
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBeUndefined();
+  });
+
+  it("rewrites subcomponents only", async () => {
+    const tree = m(s("PID", f("a|b")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    const segment = results.children[0] as Segment;
+    expect(segment).not.toHaveProperty("value");
+    expect(segment.children[0]).not.toHaveProperty("value");
+    expect(segment.children[0]?.children[0]).not.toHaveProperty("value");
+    expect(segment.children[0]?.children[0]?.children[0]).not.toHaveProperty(
+      "value"
+    );
+    expect(subValue(results)).toBe("a\\F\\b");
+  });
+
   it("does not double-encode already-escaped values", async () => {
     // If a value contains literal backslash (the escape char),
     // it should be encoded as \E\ — not left as-is

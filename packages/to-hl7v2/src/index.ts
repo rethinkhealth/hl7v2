@@ -10,12 +10,18 @@ import type {
   Subcomponent,
 } from "@glion/ast";
 import { delimiters as queryDelimiters } from "@glion/util-query";
-import { DEFAULT_DELIMITERS } from "@glion/utils";
+import { DEFAULT_DELIMITERS, encodeEscapes } from "@glion/utils";
 import type { Plugin } from "unified";
 import type { Node } from "unist";
 import type { VFile } from "vfile";
 
 export interface Hl7v2ToHl7v2Options {
+  /**
+   * Write each subcomponent value with its delimiters, escape character, and
+   * control characters as escape sequences (`true`, the default), or as it is
+   * (`false`). MSH-1 and MSH-2 are written as they are either way.
+   */
+  encodeEscapes?: boolean;
   /** Append a field delimiter after the last field in each segment. */
   trailingDelimiter?: boolean;
 }
@@ -55,10 +61,14 @@ export function toHl7v2(
     ...delimiters,
   };
   const trailing = options?.trailingDelimiter === true;
+  const encode = options?.encodeEscapes ?? true;
 
-  // -- leaf & field-level serializers (no options needed) ----------------
+  // -- leaf & field-level serializers ------------------------------------
 
-  const sub = (s: Subcomponent): string => s.value ?? "";
+  const sub = (s: Subcomponent): string => {
+    const value = s.value ?? "";
+    return encode ? encodeEscapes(value, d) : value;
+  };
 
   const comp = (c: Component): string =>
     ((c.children || []) as Subcomponent[]).map(sub).join(d.subcomponent);
@@ -85,8 +95,16 @@ export function toHl7v2(
   };
 
   // MSH-1 is the field separator itself — skip it and emit structurally.
+  // MSH-2 holds the encoding characters, which are never escape sequences.
   const msh = (seg: Segment): string => {
-    const tail = fields(seg.children.slice(1).map(field));
+    const [, encodingCharacters, ...rest] = seg.children;
+    const parts = rest.map(field);
+    if (encodingCharacters) {
+      parts.unshift(
+        toHl7v2(encodingCharacters, d, { ...options, encodeEscapes: false })
+      );
+    }
+    const tail = fields(parts);
     return tail.length ? `MSH${d.field}${tail}` : `MSH${d.field}`;
   };
 

@@ -32,6 +32,7 @@ import {
   ORU_R01_HEADER,
   ORU_R01_MEDIUM,
   obxCodedLine,
+  obxEscapedLine,
   oruObx,
   repeat,
 } from "./fixtures/messages";
@@ -64,6 +65,16 @@ describe("canary — suites measure real work", () => {
   it("parser: ADT_A01_SMALL parses to 3 segments", () => {
     const tree = parseHL7v2(ADT_A01_SMALL);
     expect(tree.children).toHaveLength(3);
+  });
+
+  it("parser: the escaped ORU^R01 fixture decodes its escape sequences while parsing", () => {
+    const tree = parseHL7v2(
+      hl7(...ORU_R01_HEADER, ...repeat(obxEscapedLine, 200))
+    );
+    expect(tree.children).toHaveLength(205);
+    expect(value(tree, "OBX.5")?.value).toBe(
+      "Result 1 holds | and ^ and ~ and & and \\ chars"
+    );
   });
 
   it("profiles-runner: ORU_R01 fixtures match and group into ORDER_OBSERVATION", async () => {

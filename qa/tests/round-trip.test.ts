@@ -9,8 +9,10 @@
  * from the crash resilience suite (QR3).
  */
 import { hl7v2AnnotateDelimiters } from "@glion/annotate-delimiters";
+import { f as field, m as message, s as segment } from "@glion/builder";
 import { hl7v2Parser } from "@glion/parser";
-import { hl7v2ToHl7v2 } from "@glion/to-hl7v2";
+import { hl7v2ToHl7v2, toHl7v2 } from "@glion/to-hl7v2";
+import { value } from "@glion/util-query";
 import fc from "fast-check";
 import { unified } from "unified";
 
@@ -308,5 +310,42 @@ describe("QR4: round-trip data fidelity", () => {
       // Allow some non-idempotent edge cases (e.g., lone escape chars).
       expect(idempotentCount).toBeGreaterThan(0);
     });
+  });
+});
+
+describe("QR4: content round-trips through serialize and parse", () => {
+  const read = (source: string): string => {
+    const tree = unified().use(hl7v2Parser).parse(source);
+    return value(tree, "PID.3")?.value ?? "";
+  };
+  const write = (content: string): string =>
+    toHl7v2(
+      message(
+        segment("MSH", field("|"), field("^~\\&")),
+        segment("PID", field("1"), field(""), field(content))
+      )
+    );
+
+  it("keeps a locally defined sequence that holds a delimiter as content", () => {
+    const content = "a\\Zfoo|bar\\b";
+    const wire = write(content);
+
+    expect(wire).toBe("MSH|^~\\&\rPID|1||a\\E\\Zfoo\\F\\bar\\E\\b");
+    expect(read(wire)).toBe(content);
+  });
+
+  it("keeps a locally defined sequence and a character set switch as they are", () => {
+    const content = "\\Zsite 7\\a\\C2842\\b\\M2442\\c";
+
+    expect(write(content)).toBe(`MSH|^~\\&\rPID|1||${content}`);
+    expect(read(write(content))).toBe(content);
+  });
+
+  it("reads back any content a value was given", () => {
+    fc.assert(
+      fc.property(fc.string({ unit: "grapheme" }), (content) => {
+        expect(read(write(content))).toBe(content);
+      })
+    );
   });
 });
