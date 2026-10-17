@@ -1,5 +1,9 @@
 # @rethinkhealth/hl7v2-util-visit
 
+## 0.28.0
+
+No changes in this release.
+
 ## 0.27.1
 
 ### Patch Changes

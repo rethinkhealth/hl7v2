@@ -1,5 +1,13 @@
 # @rethinkhealth/hl7v2-util-query
 
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/utils@0.28.0
+  - @glion/ast@0.28.0
+
 ## 0.27.1
 
 ### Patch Changes
