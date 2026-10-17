@@ -60,6 +60,15 @@ describe("hl7v2LintWithdrawn", () => {
       expect(message?.source).toBe("hl7v2-lint");
     });
 
+    it("reports the value as content, not as it is on the wire", async () => {
+      const [message] = await lint(
+        msh("2.7"),
+        "AL1|1||PENICILLIN|||2024\\F\\01"
+      );
+
+      expect(message?.actual).toBe("2024|01");
+    });
+
     // `|||` leaves AL1-6 present but empty.
     it("accepts an empty withdrawn field", async () => {
       expect(await lint(msh("2.7"), "AL1|1||PENICILLIN|||")).toEqual([]);

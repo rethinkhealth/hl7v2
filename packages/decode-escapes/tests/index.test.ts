@@ -111,6 +111,18 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Value*More");
   });
 
+  it("leaves a subcomponent without a value empty", async () => {
+    const tree = m(s("PID", f("x")));
+    const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
+      ?.children[0]?.children[0];
+    Object.assign(subcomponent ?? {}, { value: undefined });
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+    expect(
+      (results.children[0] as Segment).children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBe("");
+  });
+
   it("does nothing when there are no escapes", async () => {
     const tree = m(s("MSH", f("PlainValue")));
 

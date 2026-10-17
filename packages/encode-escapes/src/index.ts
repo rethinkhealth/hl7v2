@@ -41,7 +41,7 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
 
       if (node.type === "subcomponent") {
         (node as Subcomponent).value = encodeEscapes(
-          (node as Subcomponent).value,
+          (node as Subcomponent).value ?? "",
           d
         );
       }

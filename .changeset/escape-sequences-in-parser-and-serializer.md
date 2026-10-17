@@ -6,6 +6,7 @@
 "@glion/decode-escapes": minor
 "@glion/encode-escapes": minor
 "@glion/mllp-client": minor
+"@glion/cli": minor
 ---
 
 Breaking: decode HL7v2 escape sequences while parsing and encode them while serializing, so a subcomponent `value` is always the content and a parsed message writes back as the same text.
@@ -17,4 +18,5 @@ Breaking: decode HL7v2 escape sequences while parsing and encode them while seri
 - Add `decodeEscapes(value, delimiters)` and `encodeEscapes(value, delimiters)` to `@glion/utils`
 - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` are for trees handled with those options off; a parsed tree must not be decoded again
 - `hl7v2EncodeEscapes` now writes a control character other than the segment delimiter as `\Xdd\`
-- `MllpClient` sends a message whose value holds a control character, written as `\Xdd\`, instead of rejecting it with `INVALID_MESSAGE`
+- `MllpClient` and `glion send` send a message whose value holds a control character, written as `\Xdd\`, instead of rejecting it with `INVALID_MESSAGE`
+- The bytes of a `\Xdd…\` are decoded as UTF-8; a sequence whose bytes are not UTF-8, or that has an odd number of digits, stays as written

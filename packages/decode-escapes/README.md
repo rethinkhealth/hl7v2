@@ -76,7 +76,7 @@ Each escape sequence is decoded as follows:
 | `\R\`     | repetition separator (default `~`)             |
 | `\T\`     | subcomponent separator (default `&`)           |
 | `\E\`     | escape character (default `\`)                 |
-| `\Xdddd\` | character(s) for the given hexadecimal code(s) |
+| `\Xdddd\` | the characters its bytes encode in UTF-8       |
 | `\.br\`   | carriage return (`\r`)                         |
 | `\H\`     | kept as written (highlight on)                 |
 | `\N\`     | kept as written (normal text)                  |

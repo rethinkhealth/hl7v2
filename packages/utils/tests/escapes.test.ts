@@ -48,6 +48,24 @@ describe(decodeEscapes, () => {
     expect(decodeEscapes("\\X414243\\", DEFAULT_DELIMITERS)).toBe("ABC");
   });
 
+  it("decodes the bytes of a hex escape as UTF-8", () => {
+    expect(decodeEscapes("caf\\XC3A9\\ \\XE282AC\\", DEFAULT_DELIMITERS)).toBe(
+      "café €"
+    );
+  });
+
+  it("leaves a hex escape with an odd number of digits untouched", () => {
+    expect(decodeEscapes("A\\X414\\B\\X4\\C", DEFAULT_DELIMITERS)).toBe(
+      "A\\X414\\B\\X4\\C"
+    );
+  });
+
+  it("leaves a hex escape whose bytes are not UTF-8 untouched", () => {
+    expect(decodeEscapes("caf\\XE9\\ \\XC3\\", DEFAULT_DELIMITERS)).toBe(
+      "caf\\XE9\\ \\XC3\\"
+    );
+  });
+
   it("leaves a hex escape without digits untouched", () => {
     expect(decodeEscapes("A\\X\\B", DEFAULT_DELIMITERS)).toBe("A\\X\\B");
   });
@@ -139,6 +157,40 @@ describe(encodeEscapes, () => {
     ).toBe("\\C2842\\a\\F\\b\\M2442\\c\\M242844\\d");
   });
 
+  it("encodes a delimiter inside a locally defined sequence", () => {
+    expect(
+      encodeEscapes("a\\Zfoo|bar\\b\\Zx^y~z&w\\c\\Zq\rr\\d", DEFAULT_DELIMITERS)
+    ).toBe(
+      "a\\E\\Zfoo\\F\\bar\\E\\b\\E\\Zx\\S\\y\\R\\z\\T\\w\\E\\c\\E\\Zq\\.br\\r\\E\\d"
+    );
+  });
+
+  it("encodes a control character inside a locally defined sequence", () => {
+    expect(encodeEscapes("a\\Zfoo\nbar\\b", DEFAULT_DELIMITERS)).toBe(
+      "a\\E\\Zfoo\\X0A\\bar\\E\\b"
+    );
+  });
+
+  it("encodes a sequence whose case is not the one HL7v2 defines", () => {
+    expect(
+      encodeEscapes("\\h\\a\\n\\b\\.BR\\c\\z1\\d\\c2842\\e", DEFAULT_DELIMITERS)
+    ).toBe(
+      "\\E\\h\\E\\a\\E\\n\\E\\b\\E\\.BR\\E\\c\\E\\z1\\E\\d\\E\\c2842\\E\\e"
+    );
+  });
+
+  it("encodes a literal .br so it reads back as text", () => {
+    expect(encodeEscapes("a\\.br\\b", DEFAULT_DELIMITERS)).toBe(
+      "a\\E\\.br\\E\\b"
+    );
+    expect(
+      decodeEscapes(
+        encodeEscapes("a\\.br\\b", DEFAULT_DELIMITERS),
+        DEFAULT_DELIMITERS
+      )
+    ).toBe("a\\.br\\b");
+  });
+
   it("writes a character set switch with the escape character MSH-2 declares", () => {
     expect(encodeEscapes("#C2842#a*b#M2442#c", CUSTOM_DELIMITERS)).toBe(
       "#C2842#a#F#b#M2442#c"
@@ -176,7 +228,6 @@ describe(encodeEscapes, () => {
         fc.string({ unit: "grapheme" }),
         fc.constantFrom(DEFAULT_DELIMITERS, CUSTOM_DELIMITERS),
         (value, d) => {
-          fc.pre(!value.includes(`${d.escape}.br${d.escape}`));
           expect(decodeEscapes(encodeEscapes(value, d), d)).toBe(value);
         }
       )

@@ -132,6 +132,28 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(subValue(results)).toBe("\\Zsite 7\\a\\F\\b\\C2842\\c\\M2442\\d");
   });
 
+  it("writes a subcomponent without a value as empty", async () => {
+    const tree = m(s("PID", f("x")));
+    const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
+      ?.children[0]?.children[0];
+    Object.assign(subcomponent ?? {}, { value: undefined });
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("");
+  });
+
+  it("rewrites subcomponents only", async () => {
+    const tree = m(s("PID", f("a|b")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    const segment = results.children[0] as Segment;
+    expect(segment).not.toHaveProperty("value");
+    expect(segment.children[0]).not.toHaveProperty("value");
+    expect(segment.children[0]?.children[0]).not.toHaveProperty("value");
+    expect(segment.children[0]?.children[0]?.children[0]).not.toHaveProperty(
+      "value"
+    );
+    expect(subValue(results)).toBe("a\\F\\b");
+  });
+
   it("does not double-encode already-escaped values", async () => {
     // If a value contains literal backslash (the escape char),
     // it should be encoded as \E\ — not left as-is

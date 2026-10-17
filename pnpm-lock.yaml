@@ -3023,6 +3023,9 @@ importers:
       '@glion/ast':
         specifier: workspace:*
         version: link:../packages/ast
+      '@glion/builder':
+        specifier: workspace:*
+        version: link:../packages/builder
       '@glion/hl7v2':
         specifier: workspace:*
         version: link:../packages/hl7v2

@@ -64,6 +64,15 @@ describe("hl7v2LintBackwardCompatible", () => {
       expect(message?.source).toBe("hl7v2-lint");
     });
 
+    it("reports the value as content, not as it is on the wire", async () => {
+      const [message] = await lint(
+        msh("2.5.1"),
+        "DG1|1|I9|250.00|DIA\\F\\BETES"
+      );
+
+      expect(message?.actual).toBe("DIA|BETES");
+    });
+
     // `|` after DG1-3 leaves DG1-4 present but empty.
     it("accepts an empty backward-compatible field", async () => {
       expect(await lint(msh("2.5.1"), "DG1|1|I9|250.00|")).toEqual([]);

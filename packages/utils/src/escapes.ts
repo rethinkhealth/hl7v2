@@ -2,20 +2,24 @@ import type { Delimiters } from "@glion/ast";
 
 const HEX_RADIX = 16;
 const HEX_PAIR_LENGTH = 2;
-const HEX_DIGITS = /^[0-9a-f]+$/i;
+const HEX_PAIRS = /^(?:[0-9a-f]{2})+$/i;
 const VERBATIM_SEQUENCE =
-  /^(?:H|N|\.[a-z]{2} ?[+-]?\d*|Z[^]*|C[0-9a-f]{4}|M[0-9a-f]{4}(?:[0-9a-f]{2})?)$/i;
+  /^(?:H|N|\.(?!br)[a-z]{2} ?[+-]?\d*|Z\P{Cc}*|C[0-9A-Fa-f]{4}|M[0-9A-Fa-f]{4}(?:[0-9A-Fa-f]{2})?)$/u;
 const CONTROL_CHARACTER_LIMIT = 0x20;
+const SPACE = " ";
+const UTF8 = new TextDecoder("utf-8", { fatal: true });
 
 /**
  * The value `value` carries once its HL7v2 escape sequences are decoded.
  *
  * Decodes `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` to the delimiter each stands
  * for, `\.br\` to the segment delimiter, and `\Xdd…\` to the characters its
- * pairs of hexadecimal digits name. Leaves a formatting command (`\H\`, `\N\`,
- * `\.sp\`, …), a locally defined sequence (`\Z…\`), a character set switch
- * (`\Cxxyy\`, `\Mxxyyzz\`), any other sequence, an `\X…\` whose content is not
- * hexadecimal digits, and an escape character without a closing one, as it is.
+ * bytes, named by pairs of hexadecimal digits, encode in UTF-8. Leaves a
+ * formatting command (`\H\`, `\N\`, `\.sp\`, …), a locally defined sequence
+ * (`\Z…\`), a character set switch (`\Cxxyy\`, `\Mxxyyzz\`), any other
+ * sequence, an `\X…\` whose content is not pairs of hexadecimal digits or
+ * whose bytes are not UTF-8, and an escape character without a closing one,
+ * as it is.
  *
  * @param value - The value as it is on the wire.
  * @param d - The delimiters of the message.
@@ -66,10 +70,7 @@ export function decodeEscapes(value: string, d: Delimiters): string {
           break;
         }
         default: {
-          decoded +=
-            code.startsWith("X") && HEX_DIGITS.test(code.slice(1))
-              ? decodeHexSequence(code.slice(1))
-              : d.escape + code + d.escape;
+          decoded += decodeOtherSequence(code, d);
           break;
         }
       }
@@ -84,14 +85,34 @@ export function decodeEscapes(value: string, d: Delimiters): string {
   return decoded;
 }
 
-function decodeHexSequence(hex: string): string {
-  let result = "";
-  for (let i = 0; i < hex.length; i += HEX_PAIR_LENGTH) {
-    result += String.fromCodePoint(
-      Number.parseInt(hex.slice(i, i + HEX_PAIR_LENGTH), HEX_RADIX)
-    );
+/**
+ * The characters an `\Xdd…\` with content `code` stands for, or the sequence
+ * `code` names written as it is.
+ */
+function decodeOtherSequence(code: string, d: Delimiters): string {
+  const characters =
+    code.startsWith("X") && HEX_PAIRS.test(code.slice(1))
+      ? decodeHexSequence(code.slice(1))
+      : undefined;
+  return characters ?? d.escape + code + d.escape;
+}
+
+/**
+ * The characters the bytes `hex` names encode in UTF-8, or `undefined` when
+ * they are not UTF-8.
+ */
+function decodeHexSequence(hex: string): string | undefined {
+  const bytes = new Uint8Array(hex.length / HEX_PAIR_LENGTH);
+  for (let i = 0; i < bytes.length; i += 1) {
+    const pair = hex.slice(i * HEX_PAIR_LENGTH, (i + 1) * HEX_PAIR_LENGTH);
+    bytes[i] = Number.parseInt(pair, HEX_RADIX);
   }
-  return result;
+  try {
+    return UTF8.decode(bytes);
+  } catch {
+    // The message is UTF-8 (#659); bytes that are not stay as the sender wrote them.
+    return undefined;
+  }
 }
 
 /**
@@ -103,23 +124,27 @@ function decodeHexSequence(hex: string): string {
  * as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting
  * command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally defined sequence
  * (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as
- * they are.
- * `decodeEscapes(encodeEscapes(value, d), d)` is `value` unless `value` holds
- * a literal `\.br\`.
+ * they are. `decodeEscapes(encodeEscapes(value, d), d)` is `value`.
  *
  * @param value - The value to write.
  * @param d - The delimiters of the message.
  * @returns The encoded value.
  */
 export function encodeEscapes(value: string, d: Delimiters): string {
+  if (!needsEncoding(value, d)) {
+    return value;
+  }
+
   let encoded = "";
   let copied = 0;
 
   for (let i = 0; i < value.length; i += 1) {
-    const sequenceEnd = verbatimSequenceEnd(value, i, d);
-    if (sequenceEnd !== -1) {
-      i = sequenceEnd;
-      continue;
+    if (value[i] === d.escape) {
+      const sequenceEnd = verbatimSequenceEnd(value, i, d);
+      if (sequenceEnd !== -1) {
+        i = sequenceEnd;
+        continue;
+      }
     }
     const sequence = escapeSequence(value, i, d);
     if (sequence !== undefined) {
@@ -128,7 +153,29 @@ export function encodeEscapes(value: string, d: Delimiters): string {
     }
   }
 
-  return copied === 0 ? value : encoded + value.slice(copied);
+  return encoded + value.slice(copied);
+}
+
+/**
+ * Whether `value` holds a delimiter, the escape character, or a character below
+ * U+0020.
+ */
+function needsEncoding(value: string, d: Delimiters): boolean {
+  for (let i = 0; i < value.length; i += 1) {
+    const ch = value.charAt(i);
+    if (
+      ch === d.field ||
+      ch === d.component ||
+      ch === d.repetition ||
+      ch === d.subcomponent ||
+      ch === d.escape ||
+      ch === d.segment ||
+      ch < SPACE
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -141,14 +188,22 @@ function verbatimSequenceEnd(
   index: number,
   d: Delimiters
 ): number {
-  if (value[index] !== d.escape) {
-    return -1;
-  }
   const end = value.indexOf(d.escape, index + 1);
   if (end === -1) {
     return -1;
   }
-  return VERBATIM_SEQUENCE.test(value.slice(index + 1, end)) ? end : -1;
+  const code = value.slice(index + 1, end);
+  return VERBATIM_SEQUENCE.test(code) && !holdsDelimiter(code, d) ? end : -1;
+}
+
+function holdsDelimiter(code: string, d: Delimiters): boolean {
+  return (
+    code.includes(d.field) ||
+    code.includes(d.component) ||
+    code.includes(d.repetition) ||
+    code.includes(d.subcomponent) ||
+    code.includes(d.segment)
+  );
 }
 
 /**
