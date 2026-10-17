@@ -187,7 +187,7 @@ export function spawnChild(
         maxLineLength: opts.maxLineLength,
         onOverflow: (bytes) => {
           const warning: Event = {
-            message: `child stdout dropped ${bytes} bytes (line exceeded max length)`,
+            message: `The app wrote a line past the ${bytes}-byte limit, so the line was dropped.`,
             t: "warning",
             ts: new Date().toISOString(),
           };
@@ -221,7 +221,7 @@ export function spawnChild(
         onOverflow: (bytes) => {
           for (const listener of stderrListeners) {
             listener(
-              `[child stderr dropped ${bytes} bytes (line exceeded max length)]`
+              `[the app wrote a line past the ${bytes}-byte limit, so the line was dropped]`
             );
           }
         },

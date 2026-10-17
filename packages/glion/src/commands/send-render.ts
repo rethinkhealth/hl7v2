@@ -89,6 +89,8 @@ export interface SendTransportOutcome {
   /** What became of the message: `not-sent`, or `unknown`. */
   delivery: "not-sent" | "unknown";
   message: string;
+  /** What to do about it, when the failure knows. */
+  hint?: string;
   /** The text of the error's `cause`, when it had one. */
   cause?: string;
 }
@@ -115,6 +117,8 @@ export interface SendInvalidOutcome {
    */
   request?: SendRequestSummary;
   message: string;
+  /** What to do about it, when the failure knows. */
+  hint?: string;
   /** The text of the error's `cause`, when it had one. */
   cause?: string;
 }
@@ -231,8 +235,16 @@ function renderInvalid(outcome: SendInvalidOutcome): string {
     parts.push(outcome.code);
   }
   parts.push(outcome.message);
-  const head = parts.join("  ");
-  return outcome.cause === undefined ? head : `${head}\n   ${outcome.cause}`;
+  // The fact on the first line; the cause and what to do about it under it,
+  // each on its own line, never folded into the sentence.
+  const lines = [parts.join("  ")];
+  if (outcome.cause !== undefined) {
+    lines.push(`   ${outcome.cause}`);
+  }
+  if (outcome.hint !== undefined) {
+    lines.push(`   ${outcome.hint}`);
+  }
+  return lines.join("\n");
 }
 
 /** The `<- ACK|NAK CODE MSA-2 <id> <duration>` reply line. */
@@ -390,6 +402,9 @@ function toJsonRecord(outcome: SendOutcome): Record<string, unknown> {
       }
       if (outcome.cause !== undefined) {
         record.cause = outcome.cause;
+      }
+      if (outcome.hint !== undefined) {
+        record.hint = outcome.hint;
       }
       return record;
     }
