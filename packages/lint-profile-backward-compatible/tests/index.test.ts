@@ -64,13 +64,13 @@ describe("hl7v2LintBackwardCompatible", () => {
       expect(message?.source).toBe("hl7v2-lint");
     });
 
-    it("reports the value as content, not as it is on the wire", async () => {
+    it("reports the field as HL7v2 text, with its escape sequences", async () => {
       const [message] = await lint(
         msh("2.5.1"),
         "DG1|1|I9|250.00|DIA\\F\\BETES"
       );
 
-      expect(message?.actual).toBe("DIA|BETES");
+      expect(message?.actual).toBe("DIA\\F\\BETES");
     });
 
     // `|` after DG1-3 leaves DG1-4 present but empty.

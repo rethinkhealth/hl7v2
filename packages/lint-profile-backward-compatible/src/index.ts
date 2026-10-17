@@ -65,7 +65,7 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
         return false;
       }
 
-      const value = toHl7v2(node, delimiters(tree), { encodeEscapes: false });
+      const value = toHl7v2(node, delimiters(tree));
       if (value !== EXPLICIT_NULL) {
         const message = file.message(messages.backwardCompatible(version), {
           ancestors,
