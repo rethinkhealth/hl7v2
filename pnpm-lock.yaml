@@ -789,6 +789,9 @@ importers:
 
   packages/encode-escapes:
     dependencies:
+      '@glion/util-query':
+        specifier: workspace:*
+        version: link:../util-query
       '@glion/util-visit':
         specifier: workspace:*
         version: link:../util-visit

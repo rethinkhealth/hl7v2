@@ -43,6 +43,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@glion/util-query": "workspace:*",
     "@glion/util-visit": "workspace:*",
     "@glion/utils": "workspace:*",
     "unified": "11.0.5"
