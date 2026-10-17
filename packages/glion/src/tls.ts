@@ -17,9 +17,9 @@ export async function readTlsFile(
   } catch (error) {
     throw new GlionError(
       "tls-read-failed",
-      `Failed to read ${field} at ${path}`,
+      `The TLS file \`${path}\` could not be read.`,
       { field, path },
-      "Check that the file exists and is readable (chmod 600 for key files).",
+      `Check that \`${field}\` names a file this process can read (chmod 600 for key files).`,
       error
     );
   }

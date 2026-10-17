@@ -18,7 +18,7 @@ import { loadTls } from "./send-tls";
 
 export type TargetResult =
   | { ok: true; host: string; port: number }
-  | { ok: false; reason: string };
+  | { ok: false; reason: string; hint?: string };
 
 /**
  * Resolve the MLLP target. `--host` names the receiver; `--port` defaults to
@@ -29,9 +29,9 @@ export type TargetResult =
 export function resolveTarget(args: SendArgs): TargetResult {
   if (args.host === undefined) {
     return {
+      hint: "Pass `--host` with the system to send to.",
       ok: false,
-      reason:
-        "No target host is defined. Pass `--host` with the system to send to.",
+      reason: "No target host is defined.",
     };
   }
   return { host: args.host, ok: true, port: args.port ?? DEFAULT_PORT };
@@ -40,13 +40,20 @@ export function resolveTarget(args: SendArgs): TargetResult {
 /** Where a `glion send` is aimed, and how the connection is secured. */
 export type DestinationResult =
   | { ok: true; target: SendTarget; tls: NodeSocketOptions["tls"] }
-  | { ok: false; reason: string; cause?: string; target?: SendTarget };
+  | {
+      ok: false;
+      reason: string;
+      hint?: string;
+      cause?: string;
+      target?: SendTarget;
+    };
 
 /**
  * Resolves where the message goes and how the connection is secured: the
  * target {@link resolveTarget} reads from `args`, and the certificate files
  * the invocation names read into memory. A host that is not defined and a
- * file that cannot be read are `reason`s; anything else propagates.
+ * file that cannot be read are `reason`s, each with the failure's own hint
+ * and cause; anything else propagates.
  */
 export async function resolveDestination(
   args: SendArgs
@@ -64,6 +71,7 @@ export async function resolveDestination(
       // read still reports the endpoint the send was aimed at.
       return {
         cause: causeMessage(error.cause),
+        hint: error.hint,
         ok: false,
         reason: error.message,
         target,

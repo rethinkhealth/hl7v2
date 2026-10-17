@@ -85,7 +85,7 @@ function takeFlagValue(
 ): string | { error: string } {
   const next = argv[index + 1];
   if (next === undefined || next === "" || next.startsWith("-")) {
-    return { error: `${flag} requires a value` };
+    return { error: `\`${flag}\` takes a value.` };
   }
   return next;
 }
@@ -105,13 +105,9 @@ function takeIntFlagValue(
     return raw;
   }
   if (!/^\d+$/.test(raw)) {
-    return { error: `${flag} requires an integer value, got: ${raw}` };
+    return { error: `\`${flag}\` takes a whole number.` };
   }
-  const parsed = Number.parseInt(raw, 10);
-  if (parsed === 0) {
-    return { error: `${flag} requires a positive integer, got: 0` };
-  }
-  return parsed;
+  return Number.parseInt(raw, 10);
 }
 
 /**
@@ -128,10 +124,26 @@ function takePortValue(
   if (typeof parsed === "object") {
     return parsed;
   }
-  if (parsed > MAX_PORT) {
-    return {
-      error: `--port requires a port between 1 and ${MAX_PORT}, got: ${parsed}`,
-    };
+  if (parsed < 1 || parsed > MAX_PORT) {
+    return { error: `\`--port\` takes a port between 1 and ${MAX_PORT}.` };
+  }
+  return parsed;
+}
+
+/**
+ * Reads the millisecond value of `--timeout` at `index`. A deadline of zero
+ * is no deadline at all, so it is refused with the flag's own sentence.
+ */
+function takeTimeoutValue(
+  argv: readonly string[],
+  index: number
+): number | { error: string } {
+  const parsed = takeIntFlagValue(argv, index, "--timeout");
+  if (typeof parsed === "object") {
+    return parsed;
+  }
+  if (parsed === 0) {
+    return { error: "`--timeout` takes a number of milliseconds above zero." };
   }
   return parsed;
 }
@@ -211,7 +223,7 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       continue;
     }
     if (arg === "--timeout") {
-      const parsed = takeIntFlagValue(argv, i, "--timeout");
+      const parsed = takeTimeoutValue(argv, i);
       if (typeof parsed === "object") {
         return { error: parsed.error, ok: false };
       }
@@ -222,13 +234,13 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
     // The bare "-" sentinel is a positional meaning "read from stdin",
     // not an unknown flag — accept it before the flag-rejection branch.
     if (arg !== "-" && arg.startsWith("-")) {
-      return { error: `Unknown flag: ${arg}`, ok: false };
+      return { error: `\`${arg}\` is not a \`glion send\` flag.`, ok: false };
     }
     positional.push(arg);
   }
 
   if (positional.length > 1) {
-    return { error: `Unexpected argument: ${positional[1]}`, ok: false };
+    return { error: "`glion send` takes one message source.", ok: false };
   }
 
   // "-" and absence both mean stdin; collapse the sentinel to undefined
@@ -332,10 +344,16 @@ async function readStream(stream: NodeJS.ReadableStream): Promise<string> {
   return data;
 }
 
-/** The message source's text, or why it could not be read. */
-type ReadResult = { ok: true; text: string } | { ok: false; reason: string };
+/** The message text a source holds, or why it could not be read. */
+type ReadResult =
+  | { ok: true; text: string }
+  | { ok: false; reason: string; cause?: string };
 
-/** Reads the message source `args` names, or standard input when it names none. */
+/**
+ * Reads the message from the file `args` names, or from stdin when it names
+ * none. A source that cannot be read is a `reason` naming it, with the
+ * underlying error as the `cause`.
+ */
 async function readMessageText(
   args: SendArgs,
   opts: RunSendOptions
@@ -347,8 +365,12 @@ async function readMessageText(
         : await readFile(args.file, "utf8");
     return { ok: true, text };
   } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-    return { ok: false, reason: `Could not read the message: ${reason}` };
+    const cause = causeMessage(error);
+    const reason =
+      args.file === undefined
+        ? "Standard input could not be read."
+        : `The message source \`${args.file}\` could not be read.`;
+    return { cause, ok: false, reason };
   }
 }
 
@@ -472,6 +494,7 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   if (!destination.ok) {
     return emit({
       cause: destination.cause,
+      hint: destination.hint,
       kind: "invalid",
       message: destination.reason,
       target: destination.target,
@@ -481,7 +504,12 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
 
   const read = await readMessageText(args, opts);
   if (!read.ok) {
-    return emit({ kind: "invalid", message: read.reason, target });
+    return emit({
+      cause: read.cause,
+      kind: "invalid",
+      message: read.reason,
+      target,
+    });
   }
 
   // Parse to a tree, then re-serialize to canonical, CR-delimited form. The

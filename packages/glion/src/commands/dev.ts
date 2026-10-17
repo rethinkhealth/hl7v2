@@ -1,6 +1,6 @@
 import { loadConfig } from "../config/load";
 import type { ResolvedConfig } from "../config/schema";
-import { GlionError } from "../errors";
+import { causeMessage, GlionError } from "../errors";
 import { encode } from "../events";
 import type { FileLogger } from "../file-logger";
 import { createFileLogger } from "../file-logger";
@@ -9,6 +9,26 @@ import type { Watcher } from "../parent/watcher";
 import { createWatcher } from "../parent/watcher";
 import { ensureCacheDir, prepareChild } from "../prebuild";
 import { createStore } from "../tui/store";
+
+/**
+ * Writes a failure to `sink`: the fact first, then the underlying error and
+ * what to do about it, each on its own line. A `GlionError` keeps those in
+ * separate channels, so the terminal is where they are put back together.
+ */
+function reportFailure(error: unknown, sink: NodeJS.WritableStream): void {
+  const message = error instanceof Error ? error.message : String(error);
+  sink.write(`glion dev: ${message}\n`);
+  if (!(error instanceof GlionError)) {
+    return;
+  }
+  const { cause, hint } = error;
+  if (cause !== undefined) {
+    sink.write(`\n${causeMessage(cause)}\n`);
+  }
+  if (hint) {
+    sink.write(`\n${hint}\n`);
+  }
+}
 
 /**
  * The address `glion dev` binds when the project names none: loopback, so a
@@ -154,11 +174,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
       ? await runInteractive(supervisor, watcher)
       : await runHeadless(supervisor, stdout);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    stderr.write(`glion dev: ${message}\n`);
-    if (error instanceof GlionError && error.hint) {
-      stderr.write(`\n${error.hint}\n`);
-    }
+    reportFailure(error, stderr);
     return 1;
   } finally {
     // Cleanup runs on every exit path — normal return, thrown error,

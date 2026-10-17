@@ -79,6 +79,20 @@ describe("ensureCacheDir", () => {
       await rm(newDir, { force: true, recursive: true });
     }
   });
+
+  it("reports a directory it cannot create as a GlionError", async () => {
+    const newDir = await mkdtemp(join(tmpdir(), "glion-cache-blocked-"));
+    try {
+      // A file where the directory belongs: mkdir cannot create it.
+      await writeFile(join(newDir, ".glion"), "");
+      await expect(ensureCacheDir(newDir)).rejects.toMatchObject({
+        kind: "cache-dir-failed",
+        message: `The cache directory \`${join(newDir, ".glion")}\` could not be created.`,
+      });
+    } finally {
+      await rm(newDir, { force: true, recursive: true });
+    }
+  });
 });
 
 describe("prepareChild", () => {
