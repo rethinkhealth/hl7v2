@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PassThrough } from "node:stream";
@@ -127,9 +127,10 @@ describe("runStart — process-listener lifecycle", () => {
     // we'd call `process.off(sig, undefined)` which would either
     // throw or silently break the listener table.
     //
-    // Force that path by pointing runStart at a directory with no
-    // glion config at all. `loadConfig` throws `config-not-found`
-    // before any signal handler is registered.
+    // Force that path by pointing runStart at an empty directory. A
+    // project with no config file runs on the defaults, so the failure
+    // comes from the entry build — still before any signal handler is
+    // registered.
     const emptyDir = await mkdtemp(join(tmpdir(), "glion-start-empty-"));
     try {
       const sigintBefore = process.listenerCount("SIGINT");
@@ -152,6 +153,36 @@ describe("runStart — process-listener lifecycle", () => {
       expect(process.listenerCount("SIGTERM")).toBe(sigtermBefore);
     } finally {
       await rm(emptyDir, { force: true, recursive: true });
+    }
+  });
+});
+
+describe("runStart — a project with no config file", () => {
+  it("runs the app it discovers on the defaults", async () => {
+    const bare = await mkdtemp(join(tmpdir(), "glion-start-no-config-"));
+    try {
+      await writeFile(join(bare, "glion.app.ts"), "export default {};");
+
+      const stdout = new PassThrough();
+      const stderr = new PassThrough();
+      stdout.resume();
+      stderr.resume();
+
+      await runStart({ cwd: bare, stderr, stdout });
+
+      // The manifest is what the child binds, so it is where the defaults a
+      // project without a config file runs on are visible: the discovered
+      // app, MLLP's port, and every interface for `glion start`.
+      const manifest = JSON.parse(
+        await readFile(join(bare, ".glion", "manifest.json"), "utf8")
+      ) as Record<string, unknown>;
+      expect(manifest).toMatchObject({
+        compiledEntry: join(bare, ".glion", "glion.app.js"),
+        hostname: "0.0.0.0",
+        port: 2575,
+      });
+    } finally {
+      await rm(bare, { force: true, recursive: true });
     }
   });
 });
