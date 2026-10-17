@@ -44,7 +44,10 @@ describe("deriveLocalTarget", () => {
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.reason).toBe(
-        "The project's server port is `0`, so the operating system assigns it when the server starts. Pass `--port` with the port it is listening on."
+        "The project's server port is `0`, so the operating system assigns it when the server starts."
+      );
+      expect(result.hint).toBe(
+        "Pass `--port` with the port it is listening on."
       );
     }
   });
@@ -80,8 +83,9 @@ describe("resolveTarget", () => {
       const result = resolveTarget(given, DEFAULTS);
       expect(result.ok).toBe(false);
       if (!result.ok) {
-        expect(result.reason).toBe(
-          "No target host is defined. Pass `--host`, or `--local` to send to this project's server."
+        expect(result.reason).toBe("No target host is defined.");
+        expect(result.hint).toBe(
+          "Pass `--host`, or `--local` to send to this project's server."
         );
       }
     }

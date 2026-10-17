@@ -28,7 +28,7 @@ const LOOPBACK = new Set([LOOPBACK_V4, LOOPBACK_V6]);
 
 export type TargetResult =
   | { ok: true; host: string; port: number }
-  | { ok: false; reason: string };
+  | { ok: false; reason: string; hint?: string };
 
 /** The `client` settings other than `tls`: `MllpClientOptions` as given. */
 export type ClientSettings = Omit<NonNullable<ResolvedConfig["client"]>, "tls">;
@@ -41,7 +41,13 @@ export type ProjectResult =
       target: SendTarget;
       tls: NodeSocketOptions["tls"];
     }
-  | { ok: false; reason: string; target?: SendTarget };
+  | {
+      ok: false;
+      reason: string;
+      hint?: string;
+      cause?: string;
+      target?: SendTarget;
+    };
 
 /** The fields {@link deriveLocalTarget} reads from a resolved server config. */
 interface ConnectableConfig {
@@ -75,9 +81,10 @@ export function deriveLocalTarget(
   const port = overrides.port ?? config.port;
   if (port === 0) {
     return {
+      hint: "Pass `--port` with the port it is listening on.",
       ok: false,
       reason:
-        "The project's server port is `0`, so the operating system assigns it when the server starts. Pass `--port` with the port it is listening on.",
+        "The project's server port is `0`, so the operating system assigns it when the server starts.",
     };
   }
 
@@ -103,9 +110,9 @@ export function resolveTarget(
   if (!args.local) {
     if (args.host === undefined) {
       return {
+        hint: "Pass `--host`, or `--local` to send to this project's server.",
         ok: false,
-        reason:
-          "No target host is defined. Pass `--host`, or `--local` to send to this project's server.",
+        reason: "No target host is defined.",
       };
     }
     return { host: args.host, ok: true, port: args.port ?? DEFAULT_PORT };
@@ -153,7 +160,7 @@ export async function resolveProject(
     const config = await loadProjectConfig(args, cwd);
     const resolved = resolveTarget(args, config);
     if (!resolved.ok) {
-      return resolved;
+      return { hint: resolved.hint, ok: false, reason: resolved.reason };
     }
     target = { host: resolved.host, port: resolved.port };
     const { tls: configured, ...client } = config.client ?? {};
@@ -168,8 +175,22 @@ export async function resolveProject(
     return { client, ok: true, target, tls };
   } catch (error) {
     if (error instanceof GlionError) {
-      return { ok: false, reason: error.message, target };
+      return {
+        cause: causeMessage(error.cause),
+        hint: error.hint,
+        ok: false,
+        reason: error.message,
+        target,
+      };
     }
     throw error;
   }
+}
+
+/** The message of an error's `cause`, when it had one. */
+function causeMessage(cause: unknown): string | undefined {
+  if (cause === undefined) {
+    return undefined;
+  }
+  return cause instanceof Error ? cause.message : String(cause);
 }
