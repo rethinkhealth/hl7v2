@@ -132,13 +132,13 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(subValue(results)).toBe("\\Zsite 7\\a\\F\\b\\C2842\\c\\M2442\\d");
   });
 
-  it("writes a subcomponent without a value as empty", async () => {
+  it("leaves a subcomponent without a value as it is", async () => {
     const tree = m(s("PID", f("x")));
     const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
       ?.children[0]?.children[0];
     Object.assign(subcomponent ?? {}, { value: undefined });
     const results = await unified().use(hl7v2EncodeEscapes).run(tree);
-    expect(subValue(results)).toBe("");
+    expect(subValue(results)).toBeUndefined();
   });
 
   it("rewrites subcomponents only", async () => {

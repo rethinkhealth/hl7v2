@@ -1,8 +1,10 @@
-import type { Delimiters, Root, Segment, Subcomponent } from "@glion/ast";
+import type { Delimiters, Root } from "@glion/ast";
+import { visit } from "@glion/util-visit";
 import { DEFAULT_DELIMITERS, encodeEscapes } from "@glion/utils";
 import type { Plugin } from "unified";
-import { SKIP, visit } from "unist-util-visit";
 import type { VFile } from "vfile";
+
+const ENCODING_CHARACTER_FIELDS = 2;
 
 export interface HL7v2EncodeOptions {
   delimiters?: Partial<Delimiters>;
@@ -27,23 +29,17 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
       ...options?.delimiters,
     };
 
-    visit(tree, (node, index, parent) => {
-      // Skip MSH-1 (index 0) and MSH-2 (index 1) — they define delimiters
-      if (
-        node.type === "field" &&
-        index !== undefined &&
-        index < 2 &&
-        parent?.type === "segment" &&
-        (parent as Segment).name === "MSH"
-      ) {
-        return SKIP;
-      }
-
-      if (node.type === "subcomponent") {
-        (node as Subcomponent).value = encodeEscapes(
-          (node as Subcomponent).value ?? "",
-          d
-        );
+    visit(tree, "segment", (segment) => {
+      const fields =
+        segment.name === "MSH"
+          ? segment.children.slice(ENCODING_CHARACTER_FIELDS)
+          : segment.children;
+      for (const field of fields) {
+        visit(field, "subcomponent", (node) => {
+          if (node.value !== undefined) {
+            node.value = encodeEscapes(node.value, d);
+          }
+        });
       }
     });
 

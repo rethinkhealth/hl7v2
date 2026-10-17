@@ -28,7 +28,9 @@ export const hl7v2DecodeEscapes: Plugin<[HL7v2DecodeOptions?], Root, Root> =
     };
 
     visit(tree, "subcomponent", (node: Subcomponent) => {
-      node.value = decodeEscapes(node.value ?? "", d);
+      if (node.value !== undefined) {
+        node.value = decodeEscapes(node.value, d);
+      }
     });
 
     return tree;

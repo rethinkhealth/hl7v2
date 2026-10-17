@@ -111,7 +111,7 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Value*More");
   });
 
-  it("leaves a subcomponent without a value empty", async () => {
+  it("leaves a subcomponent without a value as it is", async () => {
     const tree = m(s("PID", f("x")));
     const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
       ?.children[0]?.children[0];
@@ -120,7 +120,7 @@ describe("hl7v2DecodeEscapes plugin", () => {
     expect(
       (results.children[0] as Segment).children[0]?.children[0]?.children[0]
         ?.children[0]?.value
-    ).toBe("");
+    ).toBeUndefined();
   });
 
   it("does nothing when there are no escapes", async () => {
