@@ -489,6 +489,16 @@ describe("toHl7v2 escape sequences", () => {
     expect(toHl7v2(tree)).toBe("PID|a\\E\\b\\.br\\c\\X0A\\d");
   });
 
+  it("writes a formatting command, a locally defined sequence, and a character set switch as they are", () => {
+    const tree = m(
+      s("PID", f("\\H\\a|b\\N\\\\Zsite 7\\c\\C2842\\d\\M2442\\e"))
+    );
+
+    expect(toHl7v2(tree)).toBe(
+      "PID|\\H\\a\\F\\b\\N\\\\Zsite 7\\c\\C2842\\d\\M2442\\e"
+    );
+  });
+
   it("writes MSH-1 and MSH-2 as they are", () => {
     const tree = m(s("MSH", f("|"), f("^~\\&"), f("a|b")));
 

@@ -126,6 +126,12 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(subValue(results)).toBe("\\H\\a\\F\\b\\N\\ \\.sp 2\\c");
   });
 
+  it("writes a locally defined sequence and a character set switch as they are", async () => {
+    const tree = m(s("PID", f("\\Zsite 7\\a|b\\C2842\\c\\M2442\\d")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("\\Zsite 7\\a\\F\\b\\C2842\\c\\M2442\\d");
+  });
+
   it("does not double-encode already-escaped values", async () => {
     // If a value contains literal backslash (the escape char),
     // it should be encoded as \E\ — not left as-is

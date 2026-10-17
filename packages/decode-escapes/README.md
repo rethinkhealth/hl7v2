@@ -4,7 +4,7 @@ Unified plugin to decode HL7v2 escape sequences in literal values.
 
 ## What it does
 
-Walks an HL7v2 AST and decodes escape sequences found in `subcomponent` nodes, replacing `node.value` with the decoded text. It handles the HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`), hexadecimal escapes (`\Xdddd\`), and line-break directives (`\.br\`). A formatting command such as `\H\`, `\N\`, or `\.sp 2\` stays as written.
+Walks an HL7v2 AST and decodes escape sequences found in `subcomponent` nodes, replacing `node.value` with the decoded text. It handles the HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`), hexadecimal escapes (`\Xdddd\`), and line-break directives (`\.br\`). A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) stay as written.
 
 `@glion/parser` decodes escape sequences while parsing, so this plugin is for a tree parsed with `decodeEscapes: false`. A decoded value must not be decoded again: `\E\F\E\` on the wire is the value `\F\`, and decoding it a second time gives `|`.
 
@@ -81,6 +81,8 @@ Each escape sequence is decoded as follows:
 | `\H\`     | kept as written (highlight on)                 |
 | `\N\`     | kept as written (normal text)                  |
 | `\.sp 2\` | kept as written (any other formatting command) |
+| `\Z…\`    | kept as written (locally defined sequence)     |
+| `\C2842\` | kept as written (character set switch)         |
 
 Delimiter resolution order: `options.delimiters` → `file.data.delimiters` (set by `@glion/annotate-delimiters`) → HL7 defaults.
 

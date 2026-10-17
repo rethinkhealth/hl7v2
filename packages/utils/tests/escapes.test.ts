@@ -76,6 +76,21 @@ describe(decodeEscapes, () => {
     ).toBe("a\\.sp 2\\b\\.in+4\\c\\.ce\\d");
   });
 
+  it("keeps a locally defined sequence as it is", () => {
+    expect(decodeEscapes("a\\Zsite 7\\b\\Z\\c", DEFAULT_DELIMITERS)).toBe(
+      "a\\Zsite 7\\b\\Z\\c"
+    );
+  });
+
+  it("keeps a character set switch as it is", () => {
+    expect(
+      decodeEscapes(
+        "\\C2842\\abc\\M2442\\def\\M242844\\ghi",
+        DEFAULT_DELIMITERS
+      )
+    ).toBe("\\C2842\\abc\\M2442\\def\\M242844\\ghi");
+  });
+
   it("leaves an escape character without a closing one untouched", () => {
     expect(decodeEscapes("Value\\Unterminated", DEFAULT_DELIMITERS)).toBe(
       "Value\\Unterminated"
@@ -112,7 +127,34 @@ describe(encodeEscapes, () => {
     ).toBe("\\H\\a\\F\\b\\N\\ \\.sp 2\\c\\.in+4\\d");
   });
 
-  it("encodes an escape character that does not start a formatting command", () => {
+  it("writes a locally defined sequence as it is", () => {
+    expect(encodeEscapes("a\\Zsite 7\\b|\\Z\\c", DEFAULT_DELIMITERS)).toBe(
+      "a\\Zsite 7\\b\\F\\\\Z\\c"
+    );
+  });
+
+  it("writes a character set switch as it is", () => {
+    expect(
+      encodeEscapes("\\C2842\\a|b\\M2442\\c\\M242844\\d", DEFAULT_DELIMITERS)
+    ).toBe("\\C2842\\a\\F\\b\\M2442\\c\\M242844\\d");
+  });
+
+  it("writes a character set switch with the escape character MSH-2 declares", () => {
+    expect(encodeEscapes("#C2842#a*b#M2442#c", CUSTOM_DELIMITERS)).toBe(
+      "#C2842#a#F#b#M2442#c"
+    );
+  });
+
+  it("encodes a character set switch whose content is not hexadecimal pairs", () => {
+    expect(
+      encodeEscapes(
+        "a\\C284\\b\\C28G2\\c\\M24\\d\\M2442843\\e",
+        DEFAULT_DELIMITERS
+      )
+    ).toBe("a\\E\\C284\\E\\b\\E\\C28G2\\E\\c\\E\\M24\\E\\d\\E\\M2442843\\E\\e");
+  });
+
+  it("encodes an escape character that does not start a sequence written as it is", () => {
     expect(encodeEscapes("a\\Q\\b\\.sp|2\\c\\", DEFAULT_DELIMITERS)).toBe(
       "a\\E\\Q\\E\\b\\E\\.sp\\F\\2\\E\\c\\E\\"
     );

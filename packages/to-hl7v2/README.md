@@ -61,7 +61,7 @@ toHl7v2(fieldNode); // "DOE\\T\\SMITH" for the value "DOE&SMITH"
 
 ### Escape sequences
 
-Each subcomponent value is written as it must appear on the wire: the field, component, repetition, subcomponent, and escape delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting command such as `\H\`, `\N\`, or `\.sp 2\` is written as it is. MSH-1 and MSH-2 are written as they are. `encodeEscapes: false` writes every value as it is.
+Each subcomponent value is written as it must appear on the wire: the field, component, repetition, subcomponent, and escape delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. MSH-1 and MSH-2 are written as they are. `encodeEscapes: false` writes every value as it is.
 
 ## Round-trip guarantees
 
