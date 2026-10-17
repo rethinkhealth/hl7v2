@@ -8,12 +8,10 @@ describe("parseSendArgs", () => {
       const result = parseSendArgs([]);
       expect(result).toEqual({
         args: {
-          configPath: undefined,
           file: undefined,
           help: false,
           host: undefined,
           json: false,
-          local: false,
           port: undefined,
           timeoutMs: undefined,
         },
@@ -72,64 +70,6 @@ describe("parseSendArgs", () => {
       if (result.ok) {
         expect(result.args.port).toBe(2575);
         expect(typeof result.args.port).toBe("number");
-      }
-    });
-  });
-
-  describe("--local", () => {
-    it("sets local to true", () => {
-      const result = parseSendArgs(["--local"]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args.local).toBe(true);
-      }
-    });
-
-    it("allows --host to override an individual field alongside --local", () => {
-      const result = parseSendArgs(["--local", "--host", "10.0.0.5"]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args.local).toBe(true);
-        expect(result.args.host).toBe("10.0.0.5");
-        expect(result.args.port).toBeUndefined();
-      }
-    });
-
-    it("allows --port to override an individual field alongside --local", () => {
-      const result = parseSendArgs(["--local", "--port", "9999"]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args.local).toBe(true);
-        expect(result.args.port).toBe(9999);
-        expect(result.args.host).toBeUndefined();
-      }
-    });
-
-    it("allows both --host and --port overrides alongside --local", () => {
-      const result = parseSendArgs([
-        "--local",
-        "--host",
-        "10.0.0.5",
-        "--port",
-        "6000",
-      ]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args).toMatchObject({
-          host: "10.0.0.5",
-          local: true,
-          port: 6000,
-        });
-      }
-    });
-  });
-
-  describe("--config", () => {
-    it("captures a config path", () => {
-      const result = parseSendArgs(["--config", "./glion.config.ts"]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args.configPath).toBe("./glion.config.ts");
       }
     });
   });
@@ -194,12 +134,10 @@ describe("parseSendArgs", () => {
       ]);
       expect(result).toEqual({
         args: {
-          configPath: undefined,
           file: "message.hl7",
           help: false,
           host: "192.168.1.10",
           json: true,
-          local: false,
           port: 2575,
           timeoutMs: 10_000,
         },
@@ -219,13 +157,18 @@ describe("parseSendArgs", () => {
       expect(result).toEqual({ error: "--host requires a value", ok: false });
     });
 
+    it("rejects an empty --host: an unset shell variable names no target", () => {
+      const result = parseSendArgs(["--host", "", "--port", "2575"]);
+      expect(result).toEqual({ error: "--host requires a value", ok: false });
+    });
+
     it("rejects --port without a value", () => {
       const result = parseSendArgs(["--port"]);
       expect(result).toEqual({ error: "--port requires a value", ok: false });
     });
 
     it("rejects --port followed by a flag", () => {
-      const result = parseSendArgs(["--port", "--local"]);
+      const result = parseSendArgs(["--port", "--json"]);
       expect(result).toEqual({ error: "--port requires a value", ok: false });
     });
 
@@ -245,18 +188,18 @@ describe("parseSendArgs", () => {
       });
     });
 
-    it("rejects --config without a value", () => {
-      const result = parseSendArgs(["--config"]);
+    it("rejects --config, which `glion send` does not take", () => {
+      const result = parseSendArgs(["--config", "./glion.config.ts"]);
       expect(result).toEqual({
-        error: "--config requires a path argument",
+        error: "Unknown flag: --config",
         ok: false,
       });
     });
 
-    it("rejects --config followed by a flag", () => {
-      const result = parseSendArgs(["--config", "--json"]);
+    it("rejects a port no host can listen on", () => {
+      const result = parseSendArgs(["--port", "70000"]);
       expect(result).toEqual({
-        error: "--config requires a path argument",
+        error: "--port requires a port between 1 and 65535, got: 70000",
         ok: false,
       });
     });

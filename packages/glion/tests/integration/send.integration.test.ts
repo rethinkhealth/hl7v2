@@ -39,7 +39,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -60,7 +59,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AE", true)),
       stderr,
       stdin: Readable.from(ADT),
@@ -79,7 +77,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       reconnect: false,
       socket: refusingSocket,
       stderr,
@@ -97,7 +94,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       reconnect: { attempts: 1, delay: () => 0 },
       socket: flakySocket(1, ackFrame("AA")),
       stderr,
@@ -115,7 +111,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: [],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -130,7 +125,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: ["--help"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -139,14 +133,13 @@ describe("runSend (integration, fake socket)", () => {
 
     expect(code).toBe(0);
     expect(state.out).toContain("glion send");
-    expect(state.out).toContain("--local");
+    expect(state.out).toContain("--host");
   });
 
   it("prints the parse error and help to stderr and exits 2", async () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: ["--nope"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -162,7 +155,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: [file, "--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdout,
@@ -178,7 +170,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from("MSHXE~\\&XAPP\\bXFAC"),
@@ -197,7 +188,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: ["/no/such/file.hl7", "--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdout,
@@ -214,7 +204,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(noControlId),
@@ -235,7 +224,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(withVt),
@@ -252,7 +240,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture(true);
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -270,7 +257,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture(true);
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       reconnect: false,
       socket: refusingSocket,
       stderr,

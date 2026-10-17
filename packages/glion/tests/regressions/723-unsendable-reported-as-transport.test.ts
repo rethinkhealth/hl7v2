@@ -26,7 +26,6 @@ describe("glion send with a message the client cannot prepare", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT.replace("|MSG00001|", "||")),
@@ -44,7 +43,6 @@ describe("glion send with a message the client cannot prepare", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       // Since #1001 a control character in a value is encoded as \X0B\ and
@@ -66,7 +64,6 @@ describe("glion send with a message the client cannot prepare", () => {
     const { state, stderr, stdout } = capture(true);
     await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT.replace("|MSG00001|", "||")),
