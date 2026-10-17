@@ -50,7 +50,7 @@ describe("loadTls", () => {
   it("names the file it could not read", async () => {
     await expect(loadTls({ ca: "/no/such/ca.pem" })).rejects.toMatchObject({
       kind: "tls-read-failed",
-      message: "Failed to read the TLS ca file at /no/such/ca.pem",
+      message: "The TLS `ca` file `/no/such/ca.pem` could not be read.",
     });
   });
 });
