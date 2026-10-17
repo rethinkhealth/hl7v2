@@ -36,11 +36,8 @@ export const DEFAULT_SEND_TIMEOUT_MS = 30_000;
  *
  * - `file` — positional message source. `undefined` or `"-"` both mean "read from
  *   stdin"; the handler treats them identically.
- * - `host` / `port` — explicit target. When `--local` is set these override the
- *   individual fields derived from the config.
- * - `local` — derive host/port from the project's `glion.config.ts`.
- * - `configPath` — config file used to resolve `--local` (same discovery as
- *   `dev`/`start`).
+ * - `host` / `port` — the target to send to.
+ * - `configPath` — config file to load instead of discovering one in `cwd`.
  * - `timeoutMs` — deadline spanning connect + ACK wait.
  * - `json` — force JSON output even on a TTY.
  * - `help` — print subcommand help instead of sending.
@@ -49,7 +46,6 @@ export interface SendArgs {
   file?: string;
   host?: string;
   port?: number;
-  local: boolean;
   configPath?: string;
   timeoutMs?: number;
   json: boolean;
@@ -61,9 +57,10 @@ export type ParseSendResult =
   | { ok: false; error: string };
 
 /**
- * Reads the token after a value flag at `index`, treating an end-of-argv
- * or a following `-`-prefixed token as "no value supplied". A returned
- * `string` is the captured value; a `{ error }` object is a usage failure.
+ * Reads the token after a value flag at `index`, treating an end-of-argv, an
+ * empty token, and a following `-`-prefixed token as "no value supplied". A
+ * returned `string` is the captured value; a `{ error }` object is a usage
+ * failure.
  */
 function takeFlagValue(
   argv: readonly string[],
@@ -71,7 +68,7 @@ function takeFlagValue(
   flag: string
 ): string | { error: string } {
   const next = argv[index + 1];
-  if (next === undefined || next.startsWith("-")) {
+  if (next === undefined || next === "" || next.startsWith("-")) {
     return { error: `${flag} requires a value` };
   }
   return next;
@@ -114,7 +111,6 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const positional: string[] = [];
   let host: string | undefined;
   let port: number | undefined;
-  let local = false;
   let configPath: string | undefined;
   let timeoutMs: number | undefined;
   let json = false;
@@ -129,10 +125,6 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
     }
     if (arg === "--json") {
       json = true;
-      continue;
-    }
-    if (arg === "--local") {
-      local = true;
       continue;
     }
     if (arg === "--host") {
@@ -189,7 +181,7 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const file = rawFile === undefined || rawFile === "-" ? undefined : rawFile;
 
   return {
-    args: { configPath, file, help, host, json, local, port, timeoutMs },
+    args: { configPath, file, help, host, json, port, timeoutMs },
     ok: true,
   };
 }
@@ -208,11 +200,9 @@ Message source:
 Target:
   --host <host>          target host
   --port <port>          target port
-  --local                read host/port from glion.config.ts (this project's
-                         server); --host/--port override individual fields
 
 Options:
-  --config <path>        config file to resolve --local (same discovery as dev/start)
+  --config <path>        config file to load instead of discovering one in cwd
   --timeout <ms>         deadline spanning connect + ACK wait (default 30000)
   --json                 print one JSON line instead of the human exchange view
   -h, --help             show this help
@@ -356,7 +346,7 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
     return exitCodeFor(outcome);
   };
 
-  const resolved = await resolveTarget(args, opts.cwd);
+  const resolved = resolveTarget(args);
   if (!resolved.ok) {
     return emit({ kind: "invalid", message: resolved.reason });
   }
