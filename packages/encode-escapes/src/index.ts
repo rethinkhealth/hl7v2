@@ -1,4 +1,4 @@
-import type { Delimiters, Root } from "@glion/ast";
+import type { Delimiters, Nodes, Root } from "@glion/ast";
 import { visit } from "@glion/util-visit";
 import { DEFAULT_DELIMITERS, encodeEscapes } from "@glion/utils";
 import type { Plugin } from "unified";
@@ -29,19 +29,25 @@ export const hl7v2EncodeEscapes: Plugin<[HL7v2EncodeOptions?], Root, Root> =
       ...options?.delimiters,
     };
 
-    visit(tree, "segment", (segment) => {
-      const fields =
-        segment.name === "MSH"
-          ? segment.children.slice(ENCODING_CHARACTER_FIELDS)
-          : segment.children;
-      for (const field of fields) {
-        visit(field, "subcomponent", (node) => {
-          if (node.value !== undefined) {
-            node.value = encodeEscapes(node.value, d);
-          }
-        });
+    visit(tree, "subcomponent", (node, ancestors) => {
+      if (node.value === undefined || isEncodingCharacters(ancestors)) {
+        return;
       }
+      node.value = encodeEscapes(node.value, d);
     });
 
     return tree;
   };
+
+/** Whether `ancestors` lead to MSH-1 or MSH-2. */
+function isEncodingCharacters(ancestors: readonly Nodes[]): boolean {
+  const [segment, field] = ancestors.slice(-4);
+  return (
+    // Stryker disable next-line ConditionalExpression, OptionalChaining: type narrowing; a subcomponent's fourth ancestor is always its segment and the third its field
+    segment?.type === "segment" &&
+    segment.name === "MSH" &&
+    // Stryker disable next-line ConditionalExpression, OptionalChaining: type narrowing; a subcomponent's fourth ancestor is always its segment and the third its field
+    field?.type === "field" &&
+    segment.children.indexOf(field) < ENCODING_CHARACTER_FIELDS
+  );
+}
