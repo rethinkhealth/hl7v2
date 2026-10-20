@@ -1,6 +1,7 @@
 import type { Delimiters, Root, Segment } from "@glion/ast";
 import { f, m, s } from "@glion/builder";
 import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
+import { EscapeSequenceError } from "@glion/utils";
 import { unified } from "unified";
 
 import { hl7v2EncodeEscapes } from "../src/index";
@@ -79,6 +80,23 @@ describe("hl7v2EncodeEscapes plugin", () => {
       .use(hl7v2EncodeEscapes, { delimiters: customDelimiters })
       .run(tree);
     expect(subValue(results)).toBe("a\\F\\b\\S\\c\\R\\d\\T\\e");
+  });
+
+  it("writes a character whose escape code is a delimiter as a hexadecimal escape", async () => {
+    const tree = m(s("PID", f("a\\b")));
+    const results = await unified()
+      .use(hl7v2EncodeEscapes, { delimiters: { component: "E" } })
+      .run(tree);
+    expect(subValue(results)).toBe("a\\X5C\\b");
+  });
+
+  it("rejects a value no escape sequence can write with the delimiters", async () => {
+    const tree = m(s("PID", f("aSb")));
+    await expect(
+      unified()
+        .use(hl7v2EncodeEscapes, { delimiters: { component: "S", field: "X" } })
+        .run(tree)
+    ).rejects.toThrow(EscapeSequenceError);
   });
 
   it("round-trips with decode: encode then decode restores original", async () => {

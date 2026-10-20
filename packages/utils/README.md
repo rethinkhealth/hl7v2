@@ -173,17 +173,36 @@ decodeEscapes("DOE\\T\\SMITH", DEFAULT_DELIMITERS); // "DOE&SMITH"
 
 ### `encodeEscapes(value, delimiters)`
 
-The value `value` takes on the wire. The field, component, repetition, subcomponent, and escape delimiters are written as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. `decodeEscapes(encodeEscapes(value, d), d)` is `value`.
+The value `value` takes on the wire. The field, component, repetition, subcomponent, and escape delimiters are written as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, is written as `\Xdd\`, the hexadecimal escape of its UTF-8 bytes, with a digit `A`–`F` in lowercase when its uppercase form is a delimiter. A formatting command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. The encoded value holds no field, component, repetition, subcomponent, or segment delimiter, and `decodeEscapes(encodeEscapes(value, d), d)` is `value`.
 
 - `value` (`string`) — the value to write.
 - `delimiters` (`Delimiters`) — the delimiters of the message.
 
-Returns the encoded `string`.
+Returns the encoded `string`. Throws `EscapeSequenceError` when a character must be escaped and every escape sequence that writes it holds a delimiter.
 
 ```typescript
 import { encodeEscapes, DEFAULT_DELIMITERS } from "@glion/utils";
 
 encodeEscapes("DOE&SMITH", DEFAULT_DELIMITERS); // "DOE\\T\\SMITH"
+```
+
+### `EscapeSequenceError`
+
+Thrown by `encodeEscapes` for a character no escape sequence can write. `character` holds the character and `delimiters` the delimiters it was written with.
+
+```typescript
+import { encodeEscapes } from "@glion/utils";
+
+const delimiters = {
+  component: "S",
+  escape: "\\",
+  field: "X",
+  repetition: "~",
+  segment: "\r",
+  subcomponent: "&",
+};
+
+encodeEscapes("S", delimiters); // throws EscapeSequenceError
 ```
 
 ### Conformance utilities

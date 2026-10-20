@@ -74,6 +74,8 @@ The plugin visits every `subcomponent` node and rewrites `node.value`, substitut
 | `\r`                          | `\.br\` (line break directive) |
 | other characters below U+0020 | `\Xdd\` (hexadecimal escape)   |
 
+A character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, is written as `\Xdd\`, the hexadecimal escape of its UTF-8 bytes. A value holding a character that no escape sequence can write with the delimiters makes the plugin throw `EscapeSequenceError`, exported by `@glion/utils`.
+
 Delimiter resolution order: `options.delimiters` → `file.data.delimiters` (set by `@glion/annotate-delimiters`) → HL7 defaults.
 
 This is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes):

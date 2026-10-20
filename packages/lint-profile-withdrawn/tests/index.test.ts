@@ -69,6 +69,21 @@ describe("hl7v2LintWithdrawn", () => {
       expect(message?.actual).toBe("2024\\F\\01");
     });
 
+    // MSH-1 `X` and MSH-2 `E~\&`: the escape character in AL1-6 is written
+    // `\E\` or `\X5C\`, and both hold a delimiter.
+    it("reports the field without its text when the delimiters cannot write it", async () => {
+      const [message, ...rest] = await lint(
+        "MSHXE~\\&XSNDXFACXRCVXRFACX20241201XXADTEA01EADT_A01XMSG001XPX2.7",
+        "AL1X1XXPCNXXX2024\\b"
+      );
+
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "The data element has a value; it is withdrawn in v2.7 and must be empty."
+      );
+      expect(message?.actual).toBeUndefined();
+    });
+
     // `|||` leaves AL1-6 present but empty.
     it("accepts an empty withdrawn field", async () => {
       expect(await lint(msh("2.7"), "AL1|1||PENICILLIN|||")).toEqual([]);

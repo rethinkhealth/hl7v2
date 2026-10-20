@@ -3065,6 +3065,9 @@ importers:
       '@glion/util-visit':
         specifier: workspace:*
         version: link:../packages/util-visit
+      '@glion/utils':
+        specifier: workspace:*
+        version: link:../packages/utils
       '@types/node':
         specifier: 25.6.0
         version: 25.6.0

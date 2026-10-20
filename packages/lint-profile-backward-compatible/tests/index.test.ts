@@ -73,6 +73,21 @@ describe("hl7v2LintBackwardCompatible", () => {
       expect(message?.actual).toBe("DIA\\F\\BETES");
     });
 
+    // MSH-1 `X` and MSH-2 `E~\&`: the escape character in DG1-4 is written
+    // `\E\` or `\X5C\`, and both hold a delimiter.
+    it("reports the field without its text when the delimiters cannot write it", async () => {
+      const [message, ...rest] = await lint(
+        "MSHXE~\\&XSNDXFACXRCVXRFACX20241201XXADTEA01EADT_A01XMSG001XPX2.5.1",
+        "DG1X1XI9X250.00XDIAB\\TS"
+      );
+
+      expect(rest).toEqual([]);
+      expect(message?.message).toBe(
+        "The data element has a value; v2.5.1 keeps it only for backward compatibility."
+      );
+      expect(message?.actual).toBeUndefined();
+    });
+
     // `|` after DG1-3 leaves DG1-4 present but empty.
     it("accepts an empty backward-compatible field", async () => {
       expect(await lint(msh("2.5.1"), "DG1|1|I9|250.00|")).toEqual([]);
