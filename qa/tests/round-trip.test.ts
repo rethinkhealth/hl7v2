@@ -315,6 +315,19 @@ describe("QR4: round-trip data fidelity", () => {
 });
 
 describe("QR4: content round-trips through serialize and parse", () => {
+  // Every character the serializer can write inside an escape sequence. A
+  // delimiter drawn from this list collides with one of the forms it writes:
+  //
+  //   E F R S T       the named codes `\E\ \F\ \R\ \S\ \T\`
+  //   . b r           the segment delimiter's code `\.br\`
+  //   X               the prefix of every hexadecimal escape `\Xdd\`
+  //   0-9 A-F a-f     hexadecimal digits, in both cases, since the serializer
+  //                   writes lowercase digits when an uppercase one collides
+  //
+  // Left out are the letters of the sequences the serializer only keeps as
+  // written and never produces itself (`H`, `N`, `Z`, `C`, `M`), and every other
+  // letter, which no escape sequence the serializer writes contains. They are
+  // still drawn through `fc.char()` below, just not favoured.
   const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdef"];
   const read = (source: string): string => {
     const tree = unified().use(hl7v2Parser).parse(source);
@@ -354,11 +367,20 @@ describe("QR4: content round-trips through serialize and parse", () => {
   it("reads back any content a value was given, with any delimiters", () => {
     fc.assert(
       fc.property(
+        // Five distinct delimiters, in MSH order: field separator, then the
+        // component, repetition, escape, and subcomponent characters of MSH-2.
+        // Each is drawn half the time from ESCAPE_CODE_CHARACTERS and half the
+        // time from any printable ASCII character. Drawn uniformly, a delimiter
+        // that collides with an escape code is too rare for a run of this
+        // property to find.
         fc
           .uniqueArray(
             fc.oneof(fc.constantFrom(...ESCAPE_CODE_CHARACTERS), fc.char()),
             { maxLength: 5, minLength: 5 }
           )
+          // The content is then built for those delimiters, one unit at a
+          // time from a delimiter, the segment delimiter, or any grapheme, so
+          // that most values hold characters the serializer must escape.
           .chain((delimiters) =>
             fc.tuple(
               fc.constant(delimiters),
@@ -371,6 +393,10 @@ describe("QR4: content round-trips through serialize and parse", () => {
             )
           ),
         ([[fieldSeparator, ...encodingCharacters], content]) => {
+          // Write a message whose MSH declares the drawn delimiters and whose
+          // MSH-3 holds the content. A character no escape sequence can write
+          // with these delimiters is refused with EscapeSequenceError, and any
+          // other error fails the property.
           let wire: string;
           try {
             wire = toHl7v2(
@@ -387,6 +413,9 @@ describe("QR4: content round-trips through serialize and parse", () => {
             expect(error).toBeInstanceOf(EscapeSequenceError);
             return;
           }
+          // Read the message back with the parser. MSH-3 must hold the same
+          // content: the serializer wrote nothing the parser splits or decodes
+          // differently.
           const tree = unified().use(hl7v2Parser).parse(wire);
 
           expect(value(tree, "MSH.3")?.value ?? "").toBe(content);

@@ -4,130 +4,35 @@ import { EscapeSequenceError } from "./errors";
 
 const HEX_RADIX = 16;
 const HEX_PAIR_LENGTH = 2;
-const HEX_PAIRS = /^(?:[0-9a-f]{2})+$/i;
 // A formatting command (`\H\`, `\N\`, `\.sp 2\`, but not `\.br\`), a locally
 // defined sequence (`\Z…\`), or a character set switch (`\Cxxyy\`,
 // `\Mxxyyzz\`): HL7v2 §2.7 sequences that are kept as they are written.
 const VERBATIM_SEQUENCE =
   /^(?:H|N|\.(?!br)[a-z]{2} ?[+-]?\d*|Z\P{Cc}*|C[0-9A-Fa-f]{4}|M[0-9A-Fa-f]{4}(?:[0-9A-Fa-f]{2})?)$/u;
 const SPACE = " ";
-const UTF8_DECODER = new TextDecoder("utf-8", { fatal: true });
 const UTF8_ENCODER = new TextEncoder();
 
-// ---------------------------------------------------------------------------
-// Decoding
-// ---------------------------------------------------------------------------
-
-/**
- * The value `value` carries once its HL7v2 escape sequences are decoded.
- *
- * Decodes `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` to the delimiter each stands
- * for, `\.br\` to the segment delimiter, and `\Xdd…\` to the characters its
- * bytes, named by pairs of hexadecimal digits, encode in UTF-8. Leaves a
- * formatting command (`\H\`, `\N\`, `\.sp\`, …), a locally defined sequence
- * (`\Z…\`), a character set switch (`\Cxxyy\`, `\Mxxyyzz\`), any other
- * sequence, an `\X…\` whose content is not pairs of hexadecimal digits or
- * whose bytes are not UTF-8, and an escape character without a closing one,
- * as it is.
- *
- * @param value - The value as it is on the wire.
- * @param d - The delimiters of the message.
- * @returns The decoded value.
- */
-export function decodeEscapes(value: string, d: Delimiters): string {
-  // Stryker disable next-line ConditionalExpression, BlockStatement: a value without the escape character decodes to itself through the loop as well; the return skips the loop
-  if (!value.includes(d.escape)) {
-    return value;
-  }
-
-  let decoded = "";
-  let i = 0;
-
-  while (i < value.length) {
-    if (value[i] !== d.escape) {
-      decoded += value[i];
-      i += 1;
-      continue;
-    }
-
-    const end = value.indexOf(d.escape, i + 1);
-    if (end === -1) {
-      decoded += value.slice(i);
-      break;
-    }
-
-    const code = value.slice(i + 1, end);
-    switch (code) {
-      case "F": {
-        decoded += d.field;
-        break;
-      }
-      case "S": {
-        decoded += d.component;
-        break;
-      }
-      case "R": {
-        decoded += d.repetition;
-        break;
-      }
-      case "T": {
-        decoded += d.subcomponent;
-        break;
-      }
-      case "E": {
-        decoded += d.escape;
-        break;
-      }
-      case ".br": {
-        decoded += d.segment;
-        break;
-      }
-      default: {
-        decoded += decodeOtherSequence(code, d);
-        break;
-      }
-    }
-    i = end + 1;
-  }
-
-  return decoded;
-}
-
-/**
- * The characters an `\Xdd…\` with escape code `code` stands for, or the
- * sequence `code` names written as it is.
- */
-function decodeOtherSequence(code: string, d: Delimiters): string {
-  if (code.startsWith("X") && HEX_PAIRS.test(code.slice(1))) {
-    const characters = decodeHexDigits(code.slice(1));
-    if (characters !== undefined) {
-      return characters;
-    }
-  }
-  return d.escape + code + d.escape;
-}
-
-/**
- * The characters the bytes `hex` names encode in UTF-8, or `undefined` when
- * they are not UTF-8.
- */
-function decodeHexDigits(hex: string): string | undefined {
-  const bytes = new Uint8Array(hex.length / HEX_PAIR_LENGTH);
-  for (let i = 0; i < bytes.length; i += 1) {
-    const pair = hex.slice(i * HEX_PAIR_LENGTH, (i + 1) * HEX_PAIR_LENGTH);
-    bytes[i] = Number.parseInt(pair, HEX_RADIX);
-  }
-  try {
-    return UTF8_DECODER.decode(bytes);
-  } catch {
-    // The message is UTF-8 (#659); bytes that are not stay as the sender wrote them.
-    return undefined;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Encoding
-// ---------------------------------------------------------------------------
+// encodeEscapes writes the reverse of decodeEscapes, in escape-decoding.ts. It
+// walks the value and asks escapeSequence how to write each character:
+//
+//   encodeEscapes          walks the value, skips sequences kept as written
+//   └─ escapeSequence      picks the form for one character
+//      ├─ escapeCode       the code HL7v2 names, such as `T` for `&`
+//      ├─ holdsDelimiter   rejects a form the parser would split
+//      └─ hexDigits        the `Xdd` form, used when the named code is rejected
+//
+// Every path keeps one rule: the output holds no delimiter. The parser splits
+// a field at its delimiters before it decodes escape sequences, so a delimiter
+// inside an escape sequence would cut it in two.
+//
+// With the usual delimiters `|^~\&`, the named code is always used:
+//
+//   SMITH&JONES  →  SMITH\T\JONES
+//
+// With `E` as the component separator and `<` as the escape character, the
+// named code for `<` is `<E<`, which holds `E`, so the hex form is used:
+//
+//   a<b  →  a<X3C<b
 
 /**
  * The value `value` takes on the wire, with every character that cannot
@@ -155,22 +60,29 @@ function decodeHexDigits(hex: string): string | undefined {
  *   escape.
  */
 export function encodeEscapes(value: string, d: Delimiters): string {
+  // Most values hold nothing to escape: return them without building a copy.
   if (!needsEncoding(value, d)) {
     return value;
   }
 
+  // Plain characters are not appended one at a time. `copied` marks where the
+  // run of plain characters not yet written starts; the run is copied in one
+  // slice when an escape sequence follows it, or at the end.
   let encoded = "";
   let copied = 0;
 
   for (let i = 0; i < value.length; i += 1) {
     const ch = value.charAt(i);
 
+    // A formatting command, `\Z…\`, or character set switch already in the
+    // value is markup, not data: jump past it so it is copied as written.
     const verbatimEnd = ch === d.escape ? verbatimSequenceEnd(value, i, d) : -1;
     if (verbatimEnd !== -1) {
       i = verbatimEnd;
       continue;
     }
 
+    // A character to escape: write the plain run before it, then its sequence.
     const sequence = escapeSequence(ch, d);
     if (sequence !== undefined) {
       encoded += value.slice(copied, i) + sequence;
@@ -178,6 +90,7 @@ export function encodeEscapes(value: string, d: Delimiters): string {
     }
   }
 
+  // Write the plain run after the last escape sequence.
   return encoded + value.slice(copied);
 }
 
@@ -217,6 +130,9 @@ function verbatimSequenceEnd(
   if (end === -1) {
     return -1;
   }
+  // Kept only when the text between the escape characters is a sequence HL7v2
+  // defines and holds no delimiter. In `\Zfoo|bar\`, the `|` is data, so the
+  // whole run is escaped character by character instead.
   const code = value.slice(index + 1, end);
   return VERBATIM_SEQUENCE.test(code) && !holdsDelimiter(code, d) ? end : -1;
 }
@@ -232,20 +148,30 @@ function verbatimSequenceEnd(
  * @throws {EscapeSequenceError} When all of them hold a delimiter.
  */
 function escapeSequence(ch: string, d: Delimiters): string | undefined {
+  // 1. Not a delimiter, the escape character, or a control character: it is
+  //    written as it is.
   const code = escapeCode(ch, d);
   if (code === undefined) {
     return undefined;
   }
+
+  // 2. The named code, when it holds no delimiter: `&` → `\T\`.
   if (!holdsDelimiter(code, d)) {
     return d.escape + code + d.escape;
   }
 
+  // 3. Hex with uppercase digits: `<` → `<X3C<` when `E` is a delimiter.
+  // 4. Hex with lowercase digits, when a delimiter is one of `A`–`F`:
+  //    `~` → `~X7e~` when `E` is the field separator, since `X7E` holds `E`.
   const digits = hexDigits(ch);
   for (const hex of [`X${digits}`, `X${digits.toLowerCase()}`]) {
     if (!holdsDelimiter(hex, d)) {
       return d.escape + hex + d.escape;
     }
   }
+
+  // 5. Every form holds a delimiter. With `X` and `S` both delimiters, `S`
+  //    cannot be written: `\S\` holds `S`, and `\X53\` holds `X`.
   throw new EscapeSequenceError(ch, d);
 }
 
@@ -275,6 +201,7 @@ function escapeCode(ch: string, d: Delimiters): string | undefined {
       return ".br";
     }
     default: {
+      // A control character has no named code: a line feed is `X0A`.
       return ch < SPACE ? `X${hexDigits(ch)}` : undefined;
     }
   }
