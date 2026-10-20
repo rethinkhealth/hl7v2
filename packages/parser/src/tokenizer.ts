@@ -16,7 +16,8 @@ export interface TokenizerOptions {
   /**
    * Whether a TEXT token holds the characters its escape sequences stand for
    * (`true`, the default) or the escape sequences as they are on the wire
-   * (`false`). The encoding characters MSH-2 declares are never decoded.
+   * (`false`). A Segment ID and the encoding characters MSH-2 declares are
+   * never decoded.
    */
   decodeEscapes?: boolean;
 }
@@ -142,6 +143,9 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
       seg = this.delims.segment,
       sub = this.delims.subcomponent;
     let escaped = false;
+    // A Segment ID is not a field, so it holds no escape sequences (HL7v2
+    // §2.5.2, §2.7): `Z\R\Z` opening a segment stays `Z\R\Z`.
+    const opensSegment = j === 0 || s.charAt(j - 1) === seg;
 
     while (j < s.length) {
       const c = s.charAt(j);
@@ -159,7 +163,9 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     const raw = s.slice(this.i, j);
     this._fastAdvance(raw);
     const val =
-      escaped && this.decodeEscapes ? decodeEscapes(raw, this.delims) : raw;
+      escaped && this.decodeEscapes && !opensSegment
+        ? decodeEscapes(raw, this.delims)
+        : raw;
     return this._tok("TEXT", val, start);
   }
 
