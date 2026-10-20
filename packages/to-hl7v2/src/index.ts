@@ -50,6 +50,9 @@ export const hl7v2ToHl7v2: Plugin<[Hl7v2ToHl7v2Options?], Root, string> =
  * Works on any node in the tree — a full Root, a single Segment, or
  * even a lone Field. Delimiters default to the standard set unless
  * overridden or derivable from an MSH segment in the tree.
+ *
+ * @throws {EscapeSequenceError} When `encodeEscapes` is on and a value holds a
+ *   character that no escape sequence can write with the delimiters.
  */
 export function toHl7v2(
   node: Nodes,

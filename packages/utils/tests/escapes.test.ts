@@ -2,6 +2,7 @@ import type { Delimiters } from "@glion/ast";
 import fc from "fast-check";
 
 import { DEFAULT_DELIMITERS } from "../src/constants";
+import { EscapeSequenceError } from "../src/errors";
 import { decodeEscapes, encodeEscapes } from "../src/escapes";
 
 const CUSTOM_DELIMITERS: Delimiters = {
@@ -12,6 +13,43 @@ const CUSTOM_DELIMITERS: Delimiters = {
   segment: "\n",
   subcomponent: "@",
 };
+
+const PUNCTUATION = [..."!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"];
+const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdef"];
+
+const arbDelimiters = (
+  arbCharacter: fc.Arbitrary<string>
+): fc.Arbitrary<Delimiters> =>
+  fc
+    .uniqueArray(arbCharacter, { maxLength: 5, minLength: 5 })
+    .map(([field, component, repetition, escape, subcomponent]) => ({
+      component: component as string,
+      escape: escape as string,
+      field: field as string,
+      repetition: repetition as string,
+      segment: "\r",
+      subcomponent: subcomponent as string,
+    }));
+
+const arbValue = (d: Delimiters): fc.Arbitrary<string> =>
+  fc.string({
+    unit: fc.oneof(
+      fc.constantFrom(
+        d.field,
+        d.component,
+        d.repetition,
+        d.escape,
+        d.subcomponent,
+        d.segment
+      ),
+      fc.string({ maxLength: 1, minLength: 1, unit: "grapheme" })
+    ),
+  });
+
+const heldDelimiters = (wire: string, d: Delimiters): string[] =>
+  [d.field, d.component, d.repetition, d.subcomponent, d.segment].filter(
+    (delimiter) => wire.includes(delimiter)
+  );
 
 describe(decodeEscapes, () => {
   it("decodes the delimiter escapes to the default delimiters", () => {
@@ -222,13 +260,74 @@ describe(encodeEscapes, () => {
     expect(encodeEscapes("", DEFAULT_DELIMITERS)).toBe("");
   });
 
-  it("decodes back to the value it encoded, for any value and delimiters", () => {
+  it("writes a character whose escape code is a delimiter as a hex escape", () => {
+    expect(encodeEscapes("a#b", { ...CUSTOM_DELIMITERS, component: "E" })).toBe(
+      "a#X23#b"
+    );
+  });
+
+  it("writes the escape character as a hex escape when it is E", () => {
+    expect(encodeEscapes("aEb", { ...CUSTOM_DELIMITERS, escape: "E" })).toBe(
+      "aEX45Eb"
+    );
+  });
+
+  it("writes a hex escape with lowercase digits when an uppercase digit is a delimiter", () => {
+    expect(
+      encodeEscapes("a~b", { ...CUSTOM_DELIMITERS, escape: "~", field: "E" })
+    ).toBe("a~X7e~b");
+  });
+
+  it("writes the segment delimiter as a hex escape when a delimiter is in .br", () => {
+    expect(encodeEscapes("a\nb", { ...CUSTOM_DELIMITERS, field: "." })).toBe(
+      "a#X0A#b"
+    );
+  });
+
+  it("throws for a character no escape sequence can write", () => {
+    const d = { ...CUSTOM_DELIMITERS, component: "S", field: "X" };
+
+    expect(() => encodeEscapes("aSb", d)).toThrow(
+      new EscapeSequenceError("S", d)
+    );
+    expect(() => encodeEscapes("aSb", d)).toThrow(
+      "The value holds a character that no escape sequence can write, because a delimiter appears in both its escape code and its hexadecimal escape; use delimiters that are not letters or digits."
+    );
+  });
+
+  it("writes any value with delimiters that are not letters or digits", () => {
     fc.assert(
       fc.property(
-        fc.string({ unit: "grapheme" }),
-        fc.constantFrom(DEFAULT_DELIMITERS, CUSTOM_DELIMITERS),
-        (value, d) => {
-          expect(decodeEscapes(encodeEscapes(value, d), d)).toBe(value);
+        arbDelimiters(fc.constantFrom(...PUNCTUATION)).chain((d) =>
+          fc.tuple(fc.constant(d), arbValue(d))
+        ),
+        ([d, value]) => {
+          const wire = encodeEscapes(value, d);
+
+          expect(heldDelimiters(wire, d)).toEqual([]);
+          expect(decodeEscapes(wire, d)).toBe(value);
+        }
+      )
+    );
+  });
+
+  it("writes any value with any delimiters, or throws EscapeSequenceError", () => {
+    fc.assert(
+      fc.property(
+        arbDelimiters(
+          fc.oneof(fc.constantFrom(...ESCAPE_CODE_CHARACTERS), fc.char())
+        ).chain((d) => fc.tuple(fc.constant(d), arbValue(d))),
+        ([d, value]) => {
+          let wire: string;
+          try {
+            wire = encodeEscapes(value, d);
+          } catch (error) {
+            expect(error).toBeInstanceOf(EscapeSequenceError);
+            return;
+          }
+
+          expect(heldDelimiters(wire, d)).toEqual([]);
+          expect(decodeEscapes(wire, d)).toBe(value);
         }
       )
     );

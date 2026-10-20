@@ -13,6 +13,7 @@ import { f as field, m as message, s as segment } from "@glion/builder";
 import { hl7v2Parser } from "@glion/parser";
 import { hl7v2ToHl7v2, toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
+import { EscapeSequenceError } from "@glion/utils";
 import fc from "fast-check";
 import { unified } from "unified";
 
@@ -314,6 +315,7 @@ describe("QR4: round-trip data fidelity", () => {
 });
 
 describe("QR4: content round-trips through serialize and parse", () => {
+  const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdef"];
   const read = (source: string): string => {
     const tree = unified().use(hl7v2Parser).parse(source);
     return value(tree, "PID.3")?.value ?? "";
@@ -346,6 +348,50 @@ describe("QR4: content round-trips through serialize and parse", () => {
       fc.property(fc.string({ unit: "grapheme" }), (content) => {
         expect(read(write(content))).toBe(content);
       })
+    );
+  });
+
+  it("reads back any content a value was given, with any delimiters", () => {
+    fc.assert(
+      fc.property(
+        fc
+          .uniqueArray(
+            fc.oneof(fc.constantFrom(...ESCAPE_CODE_CHARACTERS), fc.char()),
+            { maxLength: 5, minLength: 5 }
+          )
+          .chain((delimiters) =>
+            fc.tuple(
+              fc.constant(delimiters),
+              fc.string({
+                unit: fc.oneof(
+                  fc.constantFrom(...delimiters, "\r"),
+                  fc.string({ maxLength: 1, minLength: 1, unit: "grapheme" })
+                ),
+              })
+            )
+          ),
+        ([[fieldSeparator, ...encodingCharacters], content]) => {
+          let wire: string;
+          try {
+            wire = toHl7v2(
+              message(
+                segment(
+                  "MSH",
+                  field(fieldSeparator as string),
+                  field(encodingCharacters.join("")),
+                  field(content)
+                )
+              )
+            );
+          } catch (error) {
+            expect(error).toBeInstanceOf(EscapeSequenceError);
+            return;
+          }
+          const tree = unified().use(hl7v2Parser).parse(wire);
+
+          expect(value(tree, "MSH.3")?.value ?? "").toBe(content);
+        }
+      )
     );
   });
 });

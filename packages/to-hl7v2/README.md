@@ -61,12 +61,12 @@ toHl7v2(fieldNode); // "DOE\\T\\SMITH" for the value "DOE&SMITH"
 
 ### Escape sequences
 
-Each subcomponent value is written as it must appear on the wire: the field, component, repetition, subcomponent, and escape delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. MSH-1 and MSH-2 are written as they are. `encodeEscapes: false` writes every value as it is.
+Each subcomponent value is written as it must appear on the wire: the field, component, repetition, subcomponent, and escape delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, is written as `\Xdd\`, the hexadecimal escape of its UTF-8 bytes. A value holding a character that no escape sequence can write with the message's delimiters throws `EscapeSequenceError` from `@glion/utils`. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. MSH-1 and MSH-2 are written as they are. `encodeEscapes: false` writes every value as it is.
 
 ## Round-trip guarantees
 
 - **Delimiter preservation** — the delimiters MSH-1 and MSH-2 declare, or `file.data.delimiters`, carry through to the output. Messages that do not use the defaults round-trip correctly.
-- **Escape sequences** — a value `@glion/parser` decoded is written with its escape sequences again, so a message with `\F\`, `\S\`, `\R\`, `\T\`, `\E\`, or `\.br\` in a value reads and writes back as the same text. A `\Xdd\` is written back as the character it decoded to, or as `\.br\` or `\Xdd\` when that character is a control character.
+- **Escape sequences** — a value `@glion/parser` decoded is written with its escape sequences again, so a message with `\F\`, `\S\`, `\R\`, `\T\`, `\E\`, or `\.br\` in a value reads and writes back as the same text. When a delimiter is the escape code of one of these, that sequence is written back as `\Xdd\`, which reads back as the same value. A `\Xdd\` is written back as the character it decoded to, or as `\.br\` or `\Xdd\` when that character is a control character.
 - **MSH handling** — the special case where `MSH-1` is the field separator and `MSH-2` carries the encoding characters is encoded correctly on serialization.
 - **Empty fields and components** — preserved in position so field indexes remain stable.
 - **Every node type supported** — serializing a partial subtree produces the exact fragment you would expect to find embedded inside the full message.

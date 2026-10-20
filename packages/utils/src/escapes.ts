@@ -1,13 +1,15 @@
 import type { Delimiters } from "@glion/ast";
 
+import { EscapeSequenceError } from "./errors";
+
 const HEX_RADIX = 16;
 const HEX_PAIR_LENGTH = 2;
 const HEX_PAIRS = /^(?:[0-9a-f]{2})+$/i;
 const VERBATIM_SEQUENCE =
   /^(?:H|N|\.(?!br)[a-z]{2} ?[+-]?\d*|Z\P{Cc}*|C[0-9A-Fa-f]{4}|M[0-9A-Fa-f]{4}(?:[0-9A-Fa-f]{2})?)$/u;
-const CONTROL_CHARACTER_LIMIT = 0x20;
 const SPACE = " ";
 const UTF8 = new TextDecoder("utf-8", { fatal: true });
+const UTF8_ENCODER = new TextEncoder();
 
 /**
  * The value `value` carries once its HL7v2 escape sequences are decoded.
@@ -121,14 +123,24 @@ function decodeHexSequence(hex: string): string | undefined {
  *
  * Writes the field, component, repetition, subcomponent, and escape
  * delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter
- * as `\.br\`, and any other character below U+0020 as `\Xdd\`. A formatting
- * command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally defined sequence
- * (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as
- * they are. `decodeEscapes(encodeEscapes(value, d), d)` is `value`.
+ * as `\.br\`, and any other character below U+0020 as `\Xdd\`. A character
+ * whose escape code holds a delimiter, such as `\E\` when `E` is the
+ * component separator, is written as `\Xdd\`, the hexadecimal escape of its
+ * UTF-8 bytes, with lowercase digits when an uppercase digit is a delimiter. A
+ * formatting command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally
+ * defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`,
+ * `\Mxxyyzz\`) are written as they are.
+ *
+ * The encoded value holds no field, component, repetition, subcomponent, or
+ * segment delimiter, and `decodeEscapes(encodeEscapes(value, d), d)` is
+ * `value`.
  *
  * @param value - The value to write.
  * @param d - The delimiters of the message.
  * @returns The encoded value.
+ * @throws {EscapeSequenceError} When a character must be escaped and a
+ *   delimiter appears in its escape code and in both forms of its hexadecimal
+ *   escape.
  */
 export function encodeEscapes(value: string, d: Delimiters): string {
   if (!needsEncoding(value, d)) {
@@ -202,7 +214,8 @@ function holdsDelimiter(code: string, d: Delimiters): boolean {
     code.includes(d.component) ||
     code.includes(d.repetition) ||
     code.includes(d.subcomponent) ||
-    code.includes(d.segment)
+    code.includes(d.segment) ||
+    code.includes(d.escape)
   );
 }
 
@@ -215,36 +228,69 @@ function escapeSequence(
   index: number,
   d: Delimiters
 ): string | undefined {
-  const ch = value[index];
+  const ch = value.charAt(index);
+  const code = escapeCode(ch, d);
+  if (code === undefined) {
+    return undefined;
+  }
+  const written = holdsDelimiter(code, d) ? hexCode(ch, d) : code;
+  return d.escape + written + d.escape;
+}
+
+/**
+ * The escape code HL7v2 names for `ch`, or `undefined` when `ch` is written as
+ * it is.
+ */
+function escapeCode(ch: string, d: Delimiters): string | undefined {
   switch (ch) {
     case d.escape: {
-      return `${d.escape}E${d.escape}`;
+      return "E";
     }
     case d.field: {
-      return `${d.escape}F${d.escape}`;
+      return "F";
     }
     case d.component: {
-      return `${d.escape}S${d.escape}`;
+      return "S";
     }
     case d.repetition: {
-      return `${d.escape}R${d.escape}`;
+      return "R";
     }
     case d.subcomponent: {
-      return `${d.escape}T${d.escape}`;
+      return "T";
     }
     case d.segment: {
-      return `${d.escape}.br${d.escape}`;
+      return ".br";
     }
     default: {
-      const code = value.codePointAt(index);
-      if (code !== undefined && code < CONTROL_CHARACTER_LIMIT) {
-        const hex = code
-          .toString(HEX_RADIX)
-          .toUpperCase()
-          .padStart(HEX_PAIR_LENGTH, "0");
-        return `${d.escape}X${hex}${d.escape}`;
-      }
-      return undefined;
+      return ch < SPACE ? `X${hexDigits(ch)}` : undefined;
     }
   }
+}
+
+/**
+ * The hexadecimal escape code (`Xdd…`) of `ch` that holds no delimiter, with
+ * uppercase digits, or lowercase ones when an uppercase digit is a delimiter.
+ *
+ * @throws {EscapeSequenceError} When both hold a delimiter.
+ */
+function hexCode(ch: string, d: Delimiters): string {
+  const digits = hexDigits(ch);
+  for (const code of [`X${digits}`, `X${digits.toLowerCase()}`]) {
+    if (!holdsDelimiter(code, d)) {
+      return code;
+    }
+  }
+  throw new EscapeSequenceError(ch, d);
+}
+
+/** The UTF-8 bytes of `ch` as pairs of uppercase hexadecimal digits. */
+function hexDigits(ch: string): string {
+  let digits = "";
+  for (const byte of UTF8_ENCODER.encode(ch)) {
+    digits += byte
+      .toString(HEX_RADIX)
+      .toUpperCase()
+      .padStart(HEX_PAIR_LENGTH, "0");
+  }
+  return digits;
 }
