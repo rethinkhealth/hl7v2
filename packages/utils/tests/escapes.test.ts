@@ -14,9 +14,24 @@ const CUSTOM_DELIMITERS: Delimiters = {
   subcomponent: "@",
 };
 
+// The round-trip properties at the end of this file are built from three
+// helpers. Each property first draws a delimiter set with `arbDelimiters`,
+// then chains into `arbValue` to draw a value for that set, encodes it, and
+// checks the result with `heldDelimiters` and `decodeEscapes`.
+
+// Characters that are not letters or digits. `.` collides with `\.br\`, but no
+// hexadecimal escape holds one of them, so a delimiter set drawn from them can
+// write every value.
 const PUNCTUATION = [..."!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"];
+// The characters escape codes are written with: the named codes (`E`, `F`,
+// `R`, `S`, `T`, `.br`) and the hexadecimal escape (`X`, hexadecimal digits in
+// both cases). Mixing them into the draw makes a delimiter that collides with
+// an escape code common instead of a rare accident.
 const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdef"];
 
+// A delimiter set: five distinct characters from `arbCharacter`, assigned to
+// the field, component, repetition, escape, and subcomponent roles, with `\r`
+// as the segment delimiter.
 const arbDelimiters = (
   arbCharacter: fc.Arbitrary<string>
 ): fc.Arbitrary<Delimiters> =>
@@ -31,6 +46,9 @@ const arbDelimiters = (
       subcomponent: subcomponent as string,
     }));
 
+// A value for the delimiter set `d`, built one unit at a time from either a
+// delimiter of `d` or any grapheme, so that most values hold delimiters and
+// the escape character the encoder must write as escape sequences.
 const arbValue = (d: Delimiters): fc.Arbitrary<string> =>
   fc.string({
     unit: fc.oneof(
@@ -46,6 +64,9 @@ const arbValue = (d: Delimiters): fc.Arbitrary<string> =>
     ),
   });
 
+// The delimiters of `d` that appear in the encoded value `wire`. An encoded
+// value must hold none: the parser splits at a delimiter before it decodes
+// escape sequences, so a delimiter inside `wire` would split the value.
 const heldDelimiters = (wire: string, d: Delimiters): string[] =>
   [d.field, d.component, d.repetition, d.subcomponent, d.segment].filter(
     (delimiter) => wire.includes(delimiter)

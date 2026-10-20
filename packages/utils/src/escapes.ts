@@ -5,11 +5,18 @@ import { EscapeSequenceError } from "./errors";
 const HEX_RADIX = 16;
 const HEX_PAIR_LENGTH = 2;
 const HEX_PAIRS = /^(?:[0-9a-f]{2})+$/i;
+// A formatting command (`\H\`, `\N\`, `\.sp 2\`, but not `\.br\`), a locally
+// defined sequence (`\Z…\`), or a character set switch (`\Cxxyy\`,
+// `\Mxxyyzz\`): HL7v2 §2.7 sequences that are kept as they are written.
 const VERBATIM_SEQUENCE =
   /^(?:H|N|\.(?!br)[a-z]{2} ?[+-]?\d*|Z\P{Cc}*|C[0-9A-Fa-f]{4}|M[0-9A-Fa-f]{4}(?:[0-9A-Fa-f]{2})?)$/u;
 const SPACE = " ";
-const UTF8 = new TextDecoder("utf-8", { fatal: true });
+const UTF8_DECODER = new TextDecoder("utf-8", { fatal: true });
 const UTF8_ENCODER = new TextEncoder();
+
+// ---------------------------------------------------------------------------
+// Decoding
+// ---------------------------------------------------------------------------
 
 /**
  * The value `value` carries once its HL7v2 escape sequences are decoded.
@@ -37,85 +44,90 @@ export function decodeEscapes(value: string, d: Delimiters): string {
   let i = 0;
 
   while (i < value.length) {
-    if (value[i] === d.escape) {
-      const end = value.indexOf(d.escape, i + 1);
-      if (end === -1) {
-        decoded += value.slice(i);
+    if (value[i] !== d.escape) {
+      decoded += value[i];
+      i += 1;
+      continue;
+    }
+
+    const end = value.indexOf(d.escape, i + 1);
+    if (end === -1) {
+      decoded += value.slice(i);
+      break;
+    }
+
+    const code = value.slice(i + 1, end);
+    switch (code) {
+      case "F": {
+        decoded += d.field;
         break;
       }
-
-      const code = value.slice(i + 1, end);
-
-      switch (code) {
-        case "F": {
-          decoded += d.field;
-          break;
-        }
-        case "S": {
-          decoded += d.component;
-          break;
-        }
-        case "R": {
-          decoded += d.repetition;
-          break;
-        }
-        case "T": {
-          decoded += d.subcomponent;
-          break;
-        }
-        case "E": {
-          decoded += d.escape;
-          break;
-        }
-        case ".br": {
-          decoded += d.segment;
-          break;
-        }
-        default: {
-          decoded += decodeOtherSequence(code, d);
-          break;
-        }
+      case "S": {
+        decoded += d.component;
+        break;
       }
-
-      i = end + 1;
-    } else {
-      // oxlint-disable-next-line no-plusplus
-      decoded += value[i++];
+      case "R": {
+        decoded += d.repetition;
+        break;
+      }
+      case "T": {
+        decoded += d.subcomponent;
+        break;
+      }
+      case "E": {
+        decoded += d.escape;
+        break;
+      }
+      case ".br": {
+        decoded += d.segment;
+        break;
+      }
+      default: {
+        decoded += decodeOtherSequence(code, d);
+        break;
+      }
     }
+    i = end + 1;
   }
 
   return decoded;
 }
 
 /**
- * The characters an `\Xdd…\` with content `code` stands for, or the sequence
- * `code` names written as it is.
+ * The characters an `\Xdd…\` with escape code `code` stands for, or the
+ * sequence `code` names written as it is.
  */
 function decodeOtherSequence(code: string, d: Delimiters): string {
-  const characters =
-    code.startsWith("X") && HEX_PAIRS.test(code.slice(1))
-      ? decodeHexSequence(code.slice(1))
-      : undefined;
-  return characters ?? d.escape + code + d.escape;
+  if (code.startsWith("X") && HEX_PAIRS.test(code.slice(1))) {
+    const characters = decodeHexDigits(code.slice(1));
+    if (characters !== undefined) {
+      return characters;
+    }
+  }
+  return d.escape + code + d.escape;
 }
 
 /**
  * The characters the bytes `hex` names encode in UTF-8, or `undefined` when
  * they are not UTF-8.
  */
-function decodeHexSequence(hex: string): string | undefined {
+function decodeHexDigits(hex: string): string | undefined {
   const bytes = new Uint8Array(hex.length / HEX_PAIR_LENGTH);
   for (let i = 0; i < bytes.length; i += 1) {
     const pair = hex.slice(i * HEX_PAIR_LENGTH, (i + 1) * HEX_PAIR_LENGTH);
     bytes[i] = Number.parseInt(pair, HEX_RADIX);
   }
   try {
-    return UTF8.decode(bytes);
+    return UTF8_DECODER.decode(bytes);
   } catch {
     // The message is UTF-8 (#659); bytes that are not stay as the sender wrote them.
     return undefined;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Encoding
+// ---------------------------------------------------------------------------
 
 /**
  * The value `value` takes on the wire, with every character that cannot
@@ -151,14 +163,15 @@ export function encodeEscapes(value: string, d: Delimiters): string {
   let copied = 0;
 
   for (let i = 0; i < value.length; i += 1) {
-    if (value[i] === d.escape) {
-      const sequenceEnd = verbatimSequenceEnd(value, i, d);
-      if (sequenceEnd !== -1) {
-        i = sequenceEnd;
-        continue;
-      }
+    const ch = value.charAt(i);
+
+    const verbatimEnd = ch === d.escape ? verbatimSequenceEnd(value, i, d) : -1;
+    if (verbatimEnd !== -1) {
+      i = verbatimEnd;
+      continue;
     }
-    const sequence = escapeSequence(value, i, d);
+
+    const sequence = escapeSequence(ch, d);
     if (sequence !== undefined) {
       encoded += value.slice(copied, i) + sequence;
       copied = i + 1;
@@ -208,38 +221,38 @@ function verbatimSequenceEnd(
   return VERBATIM_SEQUENCE.test(code) && !holdsDelimiter(code, d) ? end : -1;
 }
 
-function holdsDelimiter(code: string, d: Delimiters): boolean {
-  return (
-    code.includes(d.field) ||
-    code.includes(d.component) ||
-    code.includes(d.repetition) ||
-    code.includes(d.subcomponent) ||
-    code.includes(d.segment) ||
-    code.includes(d.escape)
-  );
-}
-
 /**
- * The escape sequence for the character at `index`, or `undefined` when it is
- * written as it is.
+ * The escape sequence that writes `ch`, or `undefined` when `ch` is written as
+ * it is.
+ *
+ * Writes the escape code HL7v2 names for `ch`, or, when that code holds a
+ * delimiter, the hexadecimal escape of `ch` with uppercase digits, then with
+ * lowercase digits: the first that holds no delimiter.
+ *
+ * @throws {EscapeSequenceError} When all of them hold a delimiter.
  */
-function escapeSequence(
-  value: string,
-  index: number,
-  d: Delimiters
-): string | undefined {
-  const ch = value.charAt(index);
+function escapeSequence(ch: string, d: Delimiters): string | undefined {
   const code = escapeCode(ch, d);
   if (code === undefined) {
     return undefined;
   }
-  const written = holdsDelimiter(code, d) ? hexCode(ch, d) : code;
-  return d.escape + written + d.escape;
+  if (!holdsDelimiter(code, d)) {
+    return d.escape + code + d.escape;
+  }
+
+  const digits = hexDigits(ch);
+  for (const hex of [`X${digits}`, `X${digits.toLowerCase()}`]) {
+    if (!holdsDelimiter(hex, d)) {
+      return d.escape + hex + d.escape;
+    }
+  }
+  throw new EscapeSequenceError(ch, d);
 }
 
 /**
- * The escape code HL7v2 names for `ch`, or `undefined` when `ch` is written as
- * it is.
+ * The escape code for `ch`: the one HL7v2 names for a delimiter or the escape
+ * character, `Xdd` for a character below U+0020, or `undefined` when `ch` is
+ * written as it is.
  */
 function escapeCode(ch: string, d: Delimiters): string | undefined {
   switch (ch) {
@@ -268,19 +281,18 @@ function escapeCode(ch: string, d: Delimiters): string | undefined {
 }
 
 /**
- * The hexadecimal escape code (`Xdd…`) of `ch` that holds no delimiter, with
- * uppercase digits, or lowercase ones when an uppercase digit is a delimiter.
- *
- * @throws {EscapeSequenceError} When both hold a delimiter.
+ * Whether `code` holds a delimiter or the escape character, which the parser
+ * would read as the end of the escape sequence or of the value.
  */
-function hexCode(ch: string, d: Delimiters): string {
-  const digits = hexDigits(ch);
-  for (const code of [`X${digits}`, `X${digits.toLowerCase()}`]) {
-    if (!holdsDelimiter(code, d)) {
-      return code;
-    }
-  }
-  throw new EscapeSequenceError(ch, d);
+function holdsDelimiter(code: string, d: Delimiters): boolean {
+  return (
+    code.includes(d.field) ||
+    code.includes(d.component) ||
+    code.includes(d.repetition) ||
+    code.includes(d.subcomponent) ||
+    code.includes(d.segment) ||
+    code.includes(d.escape)
+  );
 }
 
 /** The UTF-8 bytes of `ch` as pairs of uppercase hexadecimal digits. */
