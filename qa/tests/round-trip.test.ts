@@ -188,6 +188,37 @@ describe("QR4: round-trip data fidelity", () => {
     });
   });
 
+  describe("fuzz: Segment IDs", () => {
+    it("a Segment ID that holds the escape character round-trips as written", async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.string({
+            minLength: 1,
+            unit: fc.constantFrom(
+              "\\",
+              "\\F\\",
+              "\\S\\",
+              "\\R\\",
+              "\\T\\",
+              "\\E\\",
+              "\\X7C\\",
+              "\\.br\\",
+              "Z",
+              "1"
+            ),
+          }),
+          async (segmentId) => {
+            const source = `MSH|^~\\&|a\r${segmentId}|b`;
+            const serialized = String(await roundTripProcessor.process(source));
+
+            expect(normalize(serialized)).toBe(source);
+          }
+        ),
+        { numRuns: 300 }
+      );
+    });
+  });
+
   describe("fuzz: custom delimiter messages", () => {
     it("round-trip is idempotent — second pass produces the same output", async () => {
       await fc.assert(

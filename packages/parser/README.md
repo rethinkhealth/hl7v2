@@ -63,7 +63,7 @@ Options accept a partial `Delimiters` object, so only the characters you want to
 
 ### Escape sequences
 
-A value's escape sequences are decoded while the message is tokenized. `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` become the field, component, repetition, subcomponent, and escape delimiters the message declares, `\.br\` becomes the segment delimiter, and `\Xdd\` becomes the characters its bytes, named by pairs of hexadecimal digits, encode in UTF-8. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), a character set switch (`\Cxxyy\`, `\Mxxyyzz\`), and any other sequence stay as written.
+A value's escape sequences are decoded while the message is tokenized. `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` become the field, component, repetition, subcomponent, and escape delimiters the message declares, `\.br\` becomes the segment delimiter, and `\Xdd\` becomes the characters its bytes, named by pairs of hexadecimal digits, encode in UTF-8. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), a character set switch (`\Cxxyy\`, `\Mxxyyzz\`), and any other sequence stay as written. A Segment ID holds no escape sequences: `Z\R\Z` opening a segment is the Segment ID `Z\R\Z`.
 
 ```ts
 import { unified } from "unified";
