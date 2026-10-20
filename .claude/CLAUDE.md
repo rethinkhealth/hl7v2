@@ -209,6 +209,14 @@ If a chunk of code needs a long comment explaining why it's shaped this way, the
 
 Don't explain WHAT the code does — well-named identifiers do that. Don't reference the current task or PR ("added for the X flow") — that belongs in the PR description.
 
+One exception: a **walkthrough** that teaches a reader how a module's functions work together, or how an algorithm moves through its input. It must be:
+
+- **Short.** A few lines at the top of the module or above the function it explains, plus one-line step comments where a loop or a fallback order is not obvious. Never a paragraph per line of code.
+- **Learning-oriented.** Show the flow on a concrete example (an input and what it becomes) rather than describing it in prose. `SMITH&JONES → SMITH\T\JONES` teaches more than a sentence.
+- **Clear and exact.** Plain words, HL7v2 terms, and every example true of the code as it stands; a walkthrough that drifts from the code is worse than none.
+
+A walkthrough explains the flow. It never justifies the design, compares it with an alternative, or narrates history; those stay in the PR description or an ADR. TSDoc stays contract-only (the `glion-tsdoc` skill); walkthroughs are `//` comments.
+
 ### 11. Honest probability assessments over hedged generalities
 
 When considering a defensive measure, give actual numbers. "Zero with current adapters; low for custom adapters, mitigated by adapter-level testing" beats "could happen." Calibrated risk is how the project decides what to defend against and what to leave bare.

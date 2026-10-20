@@ -4,8 +4,15 @@ import type { ProfileContext } from "@glion/annotate-profile-context";
 import type { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 // oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
 import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
-import type { Component, Field, Nodes, Root, Subcomponent } from "@glion/ast";
-import { toHl7v2 } from "@glion/to-hl7v2";
+import type {
+  Component,
+  Delimiters,
+  Field,
+  Nodes,
+  Root,
+  Subcomponent,
+} from "@glion/ast";
+import { EscapeSequenceError, toHl7v2 } from "@glion/to-hl7v2";
 import { delimiters } from "@glion/util-query";
 import { SKIP, visit } from "@glion/util-visit";
 import { isEmptyNode, Optionality } from "@glion/utils";
@@ -18,6 +25,25 @@ const messages = {
   backwardCompatible: (version: string) =>
     `The data element has a value; v${version} keeps it only for backward compatibility.`,
 } as const;
+
+/**
+ * `node` as HL7v2 text with its escape sequences, or `undefined` when the
+ * message's delimiters cannot write one of its values.
+ */
+function hl7v2Text(
+  node: Field | Component | Subcomponent,
+  d: Delimiters
+): string | undefined {
+  try {
+    return toHl7v2(node, d);
+  } catch (error) {
+    // Stryker disable next-line ConditionalExpression: toHl7v2 throws only EscapeSequenceError for a field, a component, or a subcomponent
+    if (error instanceof EscapeSequenceError) {
+      return undefined;
+    }
+    throw error;
+  }
+}
 
 /**
  * Lint rule that reports a value in any element whose optionality is `B`
@@ -65,7 +91,7 @@ const hl7v2LintBackwardCompatible = lintRule<Root>(
         return false;
       }
 
-      const value = toHl7v2(node, delimiters(tree));
+      const value = hl7v2Text(node, delimiters(tree));
       if (value !== EXPLICIT_NULL) {
         const message = file.message(messages.backwardCompatible(version), {
           ancestors,

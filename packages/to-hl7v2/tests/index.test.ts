@@ -8,7 +8,7 @@ import type {
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 
-import { hl7v2ToHl7v2, toHl7v2 } from "../src";
+import { EscapeSequenceError, hl7v2ToHl7v2, toHl7v2 } from "../src";
 
 describe(toHl7v2, () => {
   it("converts a simple MSH segment back to HL7v2 format", () => {
@@ -481,6 +481,18 @@ describe("toHl7v2 escape sequences", () => {
     const tree = m(s("PID", f("a|b^c~d&e")));
 
     expect(toHl7v2(tree)).toBe("PID|a\\F\\b\\S\\c\\R\\d\\T\\e");
+  });
+
+  it("writes a character whose escape code is a delimiter as a hexadecimal escape", () => {
+    const tree = m(s("MSH", f("^"), f("E\\<$")), s("PID", f("a<b")));
+
+    expect(toHl7v2(tree)).toBe("MSH^E\\<$\rPID^a<X3C<b");
+  });
+
+  it("throws EscapeSequenceError for a value no escape sequence can write with the delimiters", () => {
+    const tree = m(s("MSH", f("X"), f("S~\\&")), s("PID", f("aSb")));
+
+    expect(() => toHl7v2(tree)).toThrow(EscapeSequenceError);
   });
 
   it("writes the escape character, the segment delimiter, and control characters as escape sequences", () => {

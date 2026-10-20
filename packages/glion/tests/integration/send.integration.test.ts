@@ -246,6 +246,27 @@ describe("runSend (integration, fake socket)", () => {
     expect(JSON.parse(state.out).code).toBe("AA");
   });
 
+  it("reports an invalid outcome when the delimiters cannot write a value", async () => {
+    // MSH-1 `X` and MSH-2 `E~\&`: the escape character in MSH-3 is written
+    // `\E\` or `\X5C\`, and both hold a delimiter.
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      cwd: "/tmp",
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from("MSHXE~\\&XAPP\\bXFAC"),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    const json = JSON.parse(state.out);
+    expect(json.kind).toBe("invalid");
+    expect(json.message).toBe(
+      "The value holds a character that must be written as an escape sequence, and every escape sequence for it holds one of the message's delimiters. With delimiters that are ASCII punctuation, every character can be written."
+    );
+  });
+
   it("reports an invalid outcome when the file cannot be read", async () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({

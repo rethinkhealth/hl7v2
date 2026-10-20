@@ -14,7 +14,7 @@ import { MllpClient, MllpClientError } from "@glion/mllp-client";
 import type { MllpClientOptions, MllpSocket } from "@glion/mllp-client";
 import { nodeSocket } from "@glion/mllp-client/node";
 import { parseHL7v2 } from "@glion/parser";
-import { toHl7v2 } from "@glion/to-hl7v2";
+import { EscapeSequenceError, toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
 
 import { renderHuman, renderJson } from "./send-render";
@@ -376,7 +376,10 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   // bytes (line endings in particular); whether the message is a *valid* HL7v2
   // message is the receiver's call, surfaced as a NAK. We do not pre-validate.
   const tree = parseHL7v2(text);
-  const canonical = toHl7v2(tree);
+  const canonical = canonicalText(tree, target);
+  if (typeof canonical !== "string") {
+    return emit(canonical);
+  }
   const timeoutMs = args.timeoutMs ?? DEFAULT_SEND_TIMEOUT_MS;
   const request = {
     byteCount: ENCODER.encode(canonical).length,
@@ -410,6 +413,21 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
     return emit(sendErrorOutcome(error, { request, startedAt, target }));
   } finally {
     await client?.close();
+  }
+}
+
+/**
+ * `tree` as canonical, CR-delimited HL7v2, or the `invalid` outcome when the
+ * delimiters MSH-1 and MSH-2 declare cannot write one of its values.
+ */
+function canonicalText(tree: Root, target: SendTarget): string | SendOutcome {
+  try {
+    return toHl7v2(tree);
+  } catch (error) {
+    if (error instanceof EscapeSequenceError) {
+      return { kind: "invalid", message: error.message, target };
+    }
+    throw error;
   }
 }
 

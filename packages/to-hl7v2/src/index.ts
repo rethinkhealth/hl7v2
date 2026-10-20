@@ -15,6 +15,8 @@ import type { Plugin } from "unified";
 import type { Node } from "unist";
 import type { VFile } from "vfile";
 
+export { EscapeSequenceError } from "@glion/utils";
+
 export interface Hl7v2ToHl7v2Options {
   /**
    * Write each subcomponent value with its delimiters, escape character, and

@@ -12,27 +12,16 @@ const VERBATIM_SEQUENCE =
 const SPACE = " ";
 const UTF8_ENCODER = new TextEncoder();
 
-// encodeEscapes writes the reverse of decodeEscapes, in escape-decoding.ts. It
-// walks the value and asks escapeSequence how to write each character:
+// encodeEscapes writes the reverse of decodeEscapes. For each character it
+// asks escapeSequence, which tries namedEscapeCode and then hexEscapeCode and
+// keeps the first form holdsDelimiter accepts. The output never holds a
+// delimiter, because the parser splits a field at its delimiters before it
+// decodes escape sequences:
 //
-//   encodeEscapes          walks the value, skips sequences kept as written
-//   └─ escapeSequence      picks the form for one character
-//      ├─ escapeCode       the code HL7v2 names, such as `T` for `&`
-//      ├─ holdsDelimiter   rejects a form the parser would split
-//      └─ hexDigits        the `Xdd` form, used when the named code is rejected
-//
-// Every path keeps one rule: the output holds no delimiter. The parser splits
-// a field at its delimiters before it decodes escape sequences, so a delimiter
-// inside an escape sequence would cut it in two.
-//
-// With the usual delimiters `|^~\&`, the named code is always used:
-//
-//   SMITH&JONES  →  SMITH\T\JONES
-//
-// With `E` as the component separator and `<` as the escape character, the
-// named code for `<` is `<E<`, which holds `E`, so the hex form is used:
-//
-//   a<b  →  a<X3C<b
+//   SMITH&JONES  →  SMITH\T\JONES    with `|^~\&`
+//   a<b          →  a<X3C<b          with `E` as the component separator and
+//                                    `<` as the escape character: `<E<`
+//                                    would hold `E`
 
 /**
  * The value `value` takes on the wire, with every character that cannot
@@ -43,7 +32,8 @@ const UTF8_ENCODER = new TextEncoder();
  * as `\.br\`, and any other character below U+0020 as `\Xdd\`. A character
  * whose escape code holds a delimiter, such as `\E\` when `E` is the
  * component separator, is written as `\Xdd\`, the hexadecimal escape of its
- * UTF-8 bytes, with lowercase digits when an uppercase digit is a delimiter. A
+ * UTF-8 bytes, with a digit `A`–`F` in lowercase when its uppercase form is a
+ * delimiter. A
  * formatting command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally
  * defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`,
  * `\Mxxyyzz\`) are written as they are.
@@ -55,12 +45,10 @@ const UTF8_ENCODER = new TextEncoder();
  * @param value - The value to write.
  * @param d - The delimiters of the message.
  * @returns The encoded value.
- * @throws {EscapeSequenceError} When a character must be escaped and a
- *   delimiter appears in its escape code and in both forms of its hexadecimal
- *   escape.
+ * @throws {EscapeSequenceError} When a character must be escaped and every
+ *   escape sequence that writes it holds a delimiter.
  */
 export function encodeEscapes(value: string, d: Delimiters): string {
-  // Most values hold nothing to escape: return them without building a copy.
   if (!needsEncoding(value, d)) {
     return value;
   }
@@ -82,7 +70,6 @@ export function encodeEscapes(value: string, d: Delimiters): string {
       continue;
     }
 
-    // A character to escape: write the plain run before it, then its sequence.
     const sequence = escapeSequence(ch, d);
     if (sequence !== undefined) {
       encoded += value.slice(copied, i) + sequence;
@@ -90,7 +77,6 @@ export function encodeEscapes(value: string, d: Delimiters): string {
     }
   }
 
-  // Write the plain run after the last escape sequence.
   return encoded + value.slice(copied);
 }
 
@@ -141,46 +127,41 @@ function verbatimSequenceEnd(
  * The escape sequence that writes `ch`, or `undefined` when `ch` is written as
  * it is.
  *
- * Writes the escape code HL7v2 names for `ch`, or, when that code holds a
- * delimiter, the hexadecimal escape of `ch` with uppercase digits, then with
- * lowercase digits: the first that holds no delimiter.
+ * Writes the escape code HL7v2 names for `ch` when it holds no delimiter, and
+ * otherwise the hexadecimal escape of `ch`.
  *
- * @throws {EscapeSequenceError} When all of them hold a delimiter.
+ * @throws {EscapeSequenceError} When both hold a delimiter.
  */
 function escapeSequence(ch: string, d: Delimiters): string | undefined {
   // 1. Not a delimiter, the escape character, or a control character: it is
   //    written as it is.
-  const code = escapeCode(ch, d);
-  if (code === undefined) {
+  const named = namedEscapeCode(ch, d);
+  if (named === undefined && ch >= SPACE) {
     return undefined;
   }
 
   // 2. The named code, when it holds no delimiter: `&` → `\T\`.
-  if (!holdsDelimiter(code, d)) {
-    return d.escape + code + d.escape;
+  if (named !== undefined && !holdsDelimiter(named, d)) {
+    return d.escape + named + d.escape;
   }
 
-  // 3. Hex with uppercase digits: `<` → `<X3C<` when `E` is a delimiter.
-  // 4. Hex with lowercase digits, when a delimiter is one of `A`–`F`:
-  //    `~` → `~X7e~` when `E` is the field separator, since `X7E` holds `E`.
-  const digits = hexDigits(ch);
-  for (const hex of [`X${digits}`, `X${digits.toLowerCase()}`]) {
-    if (!holdsDelimiter(hex, d)) {
-      return d.escape + hex + d.escape;
-    }
+  // 3. The hexadecimal escape: `<` → `<X3C<` when `E` is a delimiter, and a
+  //    control character, which has no named code: a line feed → `\X0A\`.
+  const hex = hexEscapeCode(ch, d);
+  if (hex !== undefined) {
+    return d.escape + hex + d.escape;
   }
 
-  // 5. Every form holds a delimiter. With `X` and `S` both delimiters, `S`
-  //    cannot be written: `\S\` holds `S`, and `\X53\` holds `X`.
+  // 4. Neither works. With `X` and `S` both delimiters, `S` cannot be
+  //    written: `\S\` holds `S`, and every `\X53\` holds `X`.
   throw new EscapeSequenceError(ch, d);
 }
 
 /**
- * The escape code for `ch`: the one HL7v2 names for a delimiter or the escape
- * character, `Xdd` for a character below U+0020, or `undefined` when `ch` is
- * written as it is.
+ * The escape code HL7v2 names for `ch` when it is a delimiter or the escape
+ * character, or `undefined`.
  */
-function escapeCode(ch: string, d: Delimiters): string | undefined {
+function namedEscapeCode(ch: string, d: Delimiters): string | undefined {
   switch (ch) {
     case d.escape: {
       return "E";
@@ -201,10 +182,37 @@ function escapeCode(ch: string, d: Delimiters): string | undefined {
       return ".br";
     }
     default: {
-      // A control character has no named code: a line feed is `X0A`.
-      return ch < SPACE ? `X${hexDigits(ch)}` : undefined;
+      return undefined;
     }
   }
+}
+
+/**
+ * The hexadecimal escape code (`Xdd…`) of the UTF-8 bytes of `ch` that holds
+ * no delimiter, or `undefined` when there is none.
+ *
+ * Writes each digit `A`–`F` in uppercase, or in lowercase when its uppercase
+ * form is a delimiter. A lone surrogate has no UTF-8 bytes, so it has none.
+ */
+function hexEscapeCode(ch: string, d: Delimiters): string | undefined {
+  if (!ch.isWellFormed()) {
+    return undefined;
+  }
+
+  // `~` is the byte 0x7E: `X7E`, or `X7e` when `E` is a delimiter.
+  let code = "X";
+  for (const byte of UTF8_ENCODER.encode(ch)) {
+    const pair = byte
+      .toString(HEX_RADIX)
+      .toUpperCase()
+      .padStart(HEX_PAIR_LENGTH, "0");
+    for (const digit of pair) {
+      code += holdsDelimiter(digit, d) ? digit.toLowerCase() : digit;
+    }
+  }
+
+  // A digit `0`–`9` or the `X` itself has no other form to fall back on.
+  return holdsDelimiter(code, d) ? undefined : code;
 }
 
 /**
@@ -220,16 +228,4 @@ function holdsDelimiter(code: string, d: Delimiters): boolean {
     code.includes(d.segment) ||
     code.includes(d.escape)
   );
-}
-
-/** The UTF-8 bytes of `ch` as pairs of uppercase hexadecimal digits. */
-function hexDigits(ch: string): string {
-  let digits = "";
-  for (const byte of UTF8_ENCODER.encode(ch)) {
-    digits += byte
-      .toString(HEX_RADIX)
-      .toUpperCase()
-      .padStart(HEX_PAIR_LENGTH, "0");
-  }
-  return digits;
 }

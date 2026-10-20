@@ -1,9 +1,8 @@
 import type { Delimiters } from "@glion/ast";
 
 /**
- * A character {@link encodeEscapes} cannot write: a delimiter appears in its
- * escape code and in its hexadecimal escape (`\Xdd\`) with uppercase and with
- * lowercase digits.
+ * A character {@link encodeEscapes} cannot write: it must be written as an
+ * escape sequence, and every escape sequence that writes it holds a delimiter.
  */
 export class EscapeSequenceError extends Error {
   override readonly name = "EscapeSequenceError";
@@ -14,7 +13,7 @@ export class EscapeSequenceError extends Error {
 
   constructor(character: string, delimiters: Delimiters) {
     super(
-      "The value holds a character that no escape sequence can write, because a delimiter appears in both its escape code and its hexadecimal escape; use delimiters that are not letters or digits."
+      "The value holds a character that must be written as an escape sequence, and every escape sequence for it holds one of the message's delimiters. With delimiters that are ASCII punctuation, every character can be written."
     );
     this.character = character;
     this.delimiters = delimiters;

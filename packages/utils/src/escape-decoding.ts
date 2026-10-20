@@ -41,14 +41,12 @@ export function decodeEscapes(value: string, d: Delimiters): string {
   let i = 0;
 
   while (i < value.length) {
-    // A plain character: copy it and move on.
     if (value[i] !== d.escape) {
       decoded += value[i];
       i += 1;
       continue;
     }
 
-    // An escape character opens a sequence, and the next one closes it.
     const end = value.indexOf(d.escape, i + 1);
     if (end === -1) {
       // No closing escape character: the rest of the value is data.
@@ -88,7 +86,6 @@ export function decodeEscapes(value: string, d: Delimiters): string {
         break;
       }
     }
-    // Continue after the closing escape character.
     i = end + 1;
   }
 

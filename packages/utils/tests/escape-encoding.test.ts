@@ -15,41 +15,46 @@ const CUSTOM_DELIMITERS: Delimiters = {
   subcomponent: "@",
 };
 
-// The round-trip properties at the end of this file are built from three
+// The round-trip properties at the end of this file are built from four
 // helpers. Each property first draws a delimiter set with `arbDelimiters`,
-// then chains into `arbValue` to draw a value for that set, encodes it, and
-// checks the result with `heldDelimiters` and `decodeEscapes`.
+// then chains into `arbValue` to draw a value for that set, and encodes it.
+// A written value is checked with `heldDelimiters` and `decodeEscapes`; a
+// refused one with `escapeCodesFor`.
 
 // Characters that are not letters or digits. `.` collides with `\.br\`, but no
 // hexadecimal escape holds one of them, so a delimiter set drawn from them can
 // write every value.
 const PUNCTUATION = [..."!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"];
-// The characters escape codes are written with: the named codes (`E`, `F`,
-// `R`, `S`, `T`, `.br`) and the hexadecimal escape (`X`, hexadecimal digits in
-// both cases). Mixing them into the draw makes a delimiter that collides with
-// an escape code common instead of a rare accident.
-const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdef"];
+// The characters escape sequences are written with: the named codes (`E`,
+// `F`, `R`, `S`, `T`, `.br`), the hexadecimal escape (`X`, hexadecimal digits
+// in both cases), and the sequences kept as written (`H`, `N`, `Z`, `C`, `M`).
+// Mixing them into the draw makes a delimiter that collides with an escape
+// sequence common instead of a rare accident.
+const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdefHNZCM"];
 
 // A delimiter set: five distinct characters from `arbCharacter`, assigned to
 // the field, component, repetition, escape, and subcomponent roles, with `\r`
-// as the segment delimiter.
+// or `\n` as the segment delimiter.
 const arbDelimiters = (
   arbCharacter: fc.Arbitrary<string>
 ): fc.Arbitrary<Delimiters> =>
   fc
-    .uniqueArray(arbCharacter, { maxLength: 5, minLength: 5 })
-    .map(([field, component, repetition, escape, subcomponent]) => ({
+    .tuple(
+      fc.uniqueArray(arbCharacter, { maxLength: 5, minLength: 5 }),
+      fc.constantFrom("\r", "\n")
+    )
+    .map(([[field, component, repetition, escape, subcomponent], segment]) => ({
       component: component as string,
       escape: escape as string,
       field: field as string,
       repetition: repetition as string,
-      segment: "\r",
+      segment,
       subcomponent: subcomponent as string,
     }));
 
-// A value for the delimiter set `d`, built one unit at a time from either a
-// delimiter of `d` or any grapheme, so that most values hold delimiters and
-// the escape character the encoder must write as escape sequences.
+// A value for the delimiter set `d`, built one unit at a time from a delimiter
+// of `d`, a line break, a sequence kept as written, or any grapheme, so that
+// most values hold characters the encoder must write as escape sequences.
 const arbValue = (d: Delimiters): fc.Arbitrary<string> =>
   fc.string({
     unit: fc.oneof(
@@ -59,7 +64,15 @@ const arbValue = (d: Delimiters): fc.Arbitrary<string> =>
         d.repetition,
         d.escape,
         d.subcomponent,
-        d.segment
+        d.segment,
+        "\r",
+        "\n"
+      ),
+      fc.constantFrom(
+        `${d.escape}H${d.escape}`,
+        `${d.escape}.sp 2${d.escape}`,
+        `${d.escape}Zsite${d.escape}`,
+        `${d.escape}C2842${d.escape}`
       ),
       fc.string({ maxLength: 1, minLength: 1, unit: "grapheme" })
     ),
@@ -72,6 +85,33 @@ const heldDelimiters = (wire: string, d: Delimiters): string[] =>
   [d.field, d.component, d.repetition, d.subcomponent, d.segment].filter(
     (delimiter) => wire.includes(delimiter)
   );
+
+// Every escape code `decodeEscapes` reads back as the ASCII character `ch`:
+// its named code, when `ch` is a delimiter or the escape character, and its
+// hexadecimal escape with each digit `A`–`F` in either case. An encoder may
+// refuse `ch` only when every one of them holds a delimiter.
+const escapeCodesFor = (ch: string, d: Delimiters): string[] => {
+  const named = [
+    [d.field, "F"],
+    [d.component, "S"],
+    [d.repetition, "R"],
+    [d.subcomponent, "T"],
+    [d.escape, "E"],
+    [d.segment, ".br"],
+  ]
+    .filter(([delimiter]) => delimiter === ch)
+    .map(([, code]) => code as string);
+  const digits = (ch.codePointAt(0) ?? 0)
+    .toString(16)
+    .toUpperCase()
+    .padStart(2, "0");
+  let hex = ["X"];
+  for (const digit of digits) {
+    const cases = [...new Set([digit, digit.toLowerCase()])];
+    hex = hex.flatMap((code) => cases.map((form) => code + form));
+  }
+  return [...named, ...hex];
+};
 
 describe(encodeEscapes, () => {
   it("encodes every delimiter and the escape character", () => {
@@ -201,13 +241,52 @@ describe(encodeEscapes, () => {
 
   it("throws for a character no escape sequence can write", () => {
     const d = { ...CUSTOM_DELIMITERS, component: "S", field: "X" };
+    const thrown = (): unknown => {
+      try {
+        encodeEscapes("aSb", d);
+      } catch (error) {
+        return error;
+      }
+      return undefined;
+    };
 
-    expect(() => encodeEscapes("aSb", d)).toThrow(
-      new EscapeSequenceError("S", d)
+    const error = thrown();
+
+    expect(error).toBeInstanceOf(EscapeSequenceError);
+    expect((error as EscapeSequenceError).character).toBe("S");
+    expect((error as EscapeSequenceError).delimiters).toBe(d);
+    expect((error as EscapeSequenceError).message).toBe(
+      "The value holds a character that must be written as an escape sequence, and every escape sequence for it holds one of the message's delimiters. With delimiters that are ASCII punctuation, every character can be written."
     );
-    expect(() => encodeEscapes("aSb", d)).toThrow(
-      "The value holds a character that no escape sequence can write, because a delimiter appears in both its escape code and its hexadecimal escape; use delimiters that are not letters or digits."
-    );
+  });
+
+  it("writes a hex digit in lowercase only where its uppercase form is a delimiter", () => {
+    const d: Delimiters = {
+      component: "é",
+      escape: "\\",
+      field: "S",
+      repetition: "C",
+      segment: "\r",
+      subcomponent: "a",
+    };
+    const wire = encodeEscapes("é", d);
+
+    expect(wire).toBe("\\Xc3A9\\");
+    expect(decodeEscapes(wire, d)).toBe("é");
+  });
+
+  it("throws for a lone surrogate it must escape", () => {
+    const d = { ...CUSTOM_DELIMITERS, component: "E", escape: "\uD83D" };
+
+    expect(() => encodeEscapes("a\uD83Db", d)).toThrow(EscapeSequenceError);
+  });
+
+  it("escapes a formatting command whose code is a delimiter", () => {
+    const d = { ...DEFAULT_DELIMITERS, component: "H" };
+    const wire = encodeEscapes("\\H\\", d);
+
+    expect(wire).toBe("\\E\\\\S\\\\E\\");
+    expect(decodeEscapes(wire, d)).toBe("\\H\\");
   });
 
   it("writes any value with delimiters that are not letters or digits", () => {
@@ -226,7 +305,7 @@ describe(encodeEscapes, () => {
     );
   });
 
-  it("writes any value with any delimiters, or throws EscapeSequenceError", () => {
+  it("writes any value with any delimiters, or throws EscapeSequenceError for a character none can write", () => {
     fc.assert(
       fc.property(
         arbDelimiters(
@@ -238,6 +317,15 @@ describe(encodeEscapes, () => {
             wire = encodeEscapes(value, d);
           } catch (error) {
             expect(error).toBeInstanceOf(EscapeSequenceError);
+            const { character } = error as EscapeSequenceError;
+            expect(value).toContain(character);
+            expect(
+              escapeCodesFor(character, d).filter(
+                (code) =>
+                  heldDelimiters(code, d).length === 0 &&
+                  !code.includes(d.escape)
+              )
+            ).toEqual([]);
             return;
           }
 

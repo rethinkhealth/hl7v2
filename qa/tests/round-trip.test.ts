@@ -315,20 +315,21 @@ describe("QR4: round-trip data fidelity", () => {
 });
 
 describe("QR4: content round-trips through serialize and parse", () => {
-  // Every character the serializer can write inside an escape sequence. A
-  // delimiter drawn from this list collides with one of the forms it writes:
+  // Every character an escape sequence in a value can hold. A delimiter drawn
+  // from this list collides with a sequence the serializer writes or keeps:
   //
   //   E F R S T       the named codes `\E\ \F\ \R\ \S\ \T\`
   //   . b r           the segment delimiter's code `\.br\`
   //   X               the prefix of every hexadecimal escape `\Xdd\`
   //   0-9 A-F a-f     hexadecimal digits, in both cases, since the serializer
-  //                   writes lowercase digits when an uppercase one collides
+  //                   writes a digit in lowercase when its uppercase form
+  //                   collides
+  //   H N Z C M       sequences kept as written, such as `\H\` and `\Zsite\`,
+  //                   which must be escaped instead when they hold a delimiter
   //
-  // Left out are the letters of the sequences the serializer only keeps as
-  // written and never produces itself (`H`, `N`, `Z`, `C`, `M`), and every other
-  // letter, which no escape sequence the serializer writes contains. They are
-  // still drawn through `fc.char()` below, just not favoured.
-  const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdef"];
+  // Every other character is still drawn through `fc.char()` below, just not
+  // favoured.
+  const ESCAPE_CODE_CHARACTERS = [..."EFRST.brX0123456789ABCDEFabcdefHNZCM"];
   const read = (source: string): string => {
     const tree = unified().use(hl7v2Parser).parse(source);
     return value(tree, "PID.3")?.value ?? "";
@@ -379,14 +380,20 @@ describe("QR4: content round-trips through serialize and parse", () => {
             { maxLength: 5, minLength: 5 }
           )
           // The content is then built for those delimiters, one unit at a
-          // time from a delimiter, the segment delimiter, or any grapheme, so
-          // that most values hold characters the serializer must escape.
+          // time from a delimiter, the segment delimiter, a sequence kept as
+          // written (with `delimiters[3]`, the escape character), or any
+          // grapheme, so that most values hold characters the serializer must
+          // escape.
           .chain((delimiters) =>
             fc.tuple(
               fc.constant(delimiters),
               fc.string({
                 unit: fc.oneof(
                   fc.constantFrom(...delimiters, "\r"),
+                  fc.constantFrom(
+                    `${delimiters[3]}H${delimiters[3]}`,
+                    `${delimiters[3]}Zsite${delimiters[3]}`
+                  ),
                   fc.string({ maxLength: 1, minLength: 1, unit: "grapheme" })
                 ),
               })
@@ -394,9 +401,9 @@ describe("QR4: content round-trips through serialize and parse", () => {
           ),
         ([[fieldSeparator, ...encodingCharacters], content]) => {
           // Write a message whose MSH declares the drawn delimiters and whose
-          // MSH-3 holds the content. A character no escape sequence can write
-          // with these delimiters is refused with EscapeSequenceError, and any
-          // other error fails the property.
+          // MSH-3 holds the content. A character of the content that no escape
+          // sequence can write with these delimiters is refused with
+          // EscapeSequenceError, and any other error fails the property.
           let wire: string;
           try {
             wire = toHl7v2(
@@ -411,6 +418,7 @@ describe("QR4: content round-trips through serialize and parse", () => {
             );
           } catch (error) {
             expect(error).toBeInstanceOf(EscapeSequenceError);
+            expect(content).toContain((error as EscapeSequenceError).character);
             return;
           }
           // Read the message back with the parser. MSH-3 must hold the same
