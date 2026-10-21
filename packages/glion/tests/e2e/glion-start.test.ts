@@ -89,7 +89,7 @@ describe("glion start e2e", () => {
 
   it("starts with ephemeral port config and emits ready", async () => {
     currentProc = execa(process.execPath, [binPath, "start"], {
-      cwd: resolve(fixturesDir, "zero-config"),
+      cwd: resolve(fixturesDir, "ephemeral-port"),
       reject: false,
     });
     const ready = await readUntilEvent(currentProc, (e) => e.t === "ready");
