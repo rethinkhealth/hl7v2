@@ -21,6 +21,7 @@ import { parseHL7v2 } from "@glion/parser";
 import { EscapeSequenceError, toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
 
+import { MAX_PORT } from "../constants";
 import { renderHuman, renderJson } from "./send-render";
 import type {
   SendOutcome,
@@ -37,11 +38,7 @@ export const DEFAULT_SEND_TIMEOUT_MS = 30_000;
  *
  * - `file` — positional message source. `undefined` or `"-"` both mean "read from
  *   stdin"; the handler treats them identically.
- * - `host` / `port` — explicit target. When `--local` is set these override the
- *   individual fields derived from the config.
- * - `local` — derive host/port from the project's `glion.config.ts`.
- * - `configPath` — config file used to resolve `--local` (same discovery as
- *   `dev`/`start`).
+ * - `host` / `port` — the target to send to.
  * - `timeoutMs` — deadline spanning connect + ACK wait.
  * - `json` — force JSON output even on a TTY.
  * - `help` — print subcommand help instead of sending.
@@ -50,8 +47,6 @@ export interface SendArgs {
   file?: string;
   host?: string;
   port?: number;
-  local: boolean;
-  configPath?: string;
   timeoutMs?: number;
   json: boolean;
   help: boolean;
@@ -62,9 +57,10 @@ export type ParseSendResult =
   | { ok: false; error: string };
 
 /**
- * Reads the token after a value flag at `index`, treating an end-of-argv
- * or a following `-`-prefixed token as "no value supplied". A returned
- * `string` is the captured value; a `{ error }` object is a usage failure.
+ * Reads the token after a value flag at `index`, treating an end-of-argv, an
+ * empty token, and a following `-`-prefixed token as "no value supplied". A
+ * returned `string` is the captured value; a `{ error }` object is a usage
+ * failure.
  */
 function takeFlagValue(
   argv: readonly string[],
@@ -72,7 +68,7 @@ function takeFlagValue(
   flag: string
 ): string | { error: string } {
   const next = argv[index + 1];
-  if (next === undefined || next.startsWith("-")) {
+  if (next === undefined || next === "" || next.startsWith("-")) {
     return { error: `${flag} requires a value` };
   }
   return next;
@@ -103,6 +99,28 @@ function takeIntFlagValue(
 }
 
 /**
+ * Reads the port value of `--port` at `index`. Folds the missing-value,
+ * non-integer, and out-of-range checks into one call so the parse loop carries
+ * a single guard for the flag — and so a port no host can listen on is
+ * rejected here, not after a dial that cannot succeed.
+ */
+function takePortValue(
+  argv: readonly string[],
+  index: number
+): number | { error: string } {
+  const parsed = takeIntFlagValue(argv, index, "--port");
+  if (typeof parsed === "object") {
+    return parsed;
+  }
+  if (parsed > MAX_PORT) {
+    return {
+      error: `--port requires a port between 1 and ${MAX_PORT}, got: ${parsed}`,
+    };
+  }
+  return parsed;
+}
+
+/**
  * Pure parser for the argv that follows the `send` subcommand token.
  *
  * Mirrors the return shape and style of `parseArgs` in `run.ts`: a
@@ -115,8 +133,6 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const positional: string[] = [];
   let host: string | undefined;
   let port: number | undefined;
-  let local = false;
-  let configPath: string | undefined;
   let timeoutMs: number | undefined;
   let json = false;
   let help = false;
@@ -132,10 +148,6 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       json = true;
       continue;
     }
-    if (arg === "--local") {
-      local = true;
-      continue;
-    }
     if (arg === "--host") {
       const flagValue = takeFlagValue(argv, i, "--host");
       if (typeof flagValue === "object") {
@@ -146,20 +158,11 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       continue;
     }
     if (arg === "--port") {
-      const parsed = takeIntFlagValue(argv, i, "--port");
+      const parsed = takePortValue(argv, i);
       if (typeof parsed === "object") {
         return { error: parsed.error, ok: false };
       }
       port = parsed;
-      i += 1;
-      continue;
-    }
-    if (arg === "--config") {
-      const flagValue = argv[i + 1];
-      if (flagValue === undefined || flagValue.startsWith("-")) {
-        return { error: "--config requires a path argument", ok: false };
-      }
-      configPath = flagValue;
       i += 1;
       continue;
     }
@@ -190,7 +193,7 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const file = rawFile === undefined || rawFile === "-" ? undefined : rawFile;
 
   return {
-    args: { configPath, file, help, host, json, local, port, timeoutMs },
+    args: { file, help, host, json, port, timeoutMs },
     ok: true,
   };
 }
@@ -208,12 +211,9 @@ Message source:
 
 Target:
   --host <host>          target host
-  --port <port>          target port
-  --local                read host/port from glion.config.ts (this project's
-                         server); --host/--port override individual fields
+  --port <port>          target port; defaults to 2575, the MLLP standard
 
 Options:
-  --config <path>        config file to resolve --local (same discovery as dev/start)
   --timeout <ms>         deadline spanning connect + ACK wait (default 30000)
   --json                 print one JSON line instead of the human exchange view
   -h, --help             show this help
@@ -228,7 +228,6 @@ TLS targets are not supported yet.
 
 export interface RunSendOptions {
   argv: readonly string[];
-  cwd: string;
   stdout?: NodeJS.WritableStream;
   stderr?: NodeJS.WritableStream;
   /** Runtime socket; injectable for tests. Defaults to the Node TCP adapter. */
@@ -368,7 +367,7 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
     return exitCodeFor(outcome);
   };
 
-  const resolved = await resolveTarget(args, opts.cwd);
+  const resolved = resolveTarget(args);
   if (!resolved.ok) {
     return emit({ kind: "invalid", message: resolved.reason });
   }

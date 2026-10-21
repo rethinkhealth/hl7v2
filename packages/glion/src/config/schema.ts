@@ -2,6 +2,7 @@ import { dirname, resolve } from "node:path";
 
 import { z } from "zod";
 
+import { DEFAULT_PORT, MAX_PORT } from "../constants";
 import {
   DEFAULT_LOG_DIR_SEGMENT,
   DEFAULT_LOG_LEVEL,
@@ -151,7 +152,7 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
           };
         }),
       // port 0 is explicitly allowed and means "OS-assigned ephemeral port".
-      port: z.number().int().min(0).max(65_535).default(2575),
+      port: z.number().int().min(0).max(MAX_PORT).default(DEFAULT_PORT),
       socketTimeout: z.number().int().nonnegative().optional(),
       tls: z
         .object({

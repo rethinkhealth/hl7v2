@@ -148,7 +148,6 @@ export function runGlion(opts: RunGlionOptions): Promise<number> {
     case "send": {
       return runSend({
         argv: parsed.args.sendArgv ?? [],
-        cwd: opts.cwd,
         stderr,
         stdout,
       });
