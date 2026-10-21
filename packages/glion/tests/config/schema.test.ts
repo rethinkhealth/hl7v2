@@ -8,7 +8,6 @@ import { makeGlionConfigSchema } from "../../src/config/schema";
 const ctx = {
   configPath: "/test/glion.config.ts",
   cwd: "/test",
-  mode: "start" as const,
 };
 const schema = makeGlionConfigSchema(ctx);
 

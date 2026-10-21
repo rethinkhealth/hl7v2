@@ -1,4 +1,5 @@
 import { loadConfig } from "../config/load";
+import type { ResolvedConfig } from "../config/schema";
 import { GlionError } from "../errors";
 import { encode } from "../events";
 import type { FileLogger } from "../file-logger";
@@ -8,6 +9,17 @@ import type { Watcher } from "../parent/watcher";
 import { createWatcher } from "../parent/watcher";
 import { ensureCacheDir, prepareChild } from "../prebuild";
 import { createStore } from "../tui/store";
+
+/**
+ * The address `glion dev` binds when the project names none: loopback, so a
+ * development server is not exposed beyond this machine.
+ */
+const LOOPBACK = "127.0.0.1";
+
+/** The address to bind: the one the project names, or loopback. */
+function bindAddress(config: ResolvedConfig): string {
+  return config.hostname ?? LOOPBACK;
+}
 
 export interface RunDevOptions {
   cwd: string;
@@ -56,21 +68,20 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     const cacheDir = await ensureCacheDir(opts.cwd);
 
     // Config is compiled (TS → JS via rolldown transform), imported
-    // natively, then validated by Zod. mode:"dev" defaults hostname
-    // to 127.0.0.1 so the dev server isn't exposed beyond localhost.
+    // natively, then validated by Zod.
     const config = await loadConfig({
       cacheDir,
       cwd: opts.cwd,
       explicitPath: opts.configPath,
-      mode: "dev",
     });
+    const hostname = bindAddress(config);
 
     // The entry file goes through rolldown build() — not transform() —
     // because it may import from local TS modules (routes, handlers).
     // build() bundles those while leaving node_modules external.
     // The manifest JSON is the IPC contract: it contains the compiled
     // entry path + every server option the child needs.
-    const manifestPath = await prepareChild(config, cacheDir);
+    const manifestPath = await prepareChild(config, cacheDir, hostname);
 
     // The supervisor owns the child lifecycle. In dev mode its crash
     // policy auto-respawns once, then halts on repeated crashes within
@@ -110,7 +121,7 @@ export async function runDev(opts: RunDevOptions): Promise<number> {
     watcher.onChange(() => {
       void (async () => {
         try {
-          await prepareChild(config, cacheDir);
+          await prepareChild(config, cacheDir, hostname);
         } catch (error) {
           // Build failed (syntax error, missing import, etc.) — surface
           // it as a warning and keep the current child running. The user
