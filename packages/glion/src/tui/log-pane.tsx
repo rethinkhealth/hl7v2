@@ -1,3 +1,4 @@
+import { isAckNakCode, isAckSuccessCode } from "@glion/ack";
 import { Box, Static, Text } from "ink";
 import type { ReactElement, ReactNode } from "react";
 
@@ -120,11 +121,11 @@ function LogLine({ event }: { event: Event }): ReactElement {
       const trigger = event.trigger;
       const duration = fmtMs(event.ms).padStart(W_DUR);
       const source = event.remote.padEnd(W_SRC);
-      const ack = (event.ack ?? "?").padEnd(W_ACK);
+      const ack = event.ack ?? "?";
       let ackColor: string | undefined;
-      if (event.ack === "AA") {
+      if (isAckSuccessCode(ack)) {
         ackColor = theme.success;
-      } else if (event.ack === "AE" || event.ack === "AR") {
+      } else if (isAckNakCode(ack)) {
         ackColor = theme.error;
       }
 
@@ -142,7 +143,7 @@ function LogLine({ event }: { event: Event }): ReactElement {
           <Text>{duration}</Text>
           {"  "}
           <Text dimColor>{source}</Text>
-          <Text color={ackColor}>{ack}</Text>
+          <Text color={ackColor}>{ack.padEnd(W_ACK)}</Text>
         </Text>
       );
     }

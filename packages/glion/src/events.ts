@@ -1,3 +1,5 @@
+import type { AckCode } from "@glion/ack";
+
 import type { LogLevel } from "./config/logging";
 import { causeMessage, GlionError } from "./errors";
 import type { GlionErrorKind } from "./errors";
@@ -37,7 +39,7 @@ export type Event =
       trigger: string;
       control: string;
       pattern: string | null;
-      ack: "AA" | "AE" | "AR" | null;
+      ack: AckCode | null;
       ms: number;
       ts: string;
     }
