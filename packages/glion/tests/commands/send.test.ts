@@ -74,6 +74,77 @@ describe("parseSendArgs", () => {
     });
   });
 
+  describe("TLS flags", () => {
+    it("dials in plaintext when no TLS flag is given", () => {
+      const result = parseSendArgs(["--host", "h"]);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.args.tls).toBeUndefined();
+      }
+    });
+
+    it("asks for TLS on --tls alone, naming no file", () => {
+      const result = parseSendArgs(["--tls"]);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.args.tls).toEqual({
+          ca: undefined,
+          cert: undefined,
+          insecure: false,
+          key: undefined,
+        });
+      }
+    });
+
+    it("asks for TLS when a certificate file is named without --tls", () => {
+      const result = parseSendArgs([
+        "--ca",
+        "./ca.pem",
+        "--cert",
+        "./c.pem",
+        "--key",
+        "./c.key",
+      ]);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.args.tls).toEqual({
+          ca: "./ca.pem",
+          cert: "./c.pem",
+          insecure: false,
+          key: "./c.key",
+        });
+      }
+    });
+
+    it("asks for TLS on --insecure alone, with verification off", () => {
+      const result = parseSendArgs(["--insecure"]);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.args.tls).toEqual({
+          ca: undefined,
+          cert: undefined,
+          insecure: true,
+          key: undefined,
+        });
+      }
+    });
+
+    it("rejects a certificate flag without a path", () => {
+      expect(parseSendArgs(["--ca"])).toEqual({
+        error: "--ca requires a value",
+        ok: false,
+      });
+      expect(parseSendArgs(["--cert", "--json"])).toEqual({
+        error: "--cert requires a value",
+        ok: false,
+      });
+      expect(parseSendArgs(["--key", ""])).toEqual({
+        error: "--key requires a value",
+        ok: false,
+      });
+    });
+  });
+
   describe("--timeout", () => {
     it("parses --timeout as an integer", () => {
       const result = parseSendArgs(["--timeout", "5000"]);

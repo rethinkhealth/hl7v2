@@ -1,13 +1,20 @@
 /**
- * Resolve the MLLP target for `glion send`.
+ * Resolve where a `glion send` is aimed: the `--host`/`--port` pair the
+ * invocation names, and the TLS it dials with.
  *
- * The target is the `--host`/`--port` pair the invocation names. The command
- * is a client: it sends to the system the operator points it at, and takes no
- * part in what address a server of this project binds.
+ * The command is a client: it sends to the system the operator points it at,
+ * and takes no part in what address a server of this project binds.
+ *
+ * @module
  */
 
+import type { NodeSocketOptions } from "@glion/mllp-client/node";
+
 import { DEFAULT_PORT } from "../constants";
+import { causeMessage, GlionError } from "../errors";
 import type { SendArgs } from "./send";
+import type { SendTarget } from "./send-render";
+import { loadTls } from "./send-tls";
 
 export type TargetResult =
   | { ok: true; host: string; port: number }
@@ -28,4 +35,40 @@ export function resolveTarget(args: SendArgs): TargetResult {
     };
   }
   return { host: args.host, ok: true, port: args.port ?? DEFAULT_PORT };
+}
+
+/** Where a `glion send` is aimed, and how the connection is secured. */
+export type DestinationResult =
+  | { ok: true; target: SendTarget; tls: NodeSocketOptions["tls"] }
+  | { ok: false; reason: string; cause?: string; target?: SendTarget };
+
+/**
+ * Resolves where the message goes and how the connection is secured: the
+ * target {@link resolveTarget} reads from `args`, and the certificate files
+ * the invocation names read into memory. A host that is not defined and a
+ * file that cannot be read are `reason`s; anything else propagates.
+ */
+export async function resolveDestination(
+  args: SendArgs
+): Promise<DestinationResult> {
+  const resolved = resolveTarget(args);
+  if (!resolved.ok) {
+    return resolved;
+  }
+  const target = { host: resolved.host, port: resolved.port };
+  try {
+    return { ok: true, target, tls: await loadTls(args.tls) };
+  } catch (error) {
+    if (error instanceof GlionError) {
+      // The target was resolved first, so a certificate file that cannot be
+      // read still reports the endpoint the send was aimed at.
+      return {
+        cause: causeMessage(error.cause),
+        ok: false,
+        reason: error.message,
+        target,
+      };
+    }
+    throw error;
+  }
 }

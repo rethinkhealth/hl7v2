@@ -17,18 +17,21 @@ import {
 } from "@glion/mllp-client";
 import type { MllpClientOptions, MllpSocket } from "@glion/mllp-client";
 import { nodeSocket } from "@glion/mllp-client/node";
+import type { NodeSocketOptions } from "@glion/mllp-client/node";
 import { parseHL7v2 } from "@glion/parser";
 import { EscapeSequenceError, toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
 
 import { MAX_PORT } from "../constants";
+import { causeMessage } from "../errors";
 import { renderConnected, renderHuman, renderJson } from "./send-render";
 import type {
+  ConnectionSecurity,
   SendOutcome,
   SendRequestSummary,
   SendTarget,
 } from "./send-render";
-import { resolveTarget } from "./send-target";
+import { resolveDestination } from "./send-target";
 
 /** Connect + ACK-wait deadline used when `--timeout` is omitted. */
 export const DEFAULT_SEND_TIMEOUT_MS = 30_000;
@@ -39,14 +42,27 @@ export const DEFAULT_SEND_TIMEOUT_MS = 30_000;
  * - `file` — positional message source. `undefined` or `"-"` both mean "read from
  *   stdin"; the handler treats them identically.
  * - `host` / `port` — the target to send to.
+ * - `tls` — the TLS to dial with, or `undefined` to dial in plaintext.
  * - `timeoutMs` — deadline spanning connect + ACK wait.
  * - `json` — force JSON output even on a TTY.
  * - `help` — print subcommand help instead of sending.
  */
+export interface SendTlsArgs {
+  /** The authority to verify the receiver's certificate against. */
+  ca?: string;
+  /** The client certificate to present. */
+  cert?: string;
+  /** The private key for that certificate. */
+  key?: string;
+  /** Whether to dial without verifying the receiver's certificate. */
+  insecure: boolean;
+}
+
 export interface SendArgs {
   file?: string;
   host?: string;
   port?: number;
+  tls?: SendTlsArgs;
   timeoutMs?: number;
   json: boolean;
   help: boolean;
@@ -134,6 +150,11 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   let host: string | undefined;
   let port: number | undefined;
   let timeoutMs: number | undefined;
+  let tls = false;
+  let insecure = false;
+  let ca: string | undefined;
+  let cert: string | undefined;
+  let key: string | undefined;
   let json = false;
   let help = false;
 
@@ -166,6 +187,29 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       i += 1;
       continue;
     }
+    if (arg === "--tls") {
+      tls = true;
+      continue;
+    }
+    if (arg === "--insecure") {
+      insecure = true;
+      continue;
+    }
+    if (arg === "--ca" || arg === "--cert" || arg === "--key") {
+      const flagValue = takeFlagValue(argv, i, arg);
+      if (typeof flagValue === "object") {
+        return { error: flagValue.error, ok: false };
+      }
+      if (arg === "--ca") {
+        ca = flagValue;
+      } else if (arg === "--cert") {
+        cert = flagValue;
+      } else {
+        key = flagValue;
+      }
+      i += 1;
+      continue;
+    }
     if (arg === "--timeout") {
       const parsed = takeIntFlagValue(argv, i, "--timeout");
       if (typeof parsed === "object") {
@@ -192,8 +236,25 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const rawFile = positional[0];
   const file = rawFile === undefined || rawFile === "-" ? undefined : rawFile;
 
+  // Naming any TLS material is asking for TLS, so `--tls` is only needed when
+  // the invocation names none.
+  const wantsTls =
+    tls ||
+    insecure ||
+    ca !== undefined ||
+    cert !== undefined ||
+    key !== undefined;
+
   return {
-    args: { file, help, host, json, port, timeoutMs },
+    args: {
+      file,
+      help,
+      host,
+      json,
+      port,
+      timeoutMs,
+      tls: wantsTls ? { ca, cert, insecure, key } : undefined,
+    },
     ok: true,
   };
 }
@@ -213,6 +274,15 @@ Target:
   --host <host>          target host
   --port <port>          target port; defaults to 2575, the MLLP standard
 
+TLS:
+  --tls                  dial over TLS, verified against the system's authorities
+  --ca <path>            the authority that signed the receiver's certificate,
+                         or its own certificate when it signed itself
+  --cert <path>          client certificate to present
+  --key <path>           the private key for that certificate
+  --insecure             dial over TLS without verifying the certificate
+                         (any TLS flag dials over TLS; --tls is for the rest)
+
 Options:
   --timeout <ms>         deadline spanning connect + ACK wait (default 30000)
   --json                 print one JSON line instead of the human exchange view
@@ -222,8 +292,6 @@ Exit codes:
   0  the peer accepted the message (AA/CA)
   1  the peer rejected the message (NAK: AE/AR/CE/CR)
   2  the message could not be delivered (transport, validation, or usage error)
-
-TLS targets are not supported yet.
 `;
 
 export interface RunSendOptions {
@@ -285,18 +353,35 @@ async function readMessageText(
 }
 
 /**
+ * How `tls` secures the connection: not at all, encrypted with the peer's
+ * certificate verified, or encrypted with verification turned off.
+ */
+function securityOf(tls: NodeSocketOptions["tls"]): ConnectionSecurity {
+  if (tls === undefined || tls === false) {
+    return "plain";
+  }
+  if (tls !== true && tls.rejectUnauthorized === false) {
+    return "tls-unverified";
+  }
+  return "tls";
+}
+
+/**
  * Writes the connection's facts to `sink` as the client reports them: the
- * line for the connection opening, with the time since the dial began. A
- * connection that goes down is the exchange's own outcome.
+ * line for the connection opening, how it is secured, with the time since the
+ * dial began. A connection that goes down is the exchange's own outcome.
  */
 function reportConnection(
   client: MllpClient,
   target: SendTarget,
+  tls: NodeSocketOptions["tls"],
   sink: NodeJS.WritableStream
 ): void {
+  const security = securityOf(tls);
   const dialedAt = performance.now();
   client.on("connect", () => {
-    sink.write(`${renderConnected(target, performance.now() - dialedAt)}\n`);
+    const durationMs = performance.now() - dialedAt;
+    sink.write(`${renderConnected(target, durationMs, security)}\n`);
   });
 }
 
@@ -329,7 +414,7 @@ function sendErrorOutcome(
   }
   if (error instanceof MllpInvalidMessageError) {
     return {
-      cause: causeOf(error),
+      cause: causeMessage(error.cause),
       code: error.code,
       kind: "invalid",
       message: error.message,
@@ -339,7 +424,7 @@ function sendErrorOutcome(
   }
   if (error instanceof MllpClientError) {
     return {
-      cause: causeOf(error),
+      cause: causeMessage(error.cause),
       code: error.code,
       delivery: error.delivery,
       kind: "transport",
@@ -383,11 +468,16 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
     return exitCodeFor(outcome);
   };
 
-  const resolved = resolveTarget(args);
-  if (!resolved.ok) {
-    return emit({ kind: "invalid", message: resolved.reason });
+  const destination = await resolveDestination(args);
+  if (!destination.ok) {
+    return emit({
+      cause: destination.cause,
+      kind: "invalid",
+      message: destination.reason,
+      target: destination.target,
+    });
   }
-  const target = { host: resolved.host, port: resolved.port };
+  const { target, tls } = destination;
 
   const read = await readMessageText(args, opts);
   if (!read.ok) {
@@ -414,10 +504,11 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
       reconnect: opts.reconnect,
       sendTimeoutMs: timeoutMs,
       socket:
-        opts.socket ?? nodeSocket({ host: target.host, port: target.port }),
+        opts.socket ??
+        nodeSocket({ host: target.host, port: target.port, tls }),
     });
     if (!useJson) {
-      reportConnection(client, target, stderr);
+      reportConnection(client, target, tls, stderr);
     }
     await client.connect();
     startedAt = performance.now();
@@ -466,14 +557,4 @@ function prepareRequest(tree: Root): RequestResult {
     }
     throw error;
   }
-}
-
-/** The text of `error.cause`, when there is one. */
-function causeOf(error: Error): string | undefined {
-  if (error.cause === undefined) {
-    return undefined;
-  }
-  return error.cause instanceof Error
-    ? error.cause.message
-    : String(error.cause);
 }

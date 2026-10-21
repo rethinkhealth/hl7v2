@@ -44,3 +44,16 @@ export class GlionError extends Error {
     this.cause = cause;
   }
 }
+
+/**
+ * The message of an error's `cause`, or `undefined` when it has none.
+ *
+ * Every presenter shows the cause on its own line, so each reads it the same
+ * way: an `Error`'s message, and anything else as a string.
+ */
+export function causeMessage(cause: unknown): string | undefined {
+  if (cause === undefined) {
+    return undefined;
+  }
+  return cause instanceof Error ? cause.message : String(cause);
+}
