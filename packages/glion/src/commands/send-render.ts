@@ -275,6 +275,14 @@ function quote(text: string): string {
   return `"${text}"`;
 }
 
+/** The `== connected <host:port> <duration>` line: the connection is open. */
+export function renderConnected(
+  target: SendTarget,
+  durationMs: number
+): string {
+  return `== connected  ${target.host}:${target.port}  ${fmtMs(durationMs)}`;
+}
+
 // ── JSON line ────────────────────────────────────────────────────────
 
 /**
