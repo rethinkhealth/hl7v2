@@ -1,4 +1,4 @@
-import { Static, Text } from "ink";
+import { Box, Static, Text } from "ink";
 import type { ReactElement, ReactNode } from "react";
 
 import type { LogLevel } from "../config/logging";
@@ -29,6 +29,17 @@ export function LogPane({ entries, epoch }: LogPaneProps): ReactElement {
 }
 
 // ── Formatters ───────────────────────────────────────────────────────
+
+/** The timestamp column every log line begins with, and the gap after it. */
+const LINE_GUTTER = " ".repeat(14);
+
+/** `text` with every line placed under the message above it. */
+function indent(text: string): string {
+  return text
+    .split("\n")
+    .map((line) => `${LINE_GUTTER}${line}`)
+    .join("\n");
+}
 
 /** HH:MM:SS.mmm from an ISO timestamp. */
 function ts(iso: string): string {
@@ -176,14 +187,24 @@ function LogLine({ event }: { event: Event }): ReactElement {
       );
     }
     case "fatal": {
+      // The message is the fact; the cause and what to do about it each get
+      // their own line rather than being folded into the sentence.
       return (
-        <Text>
-          <Text dimColor>{ts(event.ts)}</Text>
-          {"  "}
-          <Text color={theme.error} bold>
-            ✖ [{event.kind}] {event.message}
+        <Box flexDirection="column">
+          <Text>
+            <Text dimColor>{ts(event.ts)}</Text>
+            {"  "}
+            <Text color={theme.error} bold>
+              ✖ [{event.kind}] {event.message}
+            </Text>
           </Text>
-        </Text>
+          {event.cause === undefined ? null : (
+            <Text dimColor>{indent(event.cause)}</Text>
+          )}
+          {event.hint === undefined ? null : (
+            <Text color={theme.info}>{indent(event.hint)}</Text>
+          )}
+        </Box>
       );
     }
     case "log": {

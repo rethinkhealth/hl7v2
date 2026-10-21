@@ -259,7 +259,8 @@ describe("glion send over TLS", () => {
     expect(code).toBe(2);
     const json = JSON.parse(state.out);
     expect(json.kind).toBe("invalid");
-    expect(json.message).toBe(`Failed to read the TLS ca file at ${missing}`);
+    expect(json.message).toBe(`The TLS file \`${missing}\` could not be read.`);
+    expect(json.hint).toContain("`--ca`");
     // The endpoint was already resolved, so the line still names it.
     expect(json.host).toBe("127.0.0.1");
     expect(json.port).toBe(issued.port);

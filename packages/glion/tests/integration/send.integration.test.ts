@@ -148,7 +148,7 @@ describe("runSend (integration, fake socket)", () => {
     });
 
     expect(code).toBe(2);
-    expect(state.err).toContain("Unknown flag: --nope");
+    expect(state.err).toContain("`--nope` is not a `glion send` flag.");
   });
 
   it("reads the message from a file argument", async () => {
@@ -197,7 +197,10 @@ describe("runSend (integration, fake socket)", () => {
     expect(code).toBe(2);
     const json = JSON.parse(state.out);
     expect(json.kind).toBe("invalid");
-    expect(json.message).toContain("Could not read the message");
+    expect(json.message).toBe(
+      "The message source `/no/such/file.hl7` could not be read."
+    );
+    expect(json.cause).toContain("ENOENT");
   });
 
   it("reports an invalid outcome (exit 2) when the message has no MSH-10", async () => {

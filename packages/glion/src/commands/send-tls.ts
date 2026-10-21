@@ -25,12 +25,12 @@ export async function loadTls(
   if (tls === undefined) {
     return undefined;
   }
-  const read = (path: string | undefined, name: string) =>
-    path === undefined ? undefined : readTlsFile(path, `the TLS ${name} file`);
+  const read = (path: string | undefined, flag: string) =>
+    path === undefined ? undefined : readTlsFile(path, flag);
   const [ca, cert, key] = await Promise.all([
-    read(tls.ca, "ca"),
-    read(tls.cert, "cert"),
-    read(tls.key, "key"),
+    read(tls.ca, "--ca"),
+    read(tls.cert, "--cert"),
+    read(tls.key, "--key"),
   ]);
   const options: NodeTlsOptions = {};
   if (tls.insecure) {

@@ -50,12 +50,13 @@ describe("loadTls", () => {
     });
   });
 
-  it("names the file it could not read", async () => {
+  it("names the file it could not read, and the flag in the hint", async () => {
     await expect(
       loadTls({ ca: "/no/such/ca.pem", insecure: false })
     ).rejects.toMatchObject({
+      hint: "Check that `--ca` names a file this process can read (chmod 600 for key files).",
       kind: "tls-read-failed",
-      message: "Failed to read the TLS ca file at /no/such/ca.pem",
+      message: "The TLS file `/no/such/ca.pem` could not be read.",
     });
   });
 });

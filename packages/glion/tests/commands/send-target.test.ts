@@ -18,20 +18,14 @@ describe("resolveTarget", () => {
     expect(result).toEqual({ host: "h.test", ok: true, port: 2575 });
   });
 
-  it("states that the host is not defined when none is given", () => {
-    const result = resolveTarget(args({ port: 1234 }));
-    expect(result).toEqual({
-      ok: false,
-      reason:
-        "No target host is defined. Pass `--host` with the system to send to.",
-    });
-  });
-
-  it("states the same when neither is given", () => {
-    expect(resolveTarget(args())).toEqual({
-      ok: false,
-      reason:
-        "No target host is defined. Pass `--host` with the system to send to.",
-    });
+  it("states that the host is not defined, whether or not --port is given", () => {
+    for (const given of [args({ port: 1234 }), args()]) {
+      const result = resolveTarget(given);
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.reason).toBe("No target host is defined.");
+        expect(result.hint).toBe("Pass `--host` with the system to send to.");
+      }
+    }
   });
 });
