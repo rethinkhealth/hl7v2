@@ -17,7 +17,7 @@
  * without sockets or fixtures.
  */
 
-import type { AckNakCode } from "@glion/ack";
+import type { AckNakCode, AckSuccessCode } from "@glion/ack";
 
 /**
  * The target the message was (or would have been) sent to. Carried on every
@@ -49,7 +49,7 @@ export interface SendAcceptOutcome {
   target: SendTarget;
   request: SendRequestSummary;
   /** Acknowledgment code: `AA` (application accept) or `CA` (commit accept). */
-  code: "AA" | "CA";
+  code: AckSuccessCode;
   /** MSA-2 of the ACK — echoes the request control id when the peer complies. */
   ackControlId: string;
   /** MSA-3 free text, when the peer included one. */
