@@ -1,5 +1,15 @@
 # @rethinkhealth/hl7v2
 
+## 0.29.0
+
+### Patch Changes
+
+- [#1057](https://github.com/rethinkhealth/glion/pull/1057) [`e2fb937`](https://github.com/rethinkhealth/glion/commit/e2fb9376aaba5e132a20091cfac91bc8b4f88ba9) Thanks [@meleksomai](https://github.com/meleksomai)! - Read a Segment ID as it is written instead of decoding its escape sequences, which moved a field value on every parse and serialize round trip when a Segment ID such as `Z\R\Z` decoded to a delimiter ([#1054](https://github.com/rethinkhealth/glion/issues/1054)).
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56)]:
+  - @glion/utils@0.29.0
+  - @glion/config@0.29.0
+  - @glion/ast@0.29.0
+
 ## 0.28.0
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # @rethinkhealth/hl7v2-mllp
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`e2fb937`](https://github.com/rethinkhealth/glion/commit/e2fb9376aaba5e132a20091cfac91bc8b4f88ba9)]:
+  - @glion/parser@0.29.0
+  - @glion/util-query@0.29.0
+  - @glion/ast@0.29.0
+  - @glion/mllp-codec@0.29.0
+  - @glion/util-charset@0.29.0
+
 ## 0.28.0
 
 ### Patch Changes
