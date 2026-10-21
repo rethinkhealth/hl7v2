@@ -1,5 +1,15 @@
 # @glion/lint-profile-timestamps
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-datatypes@0.29.0
+  - @glion/util-visit@0.29.0
+  - @glion/ast@0.29.0
+  - @glion/util-timestamp@0.29.0
+
 ## 0.28.0
 
 ### Patch Changes
