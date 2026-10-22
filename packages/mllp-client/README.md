@@ -353,13 +353,9 @@ nodeSocket(() =>
 );
 ```
 
-Node sends a server name (SNI) only when `servername` is set. Bun and Deno send `host` when it is a host name.
-
 A handshake that fails rejects with [`CONNECTION_FAILED`](#connection_failed), with Node's TLS error on `cause`: for example `UNABLE_TO_VERIFY_LEAF_SIGNATURE` or `ERR_TLS_CERT_ALTNAME_INVALID`.
 
 A receiver that refuses the client certificate over TLS 1.2 fails the handshake: [`CONNECTION_FAILED`](#connection_failed), nothing sent. Over TLS 1.3 it refuses after the handshake, so the connection opens and the first `send()` rejects with `CONNECTION_LOST`, delivery `unknown`.
-
-On Deno, a wrong `passphrase` does not fail the handshake; the connection opens without the client certificate and fails as a refused client certificate.
 
 ### Cloudflare Workers
 
