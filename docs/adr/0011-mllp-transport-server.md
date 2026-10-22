@@ -299,7 +299,6 @@ interface TcpAdapter {
 interface ListenOptions {
   port: number;
   hostname?: string;
-  tls?: TlsOptions;
   backlog?: number;
 }
 

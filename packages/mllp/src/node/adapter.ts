@@ -1,10 +1,10 @@
 /**
  * Node.js TCP/TLS adapter for the MLLP server.
  *
- * Implements the {@link TcpAdapter} interface using Node.js built-in
- * `net` and `tls` modules. Incoming `net.Socket` instances are wrapped
- * into Web Streams-based {@link AdapterSocket} objects so that the rest
- * of the MLLP stack can work with a platform-agnostic streaming API.
+ * Implements the {@link TcpAdapter} interface over a Node.js `net.Server`, or a
+ * `tls.Server` when TLS options are given. Accepted sockets are wrapped into
+ * Web Streams-based {@link AdapterSocket} objects so that the rest of the MLLP
+ * stack can work with a platform-agnostic streaming API.
  *
  * This module is internal to the `@glion/mllp` package and
  * is consumed by {@link serve} in `./serve.ts`.
@@ -17,6 +17,7 @@ import type { Server, Socket } from "node:net";
 import { createServer } from "node:net";
 import { Readable } from "node:stream";
 import { createServer as createTlsServer } from "node:tls";
+import type { TlsOptions } from "node:tls";
 import { promisify } from "node:util";
 
 import type {
@@ -28,7 +29,7 @@ import type {
 } from "../server/adapter";
 
 /**
- * Options specific to the Node.js adapter that control per-socket behaviour.
+ * Options specific to the Node.js adapter.
  *
  * @internal
  */
@@ -45,24 +46,10 @@ export interface NodeAdapterOptions {
   socketTimeout?: number;
 
   /**
-   * Whether to enable TCP keep-alive probes on accepted sockets.
-   *
-   * When `true` the operating system will periodically send keep-alive
-   * packets to detect dead peers and prevent intermediate network
-   * equipment from dropping idle connections.
-   *
-   * @default true
+   * TLS for the listener, passed to `tls.createServer()` unchanged. Without
+   * it, the adapter listens with `net.createServer()`.
    */
-  keepAlive?: boolean;
-
-  /**
-   * The initial delay in milliseconds before the first TCP keep-alive
-   * probe is sent on an idle socket. Only meaningful when
-   * {@link keepAlive} is `true`.
-   *
-   * @default 60000
-   */
-  keepAliveInitialDelay?: number;
+  tls?: TlsOptions;
 }
 
 /**
@@ -140,16 +127,13 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
 }
 
 /**
- * Create a Node.js {@link TcpAdapter} that can listen for TCP or TLS
- * connections using the built-in `net` and `tls` modules.
+ * Create a Node.js {@link TcpAdapter} that listens with `tls.createServer()`
+ * when `tls` is set, and with `net.createServer()` otherwise. A TLS socket is
+ * handed on once its TLS handshake completes.
  *
- * When the returned adapter's `listen()` method is called with a `tls`
- * option, a TLS server (`tls.createServer`) is used; otherwise a plain
- * TCP server (`net.createServer`) is created.
- *
- * Each accepted socket is configured via {@link configureSocket} (timeouts,
- * keep-alive, Nagle disabled) and then wrapped into an {@link AdapterSocket}
- * before being handed to the provided {@link ConnectionHandler}.
+ * Each accepted socket gets the idle timeout via {@link configureSocket} and
+ * is wrapped into an {@link AdapterSocket} before being handed to the
+ * provided {@link ConnectionHandler}. Nothing else is set on it.
  *
  * @example
  *   ```typescript
@@ -159,28 +143,16 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  *   });
  *   ```;
  *
- * @param options - Optional per-socket configuration (timeouts, keep-alive).
+ * @param options - Optional listener and socket configuration.
  * @returns A {@link TcpAdapter} ready to bind to a port.
  * @internal
  */
 export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
-  const {
-    socketTimeout = 0,
-    keepAlive = true,
-    keepAliveInitialDelay = 60_000,
-  } = options ?? {};
+  const { socketTimeout = 0, tls } = options ?? {};
 
   /**
-   * Apply common socket options to an accepted connection.
-   *
-   * Configures the following on the raw `net.Socket`:
-   *
-   * - **Idle timeout** -- If `socketTimeout > 0`, sets `setTimeout()` and
-   *   destroys the socket on the `"timeout"` event.
-   * - **TCP keep-alive** -- Enables keep-alive probes with the configured initial
-   *   delay when `keepAlive` is `true`.
-   * - **Nagle disabled** -- Calls `setNoDelay(true)` so that small MLLP frames
-   *   are sent immediately without buffering.
+   * Apply the idle timeout to an accepted connection: if `socketTimeout > 0`,
+   * sets `setTimeout()` and destroys the socket on the `"timeout"` event.
    *
    * @param socket - The raw Node.js socket to configure.
    */
@@ -189,30 +161,18 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
       socket.setTimeout(socketTimeout);
       socket.on("timeout", () => socket.destroy());
     }
-    if (keepAlive) {
-      socket.setKeepAlive(true, keepAliveInitialDelay);
-    }
-    socket.setNoDelay(true);
   }
 
   return {
     listen(listenOpts: ListenOptions, handler: ConnectionHandler): TcpHandle {
+      const secure = tls !== undefined;
       const onConnection = (socket: Socket) => {
         configureSocket(socket);
-        const secure = !!listenOpts.tls;
         handler(wrapNodeSocket(socket, secure));
       };
 
-      const server: Server = listenOpts.tls
-        ? createTlsServer(
-            {
-              ca: listenOpts.tls.ca,
-              cert: listenOpts.tls.cert,
-              key: listenOpts.tls.key,
-              passphrase: listenOpts.tls.passphrase,
-            },
-            onConnection
-          )
+      const server: Server = secure
+        ? createTlsServer(tls, onConnection)
         : createServer(onConnection);
 
       let resolveListening!: (value: true) => void;
