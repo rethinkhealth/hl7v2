@@ -7,8 +7,8 @@
  * Cause: Node's TLS server asks for a client certificate only when
  * `requestCert` is set, and `serve()` neither took nor passed it, so `ca` had
  * nothing to verify.
- * Resolution: `tls` takes `requestCert` and `rejectUnauthorized`, passed to
- * Node's TLS server as given.
+ * Resolution: `tls` takes Node's `tls.createServer()` options and passes them
+ * unchanged, `requestCert` among them.
  */
 
 import { once } from "node:events";
@@ -83,7 +83,6 @@ describe("serve() with tls.requestCert", () => {
         ca: pki.ca,
         cert: pki.server.cert,
         key: pki.server.private,
-        rejectUnauthorized: true,
         requestCert: true,
       },
     });

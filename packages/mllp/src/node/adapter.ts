@@ -17,6 +17,7 @@ import type { Server, Socket } from "node:net";
 import { createServer } from "node:net";
 import { Readable } from "node:stream";
 import { createServer as createTlsServer } from "node:tls";
+import type { TlsOptions } from "node:tls";
 import { promisify } from "node:util";
 
 import type {
@@ -28,7 +29,7 @@ import type {
 } from "../server/adapter";
 
 /**
- * Options specific to the Node.js adapter that control per-socket behaviour.
+ * Options specific to the Node.js adapter.
  *
  * @internal
  */
@@ -63,6 +64,12 @@ export interface NodeAdapterOptions {
    * @default 60000
    */
   keepAliveInitialDelay?: number;
+
+  /**
+   * TLS for the listener, passed to `tls.createServer()` unchanged. Plain
+   * TCP when `undefined`.
+   */
+  tls?: TlsOptions;
 }
 
 /**
@@ -143,9 +150,8 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  * Create a Node.js {@link TcpAdapter} that can listen for TCP or TLS
  * connections using the built-in `net` and `tls` modules.
  *
- * When the returned adapter's `listen()` method is called with a `tls`
- * option, a TLS server (`tls.createServer`) is used; otherwise a plain
- * TCP server (`net.createServer`) is created.
+ * When `tls` is set, the adapter listens with `tls.createServer()`;
+ * otherwise with `net.createServer()`.
  *
  * Each accepted socket is configured via {@link configureSocket} (timeouts,
  * keep-alive, Nagle disabled) and then wrapped into an {@link AdapterSocket}
@@ -159,7 +165,7 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  *   });
  *   ```;
  *
- * @param options - Optional per-socket configuration (timeouts, keep-alive).
+ * @param options - Optional socket and TLS configuration.
  * @returns A {@link TcpAdapter} ready to bind to a port.
  * @internal
  */
@@ -168,6 +174,7 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
     socketTimeout = 0,
     keepAlive = true,
     keepAliveInitialDelay = 60_000,
+    tls,
   } = options ?? {};
 
   /**
@@ -199,22 +206,11 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
     listen(listenOpts: ListenOptions, handler: ConnectionHandler): TcpHandle {
       const onConnection = (socket: Socket) => {
         configureSocket(socket);
-        const secure = !!listenOpts.tls;
-        handler(wrapNodeSocket(socket, secure));
+        handler(wrapNodeSocket(socket, tls !== undefined));
       };
 
-      const server: Server = listenOpts.tls
-        ? createTlsServer(
-            {
-              ca: listenOpts.tls.ca,
-              cert: listenOpts.tls.cert,
-              key: listenOpts.tls.key,
-              passphrase: listenOpts.tls.passphrase,
-              rejectUnauthorized: listenOpts.tls.rejectUnauthorized,
-              requestCert: listenOpts.tls.requestCert,
-            },
-            onConnection
-          )
+      const server: Server = tls
+        ? createTlsServer(tls, onConnection)
         : createServer(onConnection);
 
       let resolveListening!: (value: true) => void;

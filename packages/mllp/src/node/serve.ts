@@ -10,6 +10,8 @@
  * @module
  */
 
+import type { TlsOptions } from "node:tls";
+
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
 import { CharsetError, decodeBytes, encodeBytes } from "@glion/util-charset";
 
@@ -120,33 +122,10 @@ export interface ServeOptions {
   socketTimeout?: number;
 
   /**
-   * TLS configuration. When provided the server will create a TLS socket
-   * instead of a plain TCP socket.
+   * TLS for the listener, passed to Node's `tls.createServer()` unchanged.
+   * Plain TCP when `undefined`.
    */
-  tls?: {
-    /** CA certificate(s) that verify client certificates. */
-    ca?: string | Buffer;
-    /** The server certificate. */
-    cert: string | Buffer;
-    /** The private key for the server certificate. */
-    key: string | Buffer;
-    /** Optional passphrase for the private key. */
-    passphrase?: string;
-    /**
-     * Ask every remote system for a client certificate, verified against
-     * `ca`.
-     *
-     * @default false
-     */
-    requestCert?: boolean;
-    /**
-     * Refuse a remote system whose client certificate is missing or does not
-     * verify. Applies only with `requestCert`.
-     *
-     * @default true
-     */
-    rejectUnauthorized?: boolean;
-  };
+  tls?: TlsOptions;
 }
 
 /**
@@ -200,6 +179,7 @@ export function serve(app: Mllp, options: ServeOptions): Server {
     keepAlive: options.keepAlive,
     keepAliveInitialDelay: options.keepAliveInitialDelay,
     socketTimeout: options.socketTimeout,
+    tls: options.tls,
   });
 
   const lifecycle: LifecycleOptions = {
@@ -212,7 +192,6 @@ export function serve(app: Mllp, options: ServeOptions): Server {
     {
       hostname: options.hostname,
       port: options.port,
-      tls: options.tls,
     },
     (socket) => handleConnection(app, socket, lifecycle)
   );

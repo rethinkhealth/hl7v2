@@ -57,17 +57,17 @@ The server class. Built with a fluent chainable API:
 
 Start a Node.js or Bun TCP server that dispatches incoming MLLP frames through the `Mllp` instance.
 
-| Option                  | Type                                        | Description                                                                                    |
-| ----------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `port`                  | `number`                                    | TCP port to listen on.                                                                         |
-| `hostname`              | `string`, optional                          | Interface to bind. Defaults to all interfaces.                                                 |
-| `tls`                   | `{ cert, key, ca?, passphrase? }`, optional | Enable MLLP over TLS.                                                                          |
-| `keepAlive`             | `boolean`, optional                         | Enable TCP keep-alive on accepted sockets. Defaults to `true`.                                 |
-| `keepAliveInitialDelay` | `number`, optional                          | Delay in ms before the first keep-alive probe on an idle socket. Defaults to `60000`.          |
-| `socketTimeout`         | `number`, optional                          | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables. |
-| `onConnect`             | `ConnectionCallback`, optional              | Called when a new TCP connection is accepted.                                                  |
-| `onDisconnect`          | `ConnectionCallback`, optional              | Called when a connection closes — always fires, even if `onConnect` threw.                     |
-| `onError`               | `ErrorCallback`, optional                   | Called when a handler error goes unhandled or a lifecycle callback throws.                     |
+| Option                  | Type                                   | Description                                                                                    |
+| ----------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `port`                  | `number`                               | TCP port to listen on.                                                                         |
+| `hostname`              | `string`, optional                     | Interface to bind. Defaults to all interfaces.                                                 |
+| `tls`                   | `TlsOptions` from `node:tls`, optional | MLLP over TLS. Passed to `tls.createServer()` unchanged.                                       |
+| `keepAlive`             | `boolean`, optional                    | Enable TCP keep-alive on accepted sockets. Defaults to `true`.                                 |
+| `keepAliveInitialDelay` | `number`, optional                     | Delay in ms before the first keep-alive probe on an idle socket. Defaults to `60000`.          |
+| `socketTimeout`         | `number`, optional                     | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables. |
+| `onConnect`             | `ConnectionCallback`, optional         | Called when a new TCP connection is accepted.                                                  |
+| `onDisconnect`          | `ConnectionCallback`, optional         | Called when a connection closes — always fires, even if `onConnect` threw.                     |
+| `onError`               | `ErrorCallback`, optional              | Called when a handler error goes unhandled or a lifecycle callback throws.                     |
 
 ### Wire framing
 
@@ -250,7 +250,7 @@ Without an error handler, errors are absorbed and no response is sent. The sendi
 
 ## TLS
 
-TLS is supported via `serve()` options:
+`tls` takes the options of Node's [`tls.createServer()`](https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener) and passes them unchanged. Without `tls`, the server listens on plain TCP.
 
 ```ts
 import fs from "node:fs";
@@ -265,6 +265,20 @@ const server = serve(app, {
   tls: {
     cert: fs.readFileSync("cert.pem"),
     key: fs.readFileSync("key.pem"),
+  },
+});
+```
+
+Mutual TLS is `requestCert` with the `ca` that issued the client certificates. A remote system that presents no certificate, or one `ca` does not verify, is refused during the handshake:
+
+```ts
+const server = serve(app, {
+  port: 2575,
+  tls: {
+    ca: fs.readFileSync("ca.pem"),
+    cert: fs.readFileSync("cert.pem"),
+    key: fs.readFileSync("key.pem"),
+    requestCert: true,
   },
 });
 ```

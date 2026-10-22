@@ -8,24 +8,11 @@
  */
 
 /**
- * TLS configuration options.
- */
-export interface TlsOptions {
-  cert: string | Buffer;
-  key: string | Buffer;
-  ca?: string | Buffer;
-  passphrase?: string;
-  requestCert?: boolean;
-  rejectUnauthorized?: boolean;
-}
-
-/**
  * Options for starting a TCP listener.
  */
 export interface ListenOptions {
   port: number;
   hostname?: string;
-  tls?: TlsOptions;
   backlog?: number;
 }
 
