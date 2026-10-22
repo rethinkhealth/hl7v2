@@ -53,6 +53,16 @@ describeMllpSocketContract("nodeSocket over TLS", overTls, {
 
 describeMllpClientScenarios("nodeSocket over TLS", overTls, tls);
 
+describeMllpSocketContract(
+  "nodeSocket with an asynchronous dial",
+  ({ host, port }) =>
+    nodeSocket(async () => {
+      await sleep(1);
+      return connectTcp({ host, port });
+    }),
+  { closeBoundMs: DEFAULT_GRACEFUL_CLOSE_MS + CLOSE_SLACK_MS, remotes: tcp }
+);
+
 describe("nodeSocket over net.Socket", () => {
   it("does not dial when the signal is already aborted", async () => {
     await using remote = await listen();
@@ -64,6 +74,38 @@ describe("nodeSocket over net.Socket", () => {
     await sleep(SETTLE_MS);
 
     expect(remote.connections).toBe(0);
+  });
+
+  it("passes the attempt's signal to dial", async () => {
+    await using remote = await listen();
+    const signals: AbortSignal[] = [];
+    const socket = nodeSocket((signal) => {
+      signals.push(signal);
+      return connectTcp({ host: remote.host, port: remote.port });
+    });
+    const attempt = new AbortController();
+
+    await socket.connect(attempt.signal);
+    await socket.close();
+
+    expect(signals).toEqual([attempt.signal]);
+  });
+
+  it("leaves nothing open when an asynchronous dial resolves after the attempt was cancelled", async () => {
+    await using remote = await listen();
+    const attempt = new AbortController();
+    const socket = nodeSocket(async () => {
+      await sleep(1);
+      attempt.abort(new Error("the caller gave up"));
+      return connectTcp({ host: remote.host, port: remote.port });
+    });
+
+    await expect(socket.connect(attempt.signal)).rejects.toThrow(
+      "the caller gave up"
+    );
+    await sleep(SETTLE_MS);
+
+    expect(remote.closes).toHaveLength(remote.connections);
   });
 
   it("dials a fresh connection after close()", async () => {

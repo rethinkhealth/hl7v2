@@ -22,7 +22,7 @@ describe("workersSocket", () => {
       expect.objectContaining({
         code: "INVALID_OPTION",
         message:
-          "dial must be a function that opens a connection to the remote system.",
+          "`dial` is not a function; it must open a connection to the remote system.",
       })
     );
   });

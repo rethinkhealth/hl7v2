@@ -9,7 +9,7 @@
 import type { Socket } from "node:net";
 import { Duplex } from "node:stream";
 
-import { assertDial } from "../assertions";
+import { MllpInvalidOptionError } from "../errors/mllp-invalid-option-error";
 import type { MllpSocket, MllpStreams } from "../types";
 
 /** Default time a socket gets to end gracefully before it is destroyed. */
@@ -17,10 +17,12 @@ export const DEFAULT_GRACEFUL_CLOSE_MS = 1000;
 
 /**
  * Opens a connection to the remote system: `net.connect()` or
- * `tls.connect()`, with Node's options. MUST return a socket that is still
- * connecting, and a fresh one on every call.
+ * `tls.connect()`, with Node's options. Returns the socket, or a promise of
+ * it. MUST return a socket that is still connecting, and a fresh one on
+ * every call. An asynchronous `dial` SHOULD stop when `signal`, the
+ * attempt's signal, aborts.
  */
-export type NodeDial = () => Socket;
+export type NodeDial = (signal: AbortSignal) => Socket | Promise<Socket>;
 
 export interface NodeSocketOptions {
   /**
@@ -39,12 +41,20 @@ export interface NodeSocketOptions {
  * Rejects with the socket's error, or with `signal.reason` when cancelled.
  * Destroys the socket before rejecting.
  */
-function open(dial: NodeDial, signal: AbortSignal): Promise<Socket> {
+async function open(dial: NodeDial, signal: AbortSignal): Promise<Socket> {
+  signal.throwIfAborted();
+  const dialed = dial(signal);
+  // A socket returned directly gets its listeners before Node can emit its
+  // first error; awaiting it would defer them past that.
+  const socket = dialed instanceof Promise ? await dialed : dialed;
+
   // oxlint-disable-next-line promise/avoid-new -- wrapping a Node event emitter
   return new Promise<Socket>((resolve, reject) => {
-    signal.throwIfAborted();
-
-    const socket = dial();
+    if (signal.aborted) {
+      socket.destroy();
+      reject(signal.reason);
+      return;
+    }
     // `encrypted` is how Node tells a `tls.TLSSocket` from a `net.Socket`.
     const opened = "encrypted" in socket ? "secureConnect" : "connect";
     const done = () => {
@@ -111,7 +121,11 @@ export function nodeSocket(
   dial: NodeDial,
   opts: NodeSocketOptions = {}
 ): MllpSocket {
-  assertDial(dial);
+  if (typeof dial !== "function") {
+    throw new MllpInvalidOptionError(
+      "`dial` is not a function; it must open a connection to the remote system."
+    );
+  }
   const gracefulCloseMs = opts.gracefulCloseMs ?? DEFAULT_GRACEFUL_CLOSE_MS;
   /** Ends whatever `connect()` last opened. Nothing is open to begin with. */
   let closeOpen = (): Promise<void> => Promise.resolve();

@@ -312,10 +312,13 @@ Every adapter runs the same conformance suite: the [`MllpSocket` contract](#cust
 ```ts
 import { nodeSocket } from "@glion/mllp-client/node";
 
-nodeSocket(dial: () => net.Socket, options?: NodeSocketOptions): MllpSocket
+nodeSocket(
+  dial: (signal: AbortSignal) => net.Socket | Promise<net.Socket>,
+  options?: NodeSocketOptions
+): MllpSocket
 ```
 
-A socket over the `net.Socket` or `tls.TLSSocket` that `dial` returns: `net.connect()` or `tls.connect()`, with Node's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is connected, or once the TLS handshake completes for a `tls.TLSSocket`. `dial` must return a socket that is still connecting. The same adapter runs on Bun and Deno through their `node:net` and `node:tls` compatibility; no separate import is needed there.
+A socket over the `net.Socket` or `tls.TLSSocket` that `dial` returns: `net.connect()` or `tls.connect()`, with Node's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is connected, or once the TLS handshake completes for a `tls.TLSSocket`. `dial` must return a socket that is still connecting. It may return a promise of the socket, for setup that has to wait; it receives the attempt's signal, which aborts on the connect timeout or `close()`. `nodeSocket()` throws [`INVALID_OPTION`](#invalid_option) when `dial` is not a function. The same adapter runs on Bun and Deno through their `node:net` and `node:tls` compatibility; no separate import is needed there.
 
 | Option            | Type     | Default | Description                                                   |
 | ----------------- | -------- | ------- | ------------------------------------------------------------- |
@@ -362,10 +365,12 @@ A receiver that refuses the client certificate over TLS 1.2 fails the handshake:
 ```ts
 import { workersSocket } from "@glion/mllp-client/workers";
 
-workersSocket(dial: () => Socket): MllpSocket
+workersSocket(
+  dial: (signal: AbortSignal) => Socket | Promise<Socket>
+): MllpSocket
 ```
 
-A socket over the one `dial` returns: `connect()` from `cloudflare:sockets`, or a binding's `connect()`, with the runtime's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is open. `secureTransport: "starttls"` is not supported. Import it from the `./workers` subpath.
+A socket over the one `dial` returns: `connect()` from `cloudflare:sockets`, or a binding's `connect()`, with the runtime's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is open. `dial` may return a promise of the socket, and receives the attempt's signal. `secureTransport: "starttls"` is not supported. `workersSocket()` throws [`INVALID_OPTION`](#invalid_option) when `dial` is not a function. Import it from the `./workers` subpath.
 
 ```ts
 import { connect } from "cloudflare:sockets";
@@ -378,7 +383,7 @@ export default {
       socket: workersSocket(() =>
         connect(
           { hostname: "hl7.example.org", port: 2575 },
-          { secureTransport: "on" }
+          { allowHalfOpen: false, secureTransport: "on" }
         )
       ),
     });
@@ -461,7 +466,7 @@ The four failures of the wire — `CONNECTION_FAILED`, `CONNECTION_TIMEOUT`, `SE
 
 `MllpInvalidOptionError` · delivery `not-sent`
 
-A constructor option or a per-send `timeoutMs` is out of range — a timeout that is not a positive number of milliseconds, a `maxBufferedBytes` that is not a positive integer, or a `reconnect.attempts` that is not a non-negative integer or `Infinity`. The message names which one.
+A constructor option or a per-send `timeoutMs` is out of range — a timeout that is not a positive number of milliseconds, a `maxBufferedBytes` that is not a positive integer, or a `reconnect.attempts` that is not a non-negative integer or `Infinity`. Also thrown by `nodeSocket()` and `workersSocket()` when `dial` is not a function. The message names which one.
 
 Thrown before anything is opened or sent. A configuration bug, not a runtime condition.
 

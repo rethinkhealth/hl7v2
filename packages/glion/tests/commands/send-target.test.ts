@@ -1,11 +1,11 @@
 import { once } from "node:events";
-import { createServer as createTcpServer } from "node:net";
+import { Socket as NetSocket, createServer as createTcpServer } from "node:net";
 import type { AddressInfo, Server, Socket } from "node:net";
 import { createServer } from "node:tls";
 import type { TLSSocket } from "node:tls";
 
 import { generate } from "selfsigned";
-import { afterEach, beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { SendArgs } from "../../src/commands/send";
 import { dialTarget, resolveTarget } from "../../src/commands/send-target";
@@ -66,6 +66,7 @@ describe("dialTarget", () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     for (const socket of sockets.splice(0)) {
       socket.destroy();
     }
@@ -104,6 +105,29 @@ describe("dialTarget", () => {
     sockets.push(remote);
 
     expect("encrypted" in local).toBe(false);
+  });
+
+  it("turns Nagle's algorithm off, over plain TCP and over TLS", async () => {
+    const tcp = createTcpServer();
+    servers.push(tcp);
+    tcp.listen(0, "127.0.0.1");
+    await once(tcp, "listening");
+    const tls = await listen(SERVERNAME, pki.selfSignedCert, pki.selfSignedKey);
+    // A `tls.TLSSocket` is a `net.Socket`, so one spy sees both.
+    const setNoDelay = vi.spyOn(NetSocket.prototype, "setNoDelay");
+
+    const plain = dialTarget({
+      host: "127.0.0.1",
+      port: (tcp.address() as AddressInfo).port,
+    });
+    const secure = dialTarget(
+      { host: SERVERNAME, port: (tls.address() as AddressInfo).port },
+      { ca: pki.selfSignedCert }
+    );
+    sockets.push(plain, secure);
+    await Promise.all([once(plain, "connect"), once(secure, "secureConnect")]);
+
+    expect(setNoDelay.mock.calls).toEqual([[true], [true]]);
   });
 
   it("sends the host as the TLS server name", async () => {
