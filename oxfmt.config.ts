@@ -8,7 +8,7 @@ export default defineConfig({
     ...(base.ignorePatterns ?? []),
     "**/*.hbs",
     ".agents/skills/gh-stack/**",
-    ".claude/skills/security-audit/**",
+    ".agents/skills/security-audit/**",
   ],
   jsdoc: {
     commentLineStrategy: "keep",

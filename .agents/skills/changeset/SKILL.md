@@ -1,4 +1,5 @@
 ---
+name: changeset
 description: Use when creating or updating changesets for packages that have been modified. Trigger when the user asks to create a changeset, write release notes, or after completing work on a package.
 ---
 

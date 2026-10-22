@@ -1,11 +1,36 @@
 {
   "version": 1,
   "skills": {
+    "changeset": {
+      "source": "./.agents/skills",
+      "sourceType": "local",
+      "computedHash": "aecd62f65e57cc50b91ade2921d888e973762fa00dac89281b6f185a8246450b"
+    },
+    "commit-push-pr": {
+      "source": "./.agents/skills",
+      "sourceType": "local",
+      "computedHash": "b2fc7166f1be9ca5ad480ac2714fd327d3a9517e16c4e28563c81fbf86ff2c35"
+    },
     "gh-stack": {
       "source": "github/gh-stack",
       "sourceType": "github",
       "skillPath": "skills/gh-stack/SKILL.md",
       "computedHash": "28d42250d52f33424b807add6fbdec75736e835f98752311db321ab51733fea6"
+    },
+    "glion-messages": {
+      "source": "./.agents/skills",
+      "sourceType": "local",
+      "computedHash": "d2f2a331d3a5ad44b97108054c3b76a7a9028142123c5def8f3f1234863554de"
+    },
+    "glion-readme": {
+      "source": "./.agents/skills",
+      "sourceType": "local",
+      "computedHash": "a51d995f151b8eaff28105f7c7b239e3990486ab8bcfc95215e80c98a49f3b72"
+    },
+    "glion-tsdoc": {
+      "source": "./.agents/skills",
+      "sourceType": "local",
+      "computedHash": "7f04ddc5b60d1bc3e892e830d6b9d607cfcbf18e1b3906bbe6e0904d0552f4e5"
     },
     "security-audit": {
       "source": "cloudflare/security-audit-skill",
