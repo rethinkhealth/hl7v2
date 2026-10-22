@@ -28,12 +28,13 @@ export interface CreateContextOptions {
  *
  * Only the **parse** step runs eagerly (sync, fast). Routing fields are
  * extracted as strings from the parsed tree immediately — these cached
- * strings always reflect the original wire values (see ADR-0013).
+ * strings are the values as parsed, before any transformer runs (see
+ * ADR-0013).
  *
  * The expensive pipeline stages are lazy:
  *
- * - `ctx.tree()` — triggers `run()` (transformers: annotations, escape decoding,
- *   lint). Cached after first call.
+ * - `ctx.tree()` — triggers `run()` (transformers: annotations, lint). Cached
+ *   after first call.
  * - `ctx.result()` — triggers `run()` + `stringify()` (compilation, e.g., JSON
  *   via hl7v2Jsonify). Cached after first call.
  *
@@ -51,8 +52,8 @@ export function createContext(options: CreateContextOptions): Context {
   const parsed = processor.parse(file);
 
   // Extract routing fields as strings from the parsed tree.
-  // These are cached immediately and always reflect the original
-  // wire values, even after transformers enrich the tree in-place.
+  // These are cached immediately and keep the values as parsed, even
+  // after transformers enrich the tree in-place.
   const controlId = queryValue(parsed, "MSH.10")?.value ?? "";
   const messageType = queryValue(parsed, "MSH.9.1")?.value ?? "";
   const triggerEvent = queryValue(parsed, "MSH.9.2")?.value ?? "";
@@ -60,7 +61,7 @@ export function createContext(options: CreateContextOptions): Context {
   const version = queryValue(parsed, "MSH.12.1")?.value ?? "";
 
   // ── Lazy: transform (async, cached) ────────────────────────────────
-  // run() applies all transformers: annotations, escape decoding, lint.
+  // run() applies all transformers: annotations, lint.
   // Only executes on first call to ctx.tree() or ctx.result().
   let transformedTree: Root | undefined;
   let transformPromise: Promise<Root> | undefined;

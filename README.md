@@ -94,7 +94,7 @@ Composable plugins that annotate, enrich, and transform the AST.
 - **[@glion/annotate-profile-datatypes][glion-annotate-profile-datatypes]** — annotate field repetitions, components, and subcomponents with datatype profile metadata.
 - **[@glion/annotate-profile-fields-code-systems][glion-annotate-profile-fields-code-systems]** — annotate field-level coded values with UTG code system metadata (experimental).
 - **[@glion/annotate-profile-tables][glion-annotate-profile-tables]** — annotate primitive values with their entry in the table of the message's HL7v2 version.
-- **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) into their literal values.
+- **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) in a tree parsed with `decodeEscapes: false`.
 - **[@glion/encode-escapes][glion-encode-escapes]** — encode delimiter characters in subcomponent values as HL7v2 escape sequences before serialization.
 - **[@glion/transform-profile-groups][glion-transform-profile-groups]** — nest segments in the segment groups their event schema defines, such as `PATIENT_RESULT` and `ORDER_OBSERVATION`.
 

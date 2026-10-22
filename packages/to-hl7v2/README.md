@@ -30,16 +30,22 @@ console.log(String(file));
 
 ## API
 
-### `unified().use(hl7v2ToHl7v2)`
+### `unified().use(hl7v2ToHl7v2[, options])`
 
-Register the plugin as the compiler of a `unified` processor. Serializes the AST back to HL7v2 text and sets it as the file contents. No options.
+Register the plugin as the compiler of a `unified` processor. Serializes the AST back to HL7v2 text and sets it as the file contents. Reads `file.data.delimiters` when `@glion/annotate-delimiters` set it.
 
-### `toHl7v2(node, delimiters?)`
+| Option              | Type      | Description                                                                                                                                                                                                       |
+| ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `encodeEscapes`     | `boolean` | Write each subcomponent value with its delimiters, escape character, and control characters as escape sequences (`true`, the default), or as it is (`false`). MSH-1 and MSH-2 are written as they are either way. |
+| `trailingDelimiter` | `boolean` | Append a field delimiter after the last field of each segment (default `false`).                                                                                                                                  |
+
+### `toHl7v2(node, delimiters?, options?)`
 
 Standalone serializer. Converts any HL7v2 AST node — `Root`, `Segment`, `Field`, `FieldRepetition`, `Component`, or `Subcomponent` — to its HL7v2 text representation.
 
 - `node` (`Nodes`) — the node to serialize.
-- `delimiters` (`Delimiters`, optional) — custom delimiter set. When omitted, reads from the Root node's `data` or falls back to the HL7v2 defaults (`|`, `^`, `~`, `\`, `&`, `\r`).
+- `delimiters` (`Partial<Delimiters>`, optional) — custom delimiter set. When omitted, a `Root` is written with the delimiters its MSH-1 and MSH-2 declare, and any other node with the HL7v2 defaults (`|`, `^`, `~`, `\`, `&`, `\r`).
+- `options` (`Hl7v2ToHl7v2Options`, optional) — the options above.
 
 Returns the serialized `string`.
 
@@ -50,16 +56,22 @@ toHl7v2(rootNode); // "MSH|^~\&|...\rPID|..."
 toHl7v2(segmentNode); // "PID|12345|DOE^JOHN"
 toHl7v2(fieldNode); // "DOE^JOHN"
 toHl7v2(componentNode); // "SUB1&SUB2"
+toHl7v2(fieldNode); // "DOE\\T\\SMITH" for the value "DOE&SMITH"
 ```
+
+### Escape sequences
+
+Each subcomponent value is written as it must appear on the wire: the field, component, repetition, subcomponent, and escape delimiters as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, is written as `\Xdd\`, the hexadecimal escape of its UTF-8 bytes. A value holding a character that no escape sequence can write with the message's delimiters throws `EscapeSequenceError`, which `@glion/to-hl7v2` exports. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. MSH-1 and MSH-2 are written as they are. `encodeEscapes: false` writes every value as it is.
 
 ## Round-trip guarantees
 
-- **Delimiter preservation** — custom delimiters set on `Root.data` (by the parser or by hand) carry through to the output. Messages that do not use the defaults round-trip correctly.
+- **Delimiter preservation** — the delimiters MSH-1 and MSH-2 declare, or `file.data.delimiters`, carry through to the output. Messages that do not use the defaults round-trip correctly.
+- **Escape sequences** — a value `@glion/parser` decoded is written with its escape sequences again, so a message with `\F\`, `\S\`, `\R\`, `\T\`, `\E\`, or `\.br\` in a value reads and writes back as the same text. When a delimiter is the escape code of one of these, that sequence is written back as `\Xdd\`, which reads back as the same value. A `\Xdd\` is written back as the character it decoded to, or as `\.br\` or `\Xdd\` when that character is a control character.
 - **MSH handling** — the special case where `MSH-1` is the field separator and `MSH-2` carries the encoding characters is encoded correctly on serialization.
 - **Empty fields and components** — preserved in position so field indexes remain stable.
 - **Every node type supported** — serializing a partial subtree produces the exact fragment you would expect to find embedded inside the full message.
 
-Pair with `@glion/parser` to read HL7v2 in and `@glion/to-hl7v2` to write it back out; layer `@glion/encode-escapes` and `@glion/decode-escapes` in between to handle delimiter characters that appear in content values.
+Pair with `@glion/parser` to read HL7v2 in and `@glion/to-hl7v2` to write it back out. A tree parsed with `decodeEscapes: false` is written with `encodeEscapes: false`.
 
 ## Part of Glion
 

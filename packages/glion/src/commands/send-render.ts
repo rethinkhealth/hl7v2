@@ -4,9 +4,10 @@
  * Two output modes, both driven by a single plain {@link SendOutcome} object:
  *
  * - {@link renderHuman} — the TTY "Exchange view" (the `-> sent` / `<- ACK|NAK`
- *   lines). Multi-line, human-readable; goes to stderr in the handler.
- * - {@link renderJson} — exactly one JSON line with a stable key set; goes to
- *   stdout in the handler.
+ *   lines). Multi-line, human-readable; the handler writes an acknowledgment to
+ *   stdout and a failure to stderr.
+ * - {@link renderJson} — exactly one JSON line with a stable key set; the handler
+ *   writes it to stdout, whatever the outcome.
  *
  * The renderers do no IO and never touch the MLLP client, the ack exceptions,
  * or the parser. The handler maps the wire types (`MllpClientResponse`,
@@ -16,7 +17,7 @@
  * without sockets or fixtures.
  */
 
-import type { AckNakCode } from "@glion/ack";
+import type { AckNakCode, AckSuccessCode } from "@glion/ack";
 
 /**
  * The target the message was (or would have been) sent to. Carried on every
@@ -28,10 +29,10 @@ export interface SendTarget {
 }
 
 /**
- * What we know about the request we put on the wire. Populated for the
- * accept/NAK/transport branches (the message was serialized and a connection
- * was attempted); omitted for the `invalid` branch, which fails before any of
- * this exists.
+ * What we know about the request we put on the wire. Populated once the
+ * message has been serialized — the accept, NAK and transport branches, and
+ * the `invalid` branch when the client refused a message we had summarized;
+ * omitted for a failure that comes before any message exists.
  */
 export interface SendRequestSummary {
   /** MSH-10 of the request — the control id the peer echoes in MSA-2. */
@@ -48,7 +49,7 @@ export interface SendAcceptOutcome {
   target: SendTarget;
   request: SendRequestSummary;
   /** Acknowledgment code: `AA` (application accept) or `CA` (commit accept). */
-  code: "AA" | "CA";
+  code: AckSuccessCode;
   /** MSA-2 of the ACK — echoes the request control id when the peer complies. */
   ackControlId: string;
   /** MSA-3 free text, when the peer included one. */
@@ -94,8 +95,8 @@ export interface SendTransportOutcome {
 }
 
 /**
- * Failure before a client exists: the target could not be resolved or the
- * message could not be read. Exit 2. No request and no error code exist yet.
+ * Failure before anything reached the wire: the target could not be resolved,
+ * the message could not be read, or the client could not prepare it. Exit 2.
  */
 export interface SendInvalidOutcome {
   kind: "invalid";
@@ -104,7 +105,21 @@ export interface SendInvalidOutcome {
    * failures.
    */
   target?: SendTarget;
+  /**
+   * The client's `MllpErrorCode` when it refused the message:
+   * `INVALID_MESSAGE`.
+   */
+  code?: string;
+  /**
+   * The message that was refused, once it has been summarized; absent when the
+   * failure came before any message existed.
+   */
+  request?: SendRequestSummary;
   message: string;
+  /** What to do about it, when the failure knows. */
+  hint?: string;
+  /** The text of the error's `cause`, when it had one. */
+  cause?: string;
 }
 
 /** The plain object both renderers consume. */
@@ -157,31 +172,84 @@ function fmtMs(ms: number): string {
  * round-trip to lay out.
  */
 export function renderHuman(outcome: SendOutcome): string {
-  if (outcome.kind === "invalid") {
-    return `x  ${outcome.message}`;
-  }
-  if (outcome.kind === "transport") {
-    const where = `${outcome.target.host}:${outcome.target.port}`;
-    const line = `x  ${where}  ${outcome.code}  ${outcome.message}`;
-    return outcome.cause === undefined ? line : `${line}\n   ${outcome.cause}`;
-  }
-
-  const sentLine = renderSentLine(outcome.target, outcome.request);
-
-  if (outcome.kind === "accept") {
-    const head = renderAckLine("ACK", outcome.code, outcome);
-    const lines = [sentLine, head];
-    if (outcome.text !== undefined && outcome.text.length > 0) {
-      lines.push(`        ${quote(outcome.text)}`);
+  switch (outcome.kind) {
+    case "accept": {
+      return renderAccept(outcome);
     }
-    return lines.join("\n");
+    case "nak": {
+      return renderNak(outcome);
+    }
+    case "transport": {
+      return renderTransport(outcome);
+    }
+    case "invalid": {
+      return renderInvalid(outcome);
+    }
   }
+}
 
-  const head = renderAckLine("NAK", outcome.code, outcome);
-  const lines = [sentLine, head];
+/** The `-> sent` line, the `<- ACK` line, and the peer's text under it. */
+function renderAccept(outcome: SendAcceptOutcome): string {
+  const lines = [
+    renderSentLine(outcome.target, outcome.request),
+    renderAckLine("ACK", outcome.code, outcome),
+  ];
+  if (outcome.text !== undefined && outcome.text.length > 0) {
+    lines.push(`        ${quote(outcome.text)}`);
+  }
+  return lines.join("\n");
+}
+
+/** The `-> sent` line, the `<- NAK` line, and the rejection's detail under it. */
+function renderNak(outcome: SendNakOutcome): string {
+  const lines = [
+    renderSentLine(outcome.target, outcome.request),
+    renderAckLine("NAK", outcome.code, outcome),
+  ];
   const detail = renderNakDetail(outcome);
   if (detail.length > 0) {
     lines.push(`        ${detail}`);
+  }
+  return lines.join("\n");
+}
+
+/** The diagnostic line for a message the wire did not carry, and its cause. */
+function renderTransport(outcome: SendTransportOutcome): string {
+  const where = `${outcome.target.host}:${outcome.target.port}`;
+  const line = `x  ${where}  ${outcome.code}  ${outcome.message}`;
+  return outcome.cause === undefined ? line : `${line}\n   ${outcome.cause}`;
+}
+
+/**
+ * The diagnostic line for a failure before the wire, with its cause and hint
+ * under it. The endpoint and the control id appear when they are known, so
+ * the line says where the send was aimed and which message it was.
+ */
+function renderInvalid(outcome: SendInvalidOutcome): string {
+  const parts = ["x"];
+  if (outcome.target !== undefined) {
+    parts.push(`${outcome.target.host}:${outcome.target.port}`);
+  }
+  const controlId = outcome.request?.controlId;
+  if (controlId !== undefined && controlId.length > 0) {
+    parts.push(`MSH-10 ${controlId}`);
+  }
+  if (outcome.code !== undefined) {
+    parts.push(outcome.code);
+  }
+  parts.push(outcome.message);
+  // The fact on the first line; the cause and what to do about it under it,
+  // each on its own line, never folded into the sentence.
+  const lines = [parts.join("  ")];
+  if (outcome.cause !== undefined) {
+    lines.push(`   ${outcome.cause}`);
+  }
+  if (outcome.hint !== undefined) {
+    // A hint may carry one line per thing to fix; each is indented under the
+    // fact rather than only the first.
+    for (const line of outcome.hint.split("\n")) {
+      lines.push(`   ${line}`);
+    }
   }
   return lines.join("\n");
 }
@@ -224,6 +292,29 @@ function renderNakDetail(outcome: SendNakOutcome): string {
 
 function quote(text: string): string {
   return `"${text}"`;
+}
+
+/** How the connection is secured, for the `== connected` line. */
+export type ConnectionSecurity = "plain" | "tls" | "tls-unverified";
+
+/**
+ * The `== connected <host:port> [TLS] <duration>` line: the connection is
+ * open, marked `TLS` when it is encrypted and `TLS unverified` when
+ * `rejectUnauthorized: false` turned certificate verification off — the line
+ * never claims a certificate was checked when it was not.
+ */
+export function renderConnected(
+  target: SendTarget,
+  durationMs: number,
+  security: ConnectionSecurity
+): string {
+  const where = `${target.host}:${target.port}`;
+  const marks: Record<ConnectionSecurity, string> = {
+    plain: "",
+    tls: "  TLS",
+    "tls-unverified": "  TLS unverified",
+  };
+  return `== connected  ${where}${marks[security]}  ${fmtMs(durationMs)}`;
 }
 
 // ── JSON line ────────────────────────────────────────────────────────
@@ -307,6 +398,18 @@ function toJsonRecord(outcome: SendOutcome): Record<string, unknown> {
       if (outcome.target !== undefined) {
         record.host = outcome.target.host;
         record.port = outcome.target.port;
+      }
+      if (outcome.code !== undefined) {
+        record.code = outcome.code;
+      }
+      if (outcome.request !== undefined) {
+        record.requestControlId = outcome.request.controlId;
+      }
+      if (outcome.cause !== undefined) {
+        record.cause = outcome.cause;
+      }
+      if (outcome.hint !== undefined) {
+        record.hint = outcome.hint;
       }
       return record;
     }

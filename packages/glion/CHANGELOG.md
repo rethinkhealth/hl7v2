@@ -1,5 +1,101 @@
 # @glion/cli
 
+## 0.29.0
+
+### Minor Changes
+
+- [#1035](https://github.com/rethinkhealth/glion/pull/1035) [`3d7663d`](https://github.com/rethinkhealth/glion/commit/3d7663dae18862ed8c6fbf658f33840e59857d25) Thanks [@meleksomai](https://github.com/meleksomai)! - Let the command that binds decide which address to bind, instead of the config schema guessing from a mode.
+
+  `makeGlionConfigSchema` took a `mode` of `"dev"` or `"start"` for one purpose: to default `hostname` to `127.0.0.1` or `0.0.0.0`. That made every caller of `loadConfig` declare a server posture, including `glion send`, a client with no posture to declare — it passed `"dev"` because that produced loopback. The schema now leaves `hostname` as the config wrote it, `ResolvedConfig.hostname` is `string | undefined`, and `glion dev` and `glion start` each apply their own default when they build the child's manifest. `LoadConfigOptions.mode` is gone.
+
+- [#1040](https://github.com/rethinkhealth/glion/pull/1040) [`80fdc1e`](https://github.com/rethinkhealth/glion/commit/80fdc1e9a660ba729d45a93bbfa21d7eb1a95761) Thanks [@meleksomai](https://github.com/meleksomai)! - Report every failure as a fact, with what to do about it and the underlying error in their own channels.
+
+  - Messages state what is wrong in the user's terms: their config file, their app file, their flags. No message describes glion's own control flow ("so a target can't be derived"), names a path under `.glion/` that glion wrote for itself, or splices another system's error text into the sentence
+  - Report a failure loading the app against the file the user wrote, not the compiled copy beside it; the compiled path moves to the error's `context`
+  - Carry what to do in `hint` and the underlying error in `cause`: the `fatal` event gains both fields, `glion dev` and `glion send` print each under the message — every line of a hint that names several things to fix — and `glion send`'s JSON line gains `hint`
+  - Name the endpoint a pre-wire failure was aimed at on the diagnostic line, as the JSON line already did
+  - Report the limit a dropped line exceeded alongside the bytes dropped, instead of presenting the dropped count as the limit
+  - Say "the app" rather than "the child" in supervisor warnings, which describe the process model rather than what happened
+  - Raise the child runner's missing-manifest guard as a plain bug report instead of a `config-not-found` the operator cannot act on
+  - Report a cache directory that cannot be created as itself (`cache-dir-failed`), naming the directory, instead of letting the raw filesystem error through
+
+- [#1036](https://github.com/rethinkhealth/glion/pull/1036) [`cad92ed`](https://github.com/rethinkhealth/glion/commit/cad92eda091ca2efc51a403179098833899b15b2) Thanks [@meleksomai](https://github.com/meleksomai)! - Run a project that has no `glion.config.ts` on the defaults, as the help text and README already described.
+
+  - Discover the app at `./glion.app.ts` or `./src/glion.app.ts` when there is no config file, and run it with the schema's defaults: port `2575`, bound where each command binds by default — `127.0.0.1` under `glion dev`, `0.0.0.0` under `glion start`
+  - Write no `.glion/` cache directory for a send from a project that has no config, since there is nothing to compile
+  - Keep `config-not-found` for the one case that is still a failure: `--config` naming a file that is not there, previously reported as a compile error
+
+- [#1034](https://github.com/rethinkhealth/glion/pull/1034) [`cd4fff8`](https://github.com/rethinkhealth/glion/commit/cd4fff8bd8b7e1e0fb72351a3c797bfe6b2c2d12) Thanks [@meleksomai](https://github.com/meleksomai)! - Remove `glion send --local`. The target is the one the invocation names.
+
+  `--local` was a second route to the same thing `--host`/`--port` already express, and it was the only reason the send command read a server's configuration: it took `hostname` and `port` from `glion.config.ts`, mapped a wildcard bind address to loopback, and refused a project whose port is `0` because an OS-assigned port is not in the config. All of that is gone. `glion send` is a client that sends to the system you point it at, and takes no part in what address a server of this project binds.
+
+  `glion send` now takes its whole target from the invocation: `--host` names the receiver and `--port` defaults to `2575`, the port MLLP standardizes on. A port outside `1`–`65535` is refused before the dial. The `--config` flag is gone from the subcommand, and the handler no longer takes a working directory: with `--local` removed, `glion send` reads no file but the message, so it needs neither a config file nor a project to run in.
+
+- [#1039](https://github.com/rethinkhealth/glion/pull/1039) [`2192dc8`](https://github.com/rethinkhealth/glion/commit/2192dc8efa852c30cdca03b9cb58bfaf9816bff7) Thanks [@meleksomai](https://github.com/meleksomai)! - Send over TLS with `glion send` ([#657](https://github.com/rethinkhealth/glion/issues/657)).
+
+  - Add `--tls`, `--ca`, `--cert`, `--key`, and `--insecure`. Naming any certificate file asks for TLS, so `--tls` is only needed when the invocation names none
+  - Verify the receiver against the authority `--ca` names, or against its own certificate when it signed itself, as a development server does; `--tls` alone verifies against the runtime's trusted authorities
+  - `--insecure` dials over TLS without verifying the receiver's certificate
+  - Report a certificate file that cannot be read as the `invalid` outcome, before dialing, naming the target the send was aimed at
+  - Mark a TLS connection with `TLS` on the `== connected` line, and `TLS unverified` when verification was turned off, so the line never claims a certificate was checked when it was not
+
+### Patch Changes
+
+- [#1038](https://github.com/rethinkhealth/glion/pull/1038) [`0d033c6`](https://github.com/rethinkhealth/glion/commit/0d033c669c7815e73ad05f25f9063ffe9f8c1cd1) Thanks [@meleksomai](https://github.com/meleksomai)! - Report the connection's facts in `glion send`'s terminal view: a `== connected` line with the time the dial took. It goes to stderr and is absent under `--json`.
+
+- [#1033](https://github.com/rethinkhealth/glion/pull/1033) [`afaf429`](https://github.com/rethinkhealth/glion/commit/afaf4294a01b339751fb4643928657cdb294e326) Thanks [@meleksomai](https://github.com/meleksomai)! - Fix `glion send` to report a message the client could not prepare as the `invalid` outcome, as the 0.18.0 notes described ([#723](https://github.com/rethinkhealth/glion/issues/723)).
+
+  - Report a message with no MSH-10 control ID, or with a reserved MLLP byte, as `kind: "invalid"` with `code: "INVALID_MESSAGE"` and the reason on `cause` (previously `kind: "transport"`)
+  - Print the code and the reason on the human diagnostic line
+  - Identify the refused message by its control ID: `requestControlId` in JSON, `MSH-10 <id>` on the diagnostic line
+  - Report MSA-2 and MSA-3 of an acknowledgment as the client read them off the wire, rather than assuming MSA-2 echoes the request
+
+- [#1061](https://github.com/rethinkhealth/glion/pull/1061) [`a531fe7`](https://github.com/rethinkhealth/glion/commit/a531fe77d6bd3d084413a8176da69888e634a1ac) Thanks [@meleksomai](https://github.com/meleksomai)! - Read every HL7v2 Table 0008 acknowledgment code from a reply, with the field separator its MSH-1 declares. `glion dev` showed `?` for a reply whose MSA-1 is `CA`, `CE` or `CR`, or whose field separator is not `|`; it now shows the code, accepts in green and NAKs in red. The `ack` field of the `msg` event that `glion start` writes is now any of the six codes, or `null` ([#1059](https://github.com/rethinkhealth/glion/issues/1059)).
+
+- [#1053](https://github.com/rethinkhealth/glion/pull/1053) [`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56) Thanks [@meleksomai](https://github.com/meleksomai)! - Fix `encodeEscapes` writing an escape sequence that holds a delimiter, which made a message whose delimiters include an escape code grow on every parse and serialize round trip ([#1051](https://github.com/rethinkhealth/glion/issues/1051)).
+
+  - Write a character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, as `\Xdd\`, with a hexadecimal digit `A`–`F` in lowercase when its uppercase form is a delimiter
+  - Add `EscapeSequenceError`, thrown by `encodeEscapes`, `toHl7v2`, and `hl7v2EncodeEscapes` for a character that no escape sequence can write with the message's delimiters, and export it from `@glion/to-hl7v2`
+  - Report `glion send` of such a message as an `invalid` outcome instead of exiting with an unexpected error
+  - Report a withdrawn or backward-compatible field without `actual` when the message's delimiters cannot write it, instead of rejecting the lint run
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56), [`e2fb937`](https://github.com/rethinkhealth/glion/commit/e2fb9376aaba5e132a20091cfac91bc8b4f88ba9)]:
+  - @glion/to-hl7v2@0.29.0
+  - @glion/parser@0.29.0
+  - @glion/util-query@0.29.0
+  - @glion/ack@0.29.0
+  - @glion/mllp-client@0.29.0
+  - @glion/mllp@0.29.0
+  - @glion/ast@0.29.0
+
+## 0.28.0
+
+### Minor Changes
+
+- [#1001](https://github.com/rethinkhealth/glion/pull/1001) [`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: decode HL7v2 escape sequences while parsing and encode them while serializing, so a subcomponent `value` is always the content and a parsed message writes back as the same text.
+
+  - `hl7v2Parser` decodes `\F\`, `\S\`, `\R\`, `\T\`, `\E\`, `\.br\`, and `\Xdd\` in every value as it tokenizes, leaving MSH-2 as it is; pass `decodeEscapes: false` to keep the wire form in the tree
+  - A formatting command (`\H\`, `\N\`, `\.sp 2\`, …), a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) stay in the value as written and are written back as they are; `hl7v2DecodeEscapes` no longer removes `\H\` and `\N\`
+  - `hl7v2ToHl7v2` and `toHl7v2` write delimiters, the escape character, the segment delimiter, and other control characters in a value as escape sequences, leaving MSH-1 and MSH-2 as they are; pass `encodeEscapes: false` to write values as they are
+  - `parseHL7v2` from `@glion/hl7v2` no longer runs `hl7v2DecodeEscapes`; its output is unchanged
+  - Add `decodeEscapes(value, delimiters)` and `encodeEscapes(value, delimiters)` to `@glion/utils`
+  - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` are for trees handled with those options off; a parsed tree must not be decoded again
+  - `hl7v2EncodeEscapes` now writes a control character other than the segment delimiter as `\Xdd\`
+  - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` leave a subcomponent without a value as it is
+  - `MllpClient` and `glion send` send a message whose value holds a control character, written as `\Xdd\`, instead of rejecting it with `INVALID_MESSAGE`
+  - The bytes of a `\Xdd…\` are decoded as UTF-8; a sequence whose bytes are not UTF-8, or that has an odd number of digits, stays as written
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/parser@0.28.0
+  - @glion/to-hl7v2@0.28.0
+  - @glion/mllp-client@0.28.0
+  - @glion/mllp@0.28.0
+  - @glion/util-query@0.28.0
+  - @glion/ack@0.28.0
+  - @glion/ast@0.28.0
+
 ## 0.27.1
 
 ### Patch Changes

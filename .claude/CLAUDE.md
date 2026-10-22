@@ -72,7 +72,7 @@ Public package families:
 
 1. **Runtime** — `@glion/mllp`, `@glion/mllp-client`, `@glion/mllp-codec`, `@glion/ack`, `@glion/cli` (in `packages/glion/`)
 2. **Core** — `@glion/hl7v2`, `@glion/parser`, `@glion/ast`, `@glion/builder`, `@glion/to-hl7v2`, `@glion/jsonify`
-3. **Plugins** — `@glion/annotate-delimiters`, `@glion/annotate-profile-*`, `@glion/decode-escapes`, `@glion/encode-escapes`
+3. **Plugins** — `@glion/annotate-delimiters`, `@glion/annotate-profile-*`, `@glion/transform-profile-groups`; `@glion/decode-escapes` and `@glion/encode-escapes` serve trees parsed or written with escape handling turned off
 4. **Linting** — `@glion/lint-*` plus `@glion/preset-lint-recommended`, `@glion/preset-lint-profile-recommended`, `@glion/preset-annotate-profile-recommended`
 5. **Utilities** — `@glion/utils`, `@glion/util-query`, `@glion/util-visit`, `@glion/util-semver`, `@glion/util-timestamp`
 6. **Data & config** — `@glion/profiles`, `@glion/config`
@@ -89,9 +89,8 @@ Internal tooling:
 
 ```typescript
 unified()
-  .use(hl7v2Parser) // text → AST
+  .use(hl7v2Parser) // text → AST, escape sequences decoded
   .use(hl7v2AnnotateDelimiters) // capture MSH-1/MSH-2 delimiters
-  .use(hl7v2DecodeEscapes) // decode escape sequences
   .use(hl7v2PresetLintRecommended) // core lint rules
   .use(hl7v2PresetLintProfileRecommended) // profile-aware lint rules
   .use(hl7v2Jsonify) // serialize to JSON
@@ -209,6 +208,14 @@ When a contract is "MUST NOT throw" or "MUST be idempotent," write that loudly i
 If a chunk of code needs a long comment explaining why it's shaped this way, the design is probably wrong — refactor instead. Default to no comments. Save comments for the non-obvious WHY: a subtle invariant, a deliberate trade-off, a workaround for a specific platform bug, a reference to a spec section.
 
 Don't explain WHAT the code does — well-named identifiers do that. Don't reference the current task or PR ("added for the X flow") — that belongs in the PR description.
+
+One exception: a **walkthrough** that teaches a reader how a module's functions work together, or how an algorithm moves through its input. It must be:
+
+- **Short.** A few lines at the top of the module or above the function it explains, plus one-line step comments where a loop or a fallback order is not obvious. Never a paragraph per line of code.
+- **Learning-oriented.** Show the flow on a concrete example (an input and what it becomes) rather than describing it in prose. `SMITH&JONES → SMITH\T\JONES` teaches more than a sentence.
+- **Clear and exact.** Plain words, HL7v2 terms, and every example true of the code as it stands; a walkthrough that drifts from the code is worse than none.
+
+A walkthrough explains the flow. It never justifies the design, compares it with an alternative, or narrates history; those stay in the PR description or an ADR. TSDoc stays contract-only (the `glion-tsdoc` skill); walkthroughs are `//` comments.
 
 ### 11. Honest probability assessments over hedged generalities
 

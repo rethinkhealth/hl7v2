@@ -8,12 +8,10 @@ describe("parseSendArgs", () => {
       const result = parseSendArgs([]);
       expect(result).toEqual({
         args: {
-          configPath: undefined,
           file: undefined,
           help: false,
           host: undefined,
           json: false,
-          local: false,
           port: undefined,
           timeoutMs: undefined,
         },
@@ -76,61 +74,74 @@ describe("parseSendArgs", () => {
     });
   });
 
-  describe("--local", () => {
-    it("sets local to true", () => {
-      const result = parseSendArgs(["--local"]);
+  describe("TLS flags", () => {
+    it("dials in plaintext when no TLS flag is given", () => {
+      const result = parseSendArgs(["--host", "h"]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.local).toBe(true);
+        expect(result.args.tls).toBeUndefined();
       }
     });
 
-    it("allows --host to override an individual field alongside --local", () => {
-      const result = parseSendArgs(["--local", "--host", "10.0.0.5"]);
+    it("asks for TLS on --tls alone, naming no file", () => {
+      const result = parseSendArgs(["--tls"]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.local).toBe(true);
-        expect(result.args.host).toBe("10.0.0.5");
-        expect(result.args.port).toBeUndefined();
-      }
-    });
-
-    it("allows --port to override an individual field alongside --local", () => {
-      const result = parseSendArgs(["--local", "--port", "9999"]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args.local).toBe(true);
-        expect(result.args.port).toBe(9999);
-        expect(result.args.host).toBeUndefined();
-      }
-    });
-
-    it("allows both --host and --port overrides alongside --local", () => {
-      const result = parseSendArgs([
-        "--local",
-        "--host",
-        "10.0.0.5",
-        "--port",
-        "6000",
-      ]);
-      expect(result.ok).toBe(true);
-      if (result.ok) {
-        expect(result.args).toMatchObject({
-          host: "10.0.0.5",
-          local: true,
-          port: 6000,
+        expect(result.args.tls).toEqual({
+          ca: undefined,
+          cert: undefined,
+          insecure: false,
+          key: undefined,
         });
       }
     });
-  });
 
-  describe("--config", () => {
-    it("captures a config path", () => {
-      const result = parseSendArgs(["--config", "./glion.config.ts"]);
+    it("asks for TLS when a certificate file is named without --tls", () => {
+      const result = parseSendArgs([
+        "--ca",
+        "./ca.pem",
+        "--cert",
+        "./c.pem",
+        "--key",
+        "./c.key",
+      ]);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.args.configPath).toBe("./glion.config.ts");
+        expect(result.args.tls).toEqual({
+          ca: "./ca.pem",
+          cert: "./c.pem",
+          insecure: false,
+          key: "./c.key",
+        });
       }
+    });
+
+    it("asks for TLS on --insecure alone, with verification off", () => {
+      const result = parseSendArgs(["--insecure"]);
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.args.tls).toEqual({
+          ca: undefined,
+          cert: undefined,
+          insecure: true,
+          key: undefined,
+        });
+      }
+    });
+
+    it("rejects a certificate flag without a path", () => {
+      expect(parseSendArgs(["--ca"])).toEqual({
+        error: "`--ca` takes a value.",
+        ok: false,
+      });
+      expect(parseSendArgs(["--cert", "--json"])).toEqual({
+        error: "`--cert` takes a value.",
+        ok: false,
+      });
+      expect(parseSendArgs(["--key", ""])).toEqual({
+        error: "`--key` takes a value.",
+        ok: false,
+      });
     });
   });
 
@@ -194,12 +205,10 @@ describe("parseSendArgs", () => {
       ]);
       expect(result).toEqual({
         args: {
-          configPath: undefined,
           file: "message.hl7",
           help: false,
           host: "192.168.1.10",
           json: true,
-          local: false,
           port: 2575,
           timeoutMs: 10_000,
         },
@@ -211,28 +220,33 @@ describe("parseSendArgs", () => {
   describe("error cases", () => {
     it("rejects --host without a value (end of argv)", () => {
       const result = parseSendArgs(["--host"]);
-      expect(result).toEqual({ error: "--host requires a value", ok: false });
+      expect(result).toEqual({ error: "`--host` takes a value.", ok: false });
     });
 
     it("rejects --host followed by a flag", () => {
       const result = parseSendArgs(["--host", "--json"]);
-      expect(result).toEqual({ error: "--host requires a value", ok: false });
+      expect(result).toEqual({ error: "`--host` takes a value.", ok: false });
+    });
+
+    it("rejects an empty --host: an unset shell variable names no target", () => {
+      const result = parseSendArgs(["--host", "", "--port", "2575"]);
+      expect(result).toEqual({ error: "`--host` takes a value.", ok: false });
     });
 
     it("rejects --port without a value", () => {
       const result = parseSendArgs(["--port"]);
-      expect(result).toEqual({ error: "--port requires a value", ok: false });
+      expect(result).toEqual({ error: "`--port` takes a value.", ok: false });
     });
 
     it("rejects --port followed by a flag", () => {
-      const result = parseSendArgs(["--port", "--local"]);
-      expect(result).toEqual({ error: "--port requires a value", ok: false });
+      const result = parseSendArgs(["--port", "--json"]);
+      expect(result).toEqual({ error: "`--port` takes a value.", ok: false });
     });
 
     it("rejects a non-integer --port", () => {
       const result = parseSendArgs(["--port", "abc"]);
       expect(result).toEqual({
-        error: "--port requires an integer value, got: abc",
+        error: "`--port` takes a whole number.",
         ok: false,
       });
     });
@@ -240,23 +254,23 @@ describe("parseSendArgs", () => {
     it("rejects a fractional --port", () => {
       const result = parseSendArgs(["--port", "25.7"]);
       expect(result).toEqual({
-        error: "--port requires an integer value, got: 25.7",
+        error: "`--port` takes a whole number.",
         ok: false,
       });
     });
 
-    it("rejects --config without a value", () => {
-      const result = parseSendArgs(["--config"]);
+    it("rejects --config, which `glion send` does not take", () => {
+      const result = parseSendArgs(["--config", "./glion.config.ts"]);
       expect(result).toEqual({
-        error: "--config requires a path argument",
+        error: "`--config` is not a `glion send` flag.",
         ok: false,
       });
     });
 
-    it("rejects --config followed by a flag", () => {
-      const result = parseSendArgs(["--config", "--json"]);
+    it("rejects a port no host can listen on", () => {
+      const result = parseSendArgs(["--port", "70000"]);
       expect(result).toEqual({
-        error: "--config requires a path argument",
+        error: "`--port` takes a port between 1 and 65535.",
         ok: false,
       });
     });
@@ -264,7 +278,7 @@ describe("parseSendArgs", () => {
     it("rejects --timeout without a value", () => {
       const result = parseSendArgs(["--timeout"]);
       expect(result).toEqual({
-        error: "--timeout requires a value",
+        error: "`--timeout` takes a value.",
         ok: false,
       });
     });
@@ -272,7 +286,7 @@ describe("parseSendArgs", () => {
     it("rejects --timeout followed by a flag", () => {
       const result = parseSendArgs(["--timeout", "--json"]);
       expect(result).toEqual({
-        error: "--timeout requires a value",
+        error: "`--timeout` takes a value.",
         ok: false,
       });
     });
@@ -280,7 +294,7 @@ describe("parseSendArgs", () => {
     it("rejects a non-integer --timeout", () => {
       const result = parseSendArgs(["--timeout", "soon"]);
       expect(result).toEqual({
-        error: "--timeout requires an integer value, got: soon",
+        error: "`--timeout` takes a whole number.",
         ok: false,
       });
     });
@@ -288,7 +302,7 @@ describe("parseSendArgs", () => {
     it("rejects --port 0", () => {
       const result = parseSendArgs(["--port", "0"]);
       expect(result).toEqual({
-        error: "--port requires a positive integer, got: 0",
+        error: "`--port` takes a port between 1 and 65535.",
         ok: false,
       });
     });
@@ -296,33 +310,39 @@ describe("parseSendArgs", () => {
     it("rejects --timeout 0", () => {
       const result = parseSendArgs(["--timeout", "0"]);
       expect(result).toEqual({
-        error: "--timeout requires a positive integer, got: 0",
+        error: "`--timeout` takes a number of milliseconds above zero.",
         ok: false,
       });
     });
 
     it("rejects an unknown flag", () => {
       const result = parseSendArgs(["--raw"]);
-      expect(result).toEqual({ error: "Unknown flag: --raw", ok: false });
-    });
-
-    it("rejects an unknown short flag", () => {
-      const result = parseSendArgs(["-x"]);
-      expect(result).toEqual({ error: "Unknown flag: -x", ok: false });
-    });
-
-    it("rejects more than one positional", () => {
-      const result = parseSendArgs(["a.hl7", "b.hl7"]);
       expect(result).toEqual({
-        error: "Unexpected argument: b.hl7",
+        error: "`--raw` is not a `glion send` flag.",
         ok: false,
       });
     });
 
-    it("rejects a second positional even when the first is the stdin sentinel", () => {
+    it("rejects an unknown short flag", () => {
+      const result = parseSendArgs(["-x"]);
+      expect(result).toEqual({
+        error: "`-x` is not a `glion send` flag.",
+        ok: false,
+      });
+    });
+
+    it("rejects more than one message source", () => {
+      const result = parseSendArgs(["a.hl7", "b.hl7"]);
+      expect(result).toEqual({
+        error: "`glion send` takes one message source.",
+        ok: false,
+      });
+    });
+
+    it("rejects a second source even when the first is the stdin sentinel", () => {
       const result = parseSendArgs(["-", "b.hl7"]);
       expect(result).toEqual({
-        error: "Unexpected argument: b.hl7",
+        error: "`glion send` takes one message source.",
         ok: false,
       });
     });

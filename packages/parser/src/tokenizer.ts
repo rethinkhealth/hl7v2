@@ -1,5 +1,6 @@
 // src/tokenizer.ts
 import type { Delimiters } from "@glion/ast";
+import { decodeEscapes } from "@glion/utils";
 import type { Position } from "unist";
 
 import type { ParserContext, Token, Tokenizer, TokenType } from "./types";
@@ -11,7 +12,18 @@ const MSH_FIELD_SEPERATOR_END = 4;
 const MSH_FIELD_DELIMITER_START = 4;
 const MSH_FIELD_DELIMITER_END = 8;
 
+export interface TokenizerOptions {
+  /**
+   * Whether a TEXT token holds the characters its escape sequences stand for
+   * (`true`, the default) or the escape sequences as they are on the wire
+   * (`false`). A Segment ID and the encoding characters MSH-2 declares are
+   * never decoded.
+   */
+  decodeEscapes?: boolean;
+}
+
 export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
+  private readonly decodeEscapes: boolean;
   private input = "";
   private i = 0;
   private line = 1;
@@ -24,6 +36,10 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     | { kind: "TEXT"; value: string; advance: number }
     | { kind: "FIELD_DELIM"; advance: number }
   > = null; // queue to emit TEXT('MSH'), FIELD_DELIM, TEXT('^~\\&')
+
+  constructor(options: TokenizerOptions = {}) {
+    this.decodeEscapes = options.decodeEscapes ?? true;
+  }
 
   reset(ctx: ParserContext) {
     this.input = ctx.input;
@@ -121,21 +137,35 @@ export class HL7v2Tokenizer implements Tokenizer, Iterable<Token> {
     // TEXT until next delimiter or end
     let j = this.i;
     const cmp = this.delims.component,
+      esc = this.delims.escape,
       fld = this.delims.field,
       rep = this.delims.repetition,
       seg = this.delims.segment,
       sub = this.delims.subcomponent;
+    let escaped = false;
+    // A Segment ID is not a field, so it holds no escape sequences (HL7v2
+    // §2.5.2, §2.7): `Z\R\Z` opening a segment stays `Z\R\Z`.
+    const opensSegment = j === 0 || s.charAt(j - 1) === seg;
 
     while (j < s.length) {
       const c = s.charAt(j);
       if (c === seg || c === fld || c === rep || c === cmp || c === sub) {
         break;
       }
+      // Stryker disable next-line ConditionalExpression, EqualityOperator: the flag only skips decoding a run without the escape character, which decodes to itself
+      if (c === esc) {
+        escaped = true;
+      }
       j += 1;
     }
 
-    const val = s.slice(this.i, j);
-    this._fastAdvance(val);
+    // Positions and line counts follow the source, so the raw slice advances.
+    const raw = s.slice(this.i, j);
+    this._fastAdvance(raw);
+    const val =
+      escaped && this.decodeEscapes && !opensSegment
+        ? decodeEscapes(raw, this.delims)
+        : raw;
     return this._tok("TEXT", val, start);
   }
 

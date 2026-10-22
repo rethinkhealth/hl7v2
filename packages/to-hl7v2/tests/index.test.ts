@@ -8,7 +8,7 @@ import type {
 import { c, f, m, r, s } from "@glion/builder";
 import { unified } from "unified";
 
-import { hl7v2ToHl7v2, toHl7v2 } from "../src";
+import { EscapeSequenceError, hl7v2ToHl7v2, toHl7v2 } from "../src";
 
 describe(toHl7v2, () => {
   it("converts a simple MSH segment back to HL7v2 format", () => {
@@ -473,5 +473,69 @@ describe("getSegmentName graceful degradation", () => {
       const result = toHl7v2(correctSegment);
       expect(result).toBe("PID|SOME_DATA");
     });
+  });
+});
+
+describe("toHl7v2 escape sequences", () => {
+  it("writes delimiters inside a value as escape sequences", () => {
+    const tree = m(s("PID", f("a|b^c~d&e")));
+
+    expect(toHl7v2(tree)).toBe("PID|a\\F\\b\\S\\c\\R\\d\\T\\e");
+  });
+
+  it("writes a character whose escape code is a delimiter as a hexadecimal escape", () => {
+    const tree = m(s("MSH", f("^"), f("E\\<$")), s("PID", f("a<b")));
+
+    expect(toHl7v2(tree)).toBe("MSH^E\\<$\rPID^a<X3C<b");
+  });
+
+  it("throws EscapeSequenceError for a value no escape sequence can write with the delimiters", () => {
+    const tree = m(s("MSH", f("X"), f("S~\\&")), s("PID", f("aSb")));
+
+    expect(() => toHl7v2(tree)).toThrow(EscapeSequenceError);
+  });
+
+  it("writes the escape character, the segment delimiter, and control characters as escape sequences", () => {
+    const tree = m(s("PID", f("a\\b\rc\nd")));
+
+    expect(toHl7v2(tree)).toBe("PID|a\\E\\b\\.br\\c\\X0A\\d");
+  });
+
+  it("writes a formatting command, a locally defined sequence, and a character set switch as they are", () => {
+    const tree = m(
+      s("PID", f("\\H\\a|b\\N\\\\Zsite 7\\c\\C2842\\d\\M2442\\e"))
+    );
+
+    expect(toHl7v2(tree)).toBe(
+      "PID|\\H\\a\\F\\b\\N\\\\Zsite 7\\c\\C2842\\d\\M2442\\e"
+    );
+  });
+
+  it("writes MSH-1 and MSH-2 as they are", () => {
+    const tree = m(s("MSH", f("|"), f("^~\\&"), f("a|b")));
+
+    expect(toHl7v2(tree)).toBe("MSH|^~\\&|a\\F\\b");
+  });
+
+  it("writes escape sequences with the escape character MSH-2 declares", () => {
+    const tree = m(s("MSH", f("*"), f("%$#&"), f("a*b%c")));
+
+    expect(toHl7v2(tree)).toBe("MSH*%$#&*a#F#b#S#c");
+  });
+
+  it("writes a value as it is with encodeEscapes false", () => {
+    const tree = m(s("PID", f("a|b")));
+
+    expect(toHl7v2(tree, undefined, { encodeEscapes: false })).toBe("PID|a|b");
+  });
+
+  it("writes a value as it is when the compiler plugin has encodeEscapes false", () => {
+    const tree = m(s("PID", f("a|b")));
+
+    const file = unified()
+      .use(hl7v2ToHl7v2, { encodeEscapes: false })
+      .stringify(tree);
+
+    expect(String(file)).toBe("PID|a|b");
   });
 });

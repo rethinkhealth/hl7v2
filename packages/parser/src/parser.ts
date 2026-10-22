@@ -33,7 +33,7 @@ export function parseHL7v2(
   // Run preprocessing
   ctx = runPreprocessors(ctx, opts.preprocess || defaultPreprocessors);
   // Run tokenizer
-  const tokenizer = new HL7v2Tokenizer();
+  const tokenizer = new HL7v2Tokenizer({ decodeEscapes: opts.decodeEscapes });
   // Reset tokenizer.
   tokenizer.reset(ctx);
   // Parse

@@ -79,6 +79,20 @@ describe("ensureCacheDir", () => {
       await rm(newDir, { force: true, recursive: true });
     }
   });
+
+  it("reports a directory it cannot create as a GlionError", async () => {
+    const newDir = await mkdtemp(join(tmpdir(), "glion-cache-blocked-"));
+    try {
+      // A file where the directory belongs: mkdir cannot create it.
+      await writeFile(join(newDir, ".glion"), "");
+      await expect(ensureCacheDir(newDir)).rejects.toMatchObject({
+        kind: "cache-dir-failed",
+        message: `The cache directory \`${join(newDir, ".glion")}\` could not be created.`,
+      });
+    } finally {
+      await rm(newDir, { force: true, recursive: true });
+    }
+  });
 });
 
 describe("prepareChild", () => {
@@ -108,7 +122,11 @@ describe("prepareChild", () => {
     const entryPath = join(dir, "src", "app.ts");
     await writeFile(entryPath, "export default {};");
 
-    const manifestPath = await prepareChild(makeConfig(entryPath), cacheDir);
+    const manifestPath = await prepareChild(
+      makeConfig(entryPath),
+      cacheDir,
+      "127.0.0.1"
+    );
     const info = await stat(manifestPath);
     // oxlint-disable-next-line no-bitwise
     expect(info.mode & 0o777).toBe(0o600);
@@ -125,7 +143,11 @@ describe("prepareChild", () => {
 
     // First prepareChild creates the manifest, then deliberately
     // loosen its perms to simulate a pre-upgrade install.
-    const manifestPath = await prepareChild(makeConfig(entryPath), cacheDir);
+    const manifestPath = await prepareChild(
+      makeConfig(entryPath),
+      cacheDir,
+      "127.0.0.1"
+    );
     await chmod(manifestPath, 0o644);
     const beforeStat = await stat(manifestPath);
     // oxlint-disable-next-line no-bitwise
@@ -133,7 +155,7 @@ describe("prepareChild", () => {
 
     // Second prepareChild rewrites it — the post-write chmod must
     // restore the tight mode.
-    await prepareChild(makeConfig(entryPath), cacheDir);
+    await prepareChild(makeConfig(entryPath), cacheDir, "127.0.0.1");
     const afterStat = await stat(manifestPath);
     // oxlint-disable-next-line no-bitwise
     expect(afterStat.mode & 0o777).toBe(0o600);

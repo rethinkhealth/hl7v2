@@ -6,6 +6,13 @@
 import { parseHL7v2 } from "@glion/parser";
 import { bench, describe } from "vitest";
 
+import {
+  hl7,
+  obxEscapedLine,
+  ORU_R01_HEADER,
+  repeat,
+} from "../fixtures/messages";
+
 // ---------------------------------------------------------------------------
 // Fixtures — local: no other suite parses bare text at these shapes
 // ---------------------------------------------------------------------------
@@ -32,6 +39,7 @@ function buildMessage(segmentCount: number): string {
 
 const MEDIUM = buildMessage(50);
 const LARGE = buildMessage(200);
+const ESCAPED = hl7(...ORU_R01_HEADER, ...repeat(obxEscapedLine, 200));
 
 // ---------------------------------------------------------------------------
 // Benchmarks
@@ -52,5 +60,9 @@ describe("parser", () => {
 
   bench("parser: parse complex fields (repetitions, components, sub-components)", () => {
     parseHL7v2(COMPLEX_FIELDS);
+  });
+
+  bench("parser: parse 205 segments with escape sequences", () => {
+    parseHL7v2(ESCAPED);
   });
 });

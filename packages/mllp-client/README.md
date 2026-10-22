@@ -489,7 +489,7 @@ Thrown before anything is opened or sent. A configuration bug, not a runtime con
 
 `MllpInvalidMessageError` · delivery `not-sent` · field: `cause`
 
-The message cannot be sent as it stands: no MSH-10 control ID, or it could not be serialized, or its content contains a byte MLLP reserves as a frame marker.
+The message cannot be sent as it stands: no MSH-10 control ID, or it could not be serialized, or a Segment ID or MSH-1/MSH-2 holds a byte MLLP reserves as a frame marker. A reserved byte in a value is written as `\Xdd\` and sent.
 
 **Nothing reached the wire and the connection is still in step**, so the next message can go out on it. Fix or quarantine the message; do not reconnect.
 

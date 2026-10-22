@@ -1,5 +1,38 @@
 # @glion/lint-profile-withdrawn
 
+## 0.29.0
+
+### Patch Changes
+
+- [#1053](https://github.com/rethinkhealth/glion/pull/1053) [`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56) Thanks [@meleksomai](https://github.com/meleksomai)! - Fix `encodeEscapes` writing an escape sequence that holds a delimiter, which made a message whose delimiters include an escape code grow on every parse and serialize round trip ([#1051](https://github.com/rethinkhealth/glion/issues/1051)).
+
+  - Write a character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, as `\Xdd\`, with a hexadecimal digit `A`–`F` in lowercase when its uppercase form is a delimiter
+  - Add `EscapeSequenceError`, thrown by `encodeEscapes`, `toHl7v2`, and `hl7v2EncodeEscapes` for a character that no escape sequence can write with the message's delimiters, and export it from `@glion/to-hl7v2`
+  - Report `glion send` of such a message as an `invalid` outcome instead of exiting with an unexpected error
+  - Report a withdrawn or backward-compatible field without `actual` when the message's delimiters cannot write it, instead of rejecting the lint run
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56)]:
+  - @glion/utils@0.29.0
+  - @glion/to-hl7v2@0.29.0
+  - @glion/annotate-profile-datatypes@0.29.0
+  - @glion/annotate-profile-fields@0.29.0
+  - @glion/util-query@0.29.0
+  - @glion/util-visit@0.29.0
+  - @glion/ast@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/to-hl7v2@0.28.0
+  - @glion/utils@0.28.0
+  - @glion/annotate-profile-fields@0.28.0
+  - @glion/util-query@0.28.0
+  - @glion/util-visit@0.28.0
+  - @glion/annotate-profile-datatypes@0.28.0
+  - @glion/ast@0.28.0
+
 ## 0.27.1
 
 ### Patch Changes

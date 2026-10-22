@@ -1,6 +1,6 @@
 {
   "name": "@glion/encode-escapes",
-  "version": "0.27.1",
+  "version": "0.29.0",
   "description": "hl7v2 plugin to encode special characters as hl7v2 escape sequences",
   "keywords": [
     "health",
@@ -43,9 +43,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@glion/util-query": "workspace:*",
+    "@glion/util-visit": "workspace:*",
     "@glion/utils": "workspace:*",
-    "unified": "11.0.5",
-    "unist-util-visit": "5.1.0"
+    "unified": "11.0.5"
   },
   "devDependencies": {
     "@glion/ast": "workspace:*",

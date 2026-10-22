@@ -3,93 +3,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Readable } from "node:stream";
 
-import type { MllpSocket } from "@glion/mllp-client";
-import { frame } from "@glion/mllp-codec";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { runSend } from "../../src/commands/send";
-
-const ADT = [
-  "MSH|^~\\&|SENDER|FAC|RECEIVER|FAC|20260531120000||ADT^A01|MSG00001|P|2.5",
-  "EVN|A01|20260531120000",
-  "PID|1||12345^^^MRN||DOE^JOHN",
-].join("\r");
-
-/** Build an MLLP-framed ACK whose MSA-2 echoes the request control id. */
-function ackFrame(code: string, withErr = false): Uint8Array {
-  const segments = [
-    "MSH|^~\\&|RECEIVER|FAC|SENDER|FAC|20260531120001||ACK^A01|ACK00001|P|2.5",
-    `MSA|${code}|MSG00001|the peer says hi`,
-  ];
-  if (withErr) {
-    segments.push("ERR|||207^bad^HL70357|E");
-  }
-  return frame(new TextEncoder().encode(segments.join("\r")));
-}
-
-/**
- * A socket that replies with `ack` as soon as a message is written. The
- * client's injectable socket is what makes this port-free.
- */
-function fakeSocket(ack: Uint8Array): MllpSocket {
-  return {
-    close: () => Promise.resolve(),
-    connect: () => {
-      let controller: ReadableStreamDefaultController<Uint8Array> | undefined;
-      const readable = new ReadableStream<Uint8Array>({
-        start(c) {
-          controller = c;
-        },
-      });
-      const writable = new WritableStream<Uint8Array>({
-        write() {
-          controller?.enqueue(ack);
-        },
-      });
-      return Promise.resolve({ readable, writable });
-    },
-  };
-}
-
-/** A socket that never opens. */
-const refusingSocket: MllpSocket = {
-  close: () => Promise.resolve(),
-  connect: () => Promise.reject(new Error("ECONNREFUSED")),
-};
-
-/** A socket refused `failures` times, then the one `fakeSocket` gives. */
-function flakySocket(failures: number, ack: Uint8Array): MllpSocket {
-  const open = fakeSocket(ack);
-  let dials = 0;
-  return {
-    close: open.close,
-    connect: (signal) => {
-      dials += 1;
-      return dials <= failures
-        ? Promise.reject(new Error("ECONNREFUSED"))
-        : open.connect(signal);
-    },
-  };
-}
-
-/** Capture stdout/stderr; `tty` makes stdout report as a TTY (human output). */
-function capture(tty = false) {
-  const state = { err: "", out: "" };
-  const stdout = {
-    isTTY: tty,
-    write: (chunk: string) => {
-      state.out += chunk;
-      return true;
-    },
-  } as unknown as NodeJS.WritableStream;
-  const stderr = {
-    write: (chunk: string) => {
-      state.err += chunk;
-      return true;
-    },
-  } as unknown as NodeJS.WritableStream;
-  return { state, stderr, stdout };
-}
+import {
+  ADT,
+  ackFrame,
+  capture,
+  fakeSocket,
+  flakySocket,
+  hangUpSocket,
+  refusingSocket,
+} from "../fixtures/send";
 
 describe("runSend (integration, fake socket)", () => {
   const tempDirs: string[] = [];
@@ -115,7 +40,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -128,13 +52,14 @@ describe("runSend (integration, fake socket)", () => {
     expect(json.code).toBe("AA");
     expect(json.requestControlId).toBe("MSG00001");
     expect(json.controlId).toBe("MSG00001");
+    // MSA-3 of the acknowledgment, as the client read it off the wire.
+    expect(json.text).toBe("the peer says hi");
   });
 
   it("exits 1 and reports the NAK on AE", async () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AE", true)),
       stderr,
       stdin: Readable.from(ADT),
@@ -153,7 +78,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       reconnect: false,
       socket: refusingSocket,
       stderr,
@@ -171,7 +95,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       reconnect: { attempts: 1, delay: () => 0 },
       socket: flakySocket(1, ackFrame("AA")),
       stderr,
@@ -189,7 +112,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: [],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -204,7 +126,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: ["--help"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -213,14 +134,13 @@ describe("runSend (integration, fake socket)", () => {
 
     expect(code).toBe(0);
     expect(state.out).toContain("glion send");
-    expect(state.out).toContain("--local");
+    expect(state.out).toContain("--host");
   });
 
   it("prints the parse error and help to stderr and exits 2", async () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: ["--nope"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -228,7 +148,7 @@ describe("runSend (integration, fake socket)", () => {
     });
 
     expect(code).toBe(2);
-    expect(state.err).toContain("Unknown flag: --nope");
+    expect(state.err).toContain("`--nope` is not a `glion send` flag.");
   });
 
   it("reads the message from a file argument", async () => {
@@ -236,7 +156,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: [file, "--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdout,
@@ -246,11 +165,30 @@ describe("runSend (integration, fake socket)", () => {
     expect(JSON.parse(state.out).code).toBe("AA");
   });
 
+  it("reports an invalid outcome when the delimiters cannot write a value", async () => {
+    // MSH-1 `X` and MSH-2 `E~\&`: the escape character in MSH-3 is written
+    // `\E\` or `\X5C\`, and both hold a delimiter.
+    const { state, stderr, stdout } = capture();
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from("MSHXE~\\&XAPP\\bXFAC"),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    const json = JSON.parse(state.out);
+    expect(json.kind).toBe("invalid");
+    expect(json.message).toBe(
+      "The value holds a character that must be written as an escape sequence, and every escape sequence for it holds one of the message's delimiters. With delimiters that are ASCII punctuation, every character can be written."
+    );
+  });
+
   it("reports an invalid outcome when the file cannot be read", async () => {
     const { state, stdout, stderr } = capture();
     const code = await runSend({
       argv: ["/no/such/file.hl7", "--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdout,
@@ -259,15 +197,17 @@ describe("runSend (integration, fake socket)", () => {
     expect(code).toBe(2);
     const json = JSON.parse(state.out);
     expect(json.kind).toBe("invalid");
-    expect(json.message).toContain("Could not read the message");
+    expect(json.message).toBe(
+      "The message source `/no/such/file.hl7` could not be read."
+    );
+    expect(json.cause).toContain("ENOENT");
   });
 
-  it("reports INVALID_MESSAGE (exit 2) when the message has no MSH-10", async () => {
+  it("reports an invalid outcome (exit 2) when the message has no MSH-10", async () => {
     const noControlId = ADT.replace("|MSG00001|", "||");
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(noControlId),
@@ -276,17 +216,18 @@ describe("runSend (integration, fake socket)", () => {
 
     expect(code).toBe(2);
     const json = JSON.parse(state.out);
-    expect(json.kind).toBe("transport");
+    expect(json.kind).toBe("invalid");
     expect(json.code).toBe("INVALID_MESSAGE");
     expect(json.cause).toContain("MSH-10");
   });
 
-  it("reports INVALID_MESSAGE (exit 2) when the message contains a reserved VT byte", async () => {
-    const withVt = `${ADT}\rNTE|1||free\u000Btext`;
+  it("reports an invalid outcome (exit 2) when a Segment ID contains a reserved VT byte", async () => {
+    // A control character in a value is encoded as \X0B\ and sent; one in a
+    // Segment ID cannot be, so the client refuses the message.
+    const withVt = `${ADT}\rNT\u000BE|1||free text`;
     const { state, stderr, stdout } = capture();
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(withVt),
@@ -295,15 +236,70 @@ describe("runSend (integration, fake socket)", () => {
 
     expect(code).toBe(2);
     const json = JSON.parse(state.out);
-    expect(json.kind).toBe("transport");
+    expect(json.kind).toBe("invalid");
     expect(json.code).toBe("INVALID_MESSAGE");
+  });
+
+  it("reports the connection opening on a TTY, on stderr", async () => {
+    const { state, stderr, stdout } = capture(true);
+    await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: fakeSocket(ackFrame("AA")),
+      stderr,
+      stdin: Readable.from(ADT),
+      stdout,
+    });
+
+    expect(state.err).toMatch(/^== connected {2}h:1 {2}[\d.]+m?s\n$/);
+    expect(state.out).not.toContain("== connected");
+  });
+
+  it("reports a lost connection once, as the exchange's outcome", async () => {
+    const { state, stderr, stdout } = capture(true);
+    const code = await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: hangUpSocket,
+      stderr,
+      stdin: Readable.from(ADT),
+      stdout,
+    });
+
+    expect(code).toBe(2);
+    // The client closes with the same error `send()` rejects with, so the
+    // terminal must not state the failure a second time.
+    const lines = state.err.trimEnd().split("\n");
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toMatch(/^== connected/);
+    expect(lines[1]).toMatch(/^x {2}h:1 {2}CONNECTION_LOST/);
+  });
+
+  it("reports nothing about the connection when it never opened, nor under --json", async () => {
+    const tty = capture(true);
+    await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      reconnect: false,
+      socket: refusingSocket,
+      stderr: tty.stderr,
+      stdin: Readable.from(ADT),
+      stdout: tty.stdout,
+    });
+    expect(tty.state.err).not.toContain("== ");
+
+    const json = capture();
+    await runSend({
+      argv: ["--host", "h", "--port", "1"],
+      socket: fakeSocket(ackFrame("AA")),
+      stderr: json.stderr,
+      stdin: Readable.from(ADT),
+      stdout: json.stdout,
+    });
+    expect(json.state.err).toBe("");
   });
 
   it("renders the human exchange view on a TTY (accept)", async () => {
     const { state, stdout, stderr } = capture(true);
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       socket: fakeSocket(ackFrame("AA")),
       stderr,
       stdin: Readable.from(ADT),
@@ -321,7 +317,6 @@ describe("runSend (integration, fake socket)", () => {
     const { state, stdout, stderr } = capture(true);
     const code = await runSend({
       argv: ["--host", "h", "--port", "1"],
-      cwd: "/tmp",
       reconnect: false,
       socket: refusingSocket,
       stderr,

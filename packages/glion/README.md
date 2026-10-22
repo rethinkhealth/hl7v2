@@ -88,26 +88,30 @@ Sends a single HL7v2 message over MLLP, prints the acknowledgment, and exits. It
 glion send [<file>] [flags]
 ```
 
-The message is read from `<file>`, or from stdin when `<file>` is omitted or is `-`. It is parsed and re-serialized to its canonical, CR-delimited form before transmission, so editor line endings are normalized. Whether the message is valid is the receiver's call — it answers with a NAK — so `glion send` does not pre-validate.
+The message is read from `<file>`, or from stdin when `<file>` is omitted or is `-`. It is parsed and re-serialized to its canonical, CR-delimited form before transmission, so editor line endings are normalized. A value the message's own delimiters cannot write is refused before dialing rather than sent mangled: when every escape sequence for one of its characters would hold a delimiter, there is no way to put the value on the wire — delimiters that are ASCII punctuation can write every character. Whether the message is valid is the receiver's call — it answers with a NAK — so `glion send` does not pre-validate.
 
-| Flag              | Description                                                              |
-| ----------------- | ------------------------------------------------------------------------ |
-| `--host <host>`   | Target host.                                                             |
-| `--port <port>`   | Target port.                                                             |
-| `--local`         | Reads host and port from `glion.config.ts`; `--host`/`--port` override.  |
-| `--config <path>` | Config file used to resolve `--local` (same discovery as `dev`/`start`). |
-| `--timeout <ms>`  | Deadline spanning connect and the ACK wait. Defaults to `30000`.         |
-| `--json`          | Prints one JSON line instead of the human exchange view.                 |
+| Flag             | Description                                                                                         |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| `--host <host>`  | Target host. Required.                                                                              |
+| `--port <port>`  | Target port. Defaults to `2575`, the port MLLP standardizes on.                                     |
+| `--tls`          | Dials over TLS, verifying the receiver's certificate against the runtime's trusted authorities.     |
+| `--ca <path>`    | The authority that signed the receiver's certificate, or its own certificate when it signed itself. |
+| `--cert <path>`  | Client certificate to present, for a receiver that requires one.                                    |
+| `--key <path>`   | The private key for that certificate.                                                               |
+| `--insecure`     | Dials over TLS without verifying the receiver's certificate.                                        |
+| `--timeout <ms>` | Deadline spanning connect and the ACK wait. Defaults to `30000`.                                    |
+| `--json`         | Prints one JSON line instead of the human exchange view.                                            |
 
-`--local` resolves the target from the server this project defines: it reads `hostname` and `port` from `glion.config.ts`, mapping a wildcard bind address such as `0.0.0.0` to loopback.
+The target is the one the invocation names. `glion send` is a client: it sends to the system you point it at, and takes no part in what address a server of this project binds — so sending to your own dev server is the same command as sending to any other receiver. It reads no `glion.config.ts`, and takes no `--config`: everything it needs is on the command line.
 
 ```bash
-glion send adt.hl7 --host 127.0.0.1 --port 2575
-cat adt.hl7 | glion send --port 2575 --json
-glion send adt.hl7 --local
+glion send adt.hl7 --host 127.0.0.1
+cat adt.hl7 | glion send --host 127.0.0.1 --port 2575 --json
 ```
 
-Output adapts to the destination: a terminal receives a human-readable exchange view, while a pipe (or `--json`) receives a single JSON line. The exit code reports the result.
+Output adapts to the destination: a terminal receives a human-readable exchange view, with the connection's opening and any loss of it reported on stderr, while a pipe (or `--json`) receives a single JSON line. The exit code reports the result.
+
+A failure states what is wrong in one sentence. What to do about it follows as a `hint`, and the underlying error as a `cause` — on their own lines in the terminal, as their own fields in JSON — so the sentence stays readable and the detail stays available.
 
 | Code | Meaning                                                            |
 | ---- | ------------------------------------------------------------------ |
@@ -115,11 +119,28 @@ Output adapts to the destination: a terminal receives a human-readable exchange 
 | `1`  | The peer rejected the message (a NAK: `AE`/`AR`/`CE`/`CR`).        |
 | `2`  | The message could not be delivered (transport, validation, usage). |
 
-TLS targets are not supported; `glion send` connects in plaintext.
+#### TLS
 
-### Zero-config mode
+`glion send` connects in plaintext unless the invocation asks for TLS. Naming any certificate file asks for it, so `--tls` is only needed when the invocation names none.
 
-Both commands work without a `glion.config.ts` when the app file is at `./glion.app.ts` at the project root. The TUI shows a `zero-config` badge to indicate no config was loaded. Create a `glion.config.ts` when you need custom ports, TLS, or additional watch paths.
+```bash
+# a receiver with a publicly trusted certificate
+glion send adt.hl7 --host hl7.example.org --tls
+
+# a receiver that signed its own certificate, as a development server does
+glion send adt.hl7 --host 127.0.0.1 --ca ./server-cert.pem
+
+# a receiver that requires a client certificate
+glion send adt.hl7 --host hl7.example.org --ca ./ca.pem --cert ./client.pem --key ./client-key.pem
+```
+
+The connection line reports how the connection is secured: `TLS` when the certificate was verified, `TLS unverified` when `--insecure` turned verification off.
+
+A certificate file that cannot be read is reported before the dial, naming the file and the reason.
+
+### Without a config file
+
+A `glion.config.ts` is optional. With none, glion runs the app at `./glion.app.ts` or `./src/glion.app.ts` on the defaults: port `2575`, bound to `127.0.0.1` under `glion dev` and `0.0.0.0` under `glion start`. A config file is how you change them — custom ports, TLS, or additional watch paths.
 
 ### Cross-runtime invocation
 
