@@ -57,20 +57,20 @@
     "@glion/util-query": "workspace:*"
   },
   "devDependencies": {
-    "@cloudflare/vitest-plugin": "1.4.0",
-    "@cloudflare/workers-types": "5.20261007.1",
+    "@cloudflare/vitest-plugin": "1.4.5",
+    "@cloudflare/workers-types": "5.20261019.1",
     "@glion/check-readme": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
     "@stryker-mutator/core": "10.0.0",
     "@stryker-mutator/vitest-runner": "10.0.0",
     "@types/node": "25.6.0",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "4.1.12",
     "publint": "0.3.18",
     "selfsigned": "5.5.0",
     "tsdown": "0.21.10",
     "typescript": "6.0.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   },
   "peerDependencies": {
     "@types/node": ">=22"
