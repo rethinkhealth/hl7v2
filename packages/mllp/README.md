@@ -57,16 +57,15 @@ The server class. Built with a fluent chainable API:
 
 Start a Node.js or Bun TCP server that dispatches incoming MLLP frames through the `Mllp` instance.
 
-| Option          | Type                                               | Description                                                                                      |
-| --------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `port`          | `number`                                           | TCP port to listen on.                                                                           |
-| `hostname`      | `string`, optional                                 | Interface to bind. Defaults to all interfaces.                                                   |
-| `createServer`  | `net.createServer` or `tls.createServer`, optional | Creates the listener. Defaults to `net.createServer`. See [Listener and TLS](#listener-and-tls). |
-| `serverOptions` | Node's options for `createServer`, optional        | Passed to `createServer` unchanged.                                                              |
-| `socketTimeout` | `number`, optional                                 | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.   |
-| `onConnect`     | `ConnectionCallback`, optional                     | Called when a new TCP connection is accepted.                                                    |
-| `onDisconnect`  | `ConnectionCallback`, optional                     | Called when a connection closes — always fires, even if `onConnect` threw.                       |
-| `onError`       | `ErrorCallback`, optional                          | Called when a handler error goes unhandled or a lifecycle callback throws.                       |
+| Option          | Type                                   | Description                                                                                                             |
+| --------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `port`          | `number`                               | TCP port to listen on.                                                                                                  |
+| `hostname`      | `string`, optional                     | Interface to bind. Defaults to all interfaces.                                                                          |
+| `server`        | `net.Server` or `tls.Server`, optional | The listener, created with Node's options. Defaults to `net.createServer()`. See [Listener and TLS](#listener-and-tls). |
+| `socketTimeout` | `number`, optional                     | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.                          |
+| `onConnect`     | `ConnectionCallback`, optional         | Called when a new TCP connection is accepted.                                                                           |
+| `onDisconnect`  | `ConnectionCallback`, optional         | Called when a connection closes — always fires, even if `onConnect` threw.                                              |
+| `onError`       | `ErrorCallback`, optional              | Called when a handler error goes unhandled or a lifecycle callback throws.                                              |
 
 ### Wire framing
 
@@ -249,16 +248,18 @@ Without an error handler, errors are absorbed and no response is sent. The sendi
 
 ## Listener and TLS
 
-`serve()` creates the listener with `createServer(serverOptions)`: Node's `net.createServer` unless another is given, with `serverOptions` passed unchanged. Nothing else is set on the socket, so Node's options decide keep-alive and Nagle's algorithm:
+`server` is the listener, created with Node's options: a `net.Server`, or a `tls.Server` for TLS. Without it, `serve()` creates `net.createServer()`. `serve()` listens on it, and `close()` closes it. It must not be listening yet, and must have no connection listener of its own. Nothing is set on an accepted socket except `socketTimeout`, so Node's options decide keep-alive and Nagle's algorithm:
 
 ```ts
+import { createServer } from "node:net";
+
 const server = serve(app, {
   port: 2575,
-  serverOptions: { keepAlive: true, noDelay: true },
+  server: createServer({ keepAlive: true, noDelay: true }),
 });
 ```
 
-TLS is `tls.createServer`, with Node's [TLS server options](https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener):
+TLS is a `tls.Server`, created with Node's [TLS server options](https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener). Each connection reaches the app once its TLS handshake completes:
 
 ```ts
 import fs from "node:fs";
@@ -270,12 +271,11 @@ import { serve } from "@glion/mllp/node";
 const app = new Mllp().parser(parseHL7v2);
 
 const server = serve(app, {
-  createServer,
   port: 2575,
-  serverOptions: {
+  server: createServer({
     cert: fs.readFileSync("cert.pem"),
     key: fs.readFileSync("key.pem"),
-  },
+  }),
 });
 ```
 
@@ -283,14 +283,13 @@ Mutual TLS is `requestCert` with the `ca` that issued the client certificates. A
 
 ```ts
 const server = serve(app, {
-  createServer,
   port: 2575,
-  serverOptions: {
+  server: createServer({
     ca: fs.readFileSync("ca.pem"),
     cert: fs.readFileSync("cert.pem"),
     key: fs.readFileSync("key.pem"),
     requestCert: true,
-  },
+  }),
 });
 ```
 

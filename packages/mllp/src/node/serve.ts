@@ -10,8 +10,7 @@
  * @module
  */
 
-import type { createServer as createNetServer, ServerOpts } from "node:net";
-import type { createServer as createTlsServer, TlsOptions } from "node:tls";
+import type { Server as NetServer } from "node:net";
 
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
 import { CharsetError, decodeBytes, encodeBytes } from "@glion/util-charset";
@@ -57,35 +56,10 @@ export type ErrorCallback = (
   messageInfo: MessageInfo | undefined
 ) => void | Promise<void>;
 
-/** A plain TCP listener: `net.createServer`, with Node's `net` server options. */
-export interface ServeNetListener {
-  /**
-   * Creates the listener.
-   *
-   * @default net.createServer
-   */
-  createServer?: typeof createNetServer;
-  /** Options `net.createServer()` is called with, passed unchanged. */
-  serverOptions?: ServerOpts;
-}
-
-/** A TLS listener: `tls.createServer`, with Node's TLS server options. */
-export interface ServeTlsListener {
-  /** Creates the listener. */
-  createServer: typeof createTlsServer;
-  /** Options `tls.createServer()` is called with, passed unchanged. */
-  serverOptions?: TlsOptions;
-}
-
 /**
- * Options for starting an MLLP server with {@link serve}: the listener, and
- * how the server binds and reports connections.
+ * Options for starting an MLLP server with {@link serve}.
  */
-export type ServeOptions = ServeCommonOptions &
-  (ServeNetListener | ServeTlsListener);
-
-/** The options {@link serve} takes whatever creates the listener. */
-export interface ServeCommonOptions {
+export interface ServeOptions {
   /**
    * The hostname or IP address to bind the server to.
    * When omitted the OS will bind to all available interfaces (`0.0.0.0`).
@@ -133,6 +107,16 @@ export interface ServeCommonOptions {
    * to disable the timeout.
    */
   socketTimeout?: number;
+
+  /**
+   * The listener: a `net.Server`, or a `tls.Server` for TLS, created with
+   * Node's options. MUST NOT be listening yet, and MUST have no connection
+   * listener of its own. `serve()` listens on it, and the returned
+   * {@link Server}'s `close()` closes it.
+   *
+   * @default net.createServer()
+   */
+  server?: NetServer;
 }
 
 /**
@@ -184,8 +168,7 @@ export interface Server {
  */
 export function serve(app: Mllp, options: ServeOptions): Server {
   const adapter = nodeAdapter({
-    createServer: options.createServer,
-    serverOptions: options.serverOptions,
+    server: options.server,
     socketTimeout: options.socketTimeout,
   });
 

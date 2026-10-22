@@ -137,30 +137,26 @@ async function main(): Promise<void> {
   // other middleware is injected before.
   app.use(createMsgTelemetry(emit), { prepend: true });
 
-  // Step 4: Read TLS certificates (if configured) into the listener.
+  // Step 4: Read TLS certificates (if configured) into a TLS listener.
   // Paths are absolute (resolved by the parent's config loader).
   // Errors here produce a clear "tls-read-failed" GlionError with
   // the specific field that failed (cert, key, or ca).
   const listener = manifest.tls
-    ? {
-        createServer: createTlsServer,
-        serverOptions: {
-          ca: manifest.tls.ca
-            ? await readTlsFile(manifest.tls.ca, "tls.ca")
-            : undefined,
-          cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
-          key: await readTlsFile(manifest.tls.key, "tls.key"),
-          passphrase: manifest.tls.passphrase,
-        },
-      }
-    : {};
+    ? createTlsServer({
+        ca: manifest.tls.ca
+          ? await readTlsFile(manifest.tls.ca, "tls.ca")
+          : undefined,
+        cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
+        key: await readTlsFile(manifest.tls.key, "tls.key"),
+        passphrase: manifest.tls.passphrase,
+      })
+    : undefined;
 
   // Step 5: Start the MLLP server.
   // serve() creates a TCP server, binds it, and returns a Server
   // handle. Connection and error callbacks emit events for the
   // parent to display in the TUI or log as JSON lines.
   const server: Server = serve(app, {
-    ...listener,
     hostname: manifest.hostname,
     onConnect: (conn: ConnectionInfo) => {
       emit({
@@ -186,6 +182,7 @@ async function main(): Promise<void> {
       });
     },
     port: manifest.port,
+    server: listener,
     socketTimeout: manifest.socketTimeout,
   });
 

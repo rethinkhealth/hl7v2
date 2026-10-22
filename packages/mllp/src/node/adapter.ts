@@ -1,10 +1,11 @@
 /**
  * Node.js TCP/TLS adapter for the MLLP server.
  *
- * Implements the {@link TcpAdapter} interface over the Node.js server that
- * `createServer` returns: `net` by default, `tls` for TLS. Accepted sockets are
- * wrapped into Web Streams-based {@link AdapterSocket} objects so that the rest
- * of the MLLP stack can work with a platform-agnostic streaming API.
+ * Implements the {@link TcpAdapter} interface over a Node.js server: a new
+ * `net.Server` by default, or the `net.Server` or `tls.Server` the caller
+ * passes. Accepted sockets are wrapped into Web Streams-based
+ * {@link AdapterSocket} objects so that the rest of the MLLP stack can work with
+ * a platform-agnostic streaming API.
  *
  * This module is internal to the `@glion/mllp` package and
  * is consumed by {@link serve} in `./serve.ts`.
@@ -14,9 +15,9 @@
 
 import { once } from "node:events";
 import type { Server, Socket } from "node:net";
-import { createServer as createNetServer } from "node:net";
+import { createServer } from "node:net";
 import { Readable } from "node:stream";
-import type { TlsOptions } from "node:tls";
+import { Server as TlsServer } from "node:tls";
 import { promisify } from "node:util";
 
 import type {
@@ -26,16 +27,6 @@ import type {
   TcpAdapter,
   TcpHandle,
 } from "../server/adapter";
-
-/**
- * Creates the listener: `net.createServer`, `tls.createServer`, or a function
- * of the same shape. Called once per `listen()` with `serverOptions` and the
- * connection listener.
- */
-export type CreateServer = (
-  options: TlsOptions,
-  connectionListener: (socket: Socket) => void
-) => Server;
 
 /**
  * Options specific to the Node.js adapter.
@@ -55,14 +46,13 @@ export interface NodeAdapterOptions {
   socketTimeout?: number;
 
   /**
-   * Creates the listener.
+   * The listener: a `net.Server`, or a `tls.Server` for TLS, created with
+   * Node's options. MUST NOT be listening yet, and MUST have no connection
+   * listener of its own. The adapter listens on it and closes it.
    *
-   * @default net.createServer
+   * @default net.createServer()
    */
-  createServer?: CreateServer;
-
-  /** Options `createServer` is called with, passed unchanged. */
-  serverOptions?: TlsOptions;
+  server?: Server;
 }
 
 /**
@@ -140,12 +130,10 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
 }
 
 /**
- * Create a Node.js {@link TcpAdapter} that can listen for TCP or TLS
- * connections using the built-in `net` and `tls` modules.
- *
- * The adapter listens with `createServer(serverOptions)`: `net.createServer`
- * unless the caller passes another, such as `tls.createServer`. A socket is
- * `secure` when it is a `tls.TLSSocket`.
+ * Create a Node.js {@link TcpAdapter} that listens on `server`: a new
+ * `net.Server` unless the caller passes one. On a `tls.Server` it takes each
+ * socket once its TLS handshake completes (`secureConnection`), and a socket
+ * is `secure` when it is a `tls.TLSSocket`.
  *
  * Each accepted socket gets the idle timeout via {@link configureSocket} and
  * is wrapped into an {@link AdapterSocket} before being handed to the
@@ -164,11 +152,7 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  * @internal
  */
 export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
-  const {
-    createServer = createNetServer,
-    serverOptions = {},
-    socketTimeout = 0,
-  } = options ?? {};
+  const { socketTimeout = 0 } = options ?? {};
 
   /**
    * Apply the idle timeout to an accepted connection: if `socketTimeout > 0`,
@@ -191,7 +175,13 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
         handler(wrapNodeSocket(socket, "encrypted" in socket));
       };
 
-      const server = createServer(serverOptions, onConnection);
+      const server = options?.server ?? createServer();
+      // A `tls.Server` emits `connection` before the handshake and
+      // `secureConnection` after it.
+      server.on(
+        server instanceof TlsServer ? "secureConnection" : "connection",
+        onConnection
+      );
 
       let resolveListening!: (value: true) => void;
       let rejectListening!: (reason: unknown) => void;

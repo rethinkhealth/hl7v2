@@ -3,7 +3,7 @@
 import type { Server } from "node:net";
 import { createServer } from "node:net";
 import { Readable } from "node:stream";
-import { createServer as createTlsServer } from "node:tls";
+import { Server as TlsServer } from "node:tls";
 
 import { nodeAdapter } from "../../src/node/adapter";
 
@@ -49,10 +49,14 @@ const mockServer = {
     done?.();
   }),
   listen: vi.fn(),
-  // Persistent listener for server-level errors. The adapter registers
-  // `on("error", ...)` to keep later errors handled; tests do not need
-  // to fire it but the mock must accept the registration.
-  on: vi.fn(() => {}),
+  // Records the adapter's `connection` listener. The adapter also
+  // registers `on("error", ...)` to keep later errors handled; tests do
+  // not need to fire it but the mock must accept the registration.
+  on: vi.fn((event: string, handler: (socket: MockSocket) => void) => {
+    if (event === "connection") {
+      connectionHandler = handler;
+    }
+  }),
   // Simulate the "listening" event firing synchronously so that the
   // listening promise resolves and tests do not hang.
   // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
@@ -75,33 +79,7 @@ const mockServer = {
     const actual = (await importOriginal()) as Record<string, unknown>;
     return {
       ...actual,
-      createServer: vi.fn(
-        (_options: unknown, handler: (socket: MockSocket) => void) => {
-          connectionHandler = handler;
-          return mockServer as unknown as Server;
-        }
-      ),
-    };
-  }
-);
-
-// oxlint-disable-next-line typescript/no-explicit-any
-(vi as any).mock(
-  import("node:tls"),
-  async (
-    importOriginal: () =>
-      | Record<string, unknown>
-      | PromiseLike<Record<string, unknown>>
-  ) => {
-    const actual = (await importOriginal()) as Record<string, unknown>;
-    return {
-      ...actual,
-      createServer: vi.fn(
-        (_options: unknown, handler: (socket: MockSocket) => void) => {
-          connectionHandler = handler;
-          return mockServer as unknown as Server;
-        }
-      ),
+      createServer: vi.fn(() => mockServer as unknown as Server),
     };
   }
 );
@@ -131,34 +109,33 @@ afterEach(() => {
 });
 
 describe("nodeAdapter", () => {
-  it("listens with net.createServer() and no options by default, and sets no timeout", () => {
+  it("listens on a new net.createServer() with no options by default, and sets no timeout", () => {
     const adapter = nodeAdapter();
     adapter.listen({ port: 2575 }, noop);
 
     const socket = createMockSocket();
     connectionHandler?.(socket);
 
-    expect(createServer).toHaveBeenLastCalledWith({}, expect.any(Function));
+    expect(createServer).toHaveBeenLastCalledWith();
     expect(socket.setTimeout).not.toHaveBeenCalled();
   });
 
-  it("calls createServer with serverOptions unchanged", () => {
-    const serverOptions = {
-      cert: "cert",
-      keepAlive: true,
-      key: "key",
-      requestCert: true,
-    };
-    const adapter = nodeAdapter({
-      createServer: createTlsServer,
-      serverOptions,
-    });
+  it("listens on the server it is given", () => {
+    vi.mocked(createServer).mockClear();
+    const adapter = nodeAdapter({ server: mockServer as unknown as Server });
     adapter.listen({ port: 2575 }, noop);
 
-    expect(createTlsServer).toHaveBeenLastCalledWith(
-      serverOptions,
-      expect.any(Function)
-    );
+    expect(createServer).not.toHaveBeenCalled();
+    expect(mockServer.listen).toHaveBeenCalledWith(2575, undefined, undefined);
+  });
+
+  it("takes a tls.Server's sockets once the handshake completes", async () => {
+    const server = new TlsServer();
+    const handle = nodeAdapter({ server }).listen({ port: 0 }, noop);
+    await handle.listening;
+
+    expect(server.listenerCount("secureConnection")).toBe(1);
+    await handle.close();
   });
 
   it("marks a TLS socket secure and a plain socket not", () => {

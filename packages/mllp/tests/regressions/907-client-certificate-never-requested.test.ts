@@ -7,8 +7,8 @@
  * Cause: Node's TLS server asks for a client certificate only when
  * `requestCert` is set, and `serve()` neither took nor passed it, so `ca` had
  * nothing to verify.
- * Resolution: `serve()` takes `createServer` and `serverOptions` and calls one
- * with the other unchanged, so `tls.createServer` gets `requestCert`.
+ * Resolution: `serve()` takes the server instance, so the caller creates a
+ * `tls.Server` with Node's options, `requestCert` among them.
  */
 
 import { once } from "node:events";
@@ -74,10 +74,11 @@ async function issue() {
   return { ca: ca.cert, client, server, stranger };
 }
 
-describe("serve() with tls.createServer and requestCert", () => {
+describe("serve() on a tls.Server with requestCert", () => {
   let pki: Awaited<ReturnType<typeof issue>>;
   let server: Server | undefined;
-  let connections = 0;
+  /** `secure` of each connection `serve()` reported, in order. */
+  const connections: boolean[] = [];
   const remotes: TLSSocket[] = [];
 
   beforeAll(async () => {
@@ -90,7 +91,7 @@ describe("serve() with tls.createServer and requestCert", () => {
     }
     await server?.close();
     server = undefined;
-    connections = 0;
+    connections.length = 0;
   });
 
   const listen = async () => {
@@ -98,17 +99,16 @@ describe("serve() with tls.createServer and requestCert", () => {
       .parser(parseHL7v2)
       .on("ADT^A01", () => ({ raw: ACK }));
     server = serve(app, {
-      createServer,
-      onConnect: () => {
-        connections += 1;
+      onConnect: (connection) => {
+        connections.push(connection.secure);
       },
       port: 0,
-      serverOptions: {
+      server: createServer({
         ca: pki.ca,
         cert: pki.server.cert,
         key: pki.server.private,
         requestCert: true,
-      },
+      }),
     });
     await server.listening;
     return server.port;
@@ -125,7 +125,7 @@ describe("serve() with tls.createServer and requestCert", () => {
     expect(error).toMatchObject({
       code: "ERR_SSL_TLSV13_ALERT_CERTIFICATE_REQUIRED",
     });
-    expect(connections).toBe(0);
+    expect(connections).toEqual([]);
   });
 
   it("disconnects a remote system whose certificate the CA did not issue", async () => {
@@ -142,7 +142,7 @@ describe("serve() with tls.createServer and requestCert", () => {
     remote.resume();
     await once(remote, "close");
 
-    expect(connections).toBe(0);
+    expect(connections).toEqual([]);
   });
 
   it("answers a remote system that presents a certificate the CA issued", async () => {
@@ -161,5 +161,6 @@ describe("serve() with tls.createServer and requestCert", () => {
     const [reply] = await once(remote, "data");
 
     expect(reply).toEqual(Buffer.from(frame(encodeBytes(ACK))));
+    expect(connections).toEqual([true]);
   });
 });
