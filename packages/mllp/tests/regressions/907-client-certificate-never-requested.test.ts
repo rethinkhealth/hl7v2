@@ -7,12 +7,12 @@
  * Cause: Node's TLS server asks for a client certificate only when
  * `requestCert` is set, and `serve()` neither took nor passed it, so `ca` had
  * nothing to verify.
- * Resolution: `serve()` takes the server instance, so the caller creates a
- * `tls.Server` with Node's options, `requestCert` among them.
+ * Resolution: `serve()` passes `tls` to `tls.createServer()` unchanged, so the
+ * caller sets Node's `requestCert` with the rest of the TLS options.
  */
 
 import { once } from "node:events";
-import { connect, createServer } from "node:tls";
+import { connect } from "node:tls";
 import type { TLSSocket } from "node:tls";
 
 import { parseHL7v2 } from "@glion/hl7v2";
@@ -74,7 +74,7 @@ async function issue() {
   return { ca: ca.cert, client, server, stranger };
 }
 
-describe("serve() on a tls.Server with requestCert", () => {
+describe("serve() with tls.requestCert", () => {
   let pki: Awaited<ReturnType<typeof issue>>;
   let server: Server | undefined;
   /** `secure` of each connection `serve()` reported, in order. */
@@ -103,12 +103,12 @@ describe("serve() on a tls.Server with requestCert", () => {
         connections.push(connection.secure);
       },
       port: 0,
-      server: createServer({
+      tls: {
         ca: pki.ca,
         cert: pki.server.cert,
         key: pki.server.private,
         requestCert: true,
-      }),
+      },
     });
     await server.listening;
     return server.port;

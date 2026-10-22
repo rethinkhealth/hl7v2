@@ -47,7 +47,6 @@
  */
 
 import { readFile } from "node:fs/promises";
-import { createServer as createTlsServer } from "node:tls";
 
 import type { ConnectionInfo, MessageInfo } from "@glion/mllp";
 import { serve } from "@glion/mllp/node";
@@ -137,19 +136,19 @@ async function main(): Promise<void> {
   // other middleware is injected before.
   app.use(createMsgTelemetry(emit), { prepend: true });
 
-  // Step 4: Read TLS certificates (if configured) into a TLS listener.
+  // Step 4: Read TLS certificates (if configured).
   // Paths are absolute (resolved by the parent's config loader).
   // Errors here produce a clear "tls-read-failed" GlionError with
   // the specific field that failed (cert, key, or ca).
-  const listener = manifest.tls
-    ? createTlsServer({
+  const tls = manifest.tls
+    ? {
         ca: manifest.tls.ca
           ? await readTlsFile(manifest.tls.ca, "tls.ca")
           : undefined,
         cert: await readTlsFile(manifest.tls.cert, "tls.cert"),
         key: await readTlsFile(manifest.tls.key, "tls.key"),
         passphrase: manifest.tls.passphrase,
-      })
+      }
     : undefined;
 
   // Step 5: Start the MLLP server.
@@ -182,8 +181,8 @@ async function main(): Promise<void> {
       });
     },
     port: manifest.port,
-    server: listener,
     socketTimeout: manifest.socketTimeout,
+    tls,
   });
 
   // Step 6: Wait for the server to bind.

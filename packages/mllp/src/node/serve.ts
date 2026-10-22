@@ -10,7 +10,7 @@
  * @module
  */
 
-import type { Server as NetServer } from "node:net";
+import type { TlsOptions } from "node:tls";
 
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
 import { CharsetError, decodeBytes, encodeBytes } from "@glion/util-charset";
@@ -109,14 +109,10 @@ export interface ServeOptions {
   socketTimeout?: number;
 
   /**
-   * The listener: a `net.Server`, or a `tls.Server` for TLS, created with
-   * Node's options. MUST NOT be listening yet, and MUST have no connection
-   * listener of its own. `serve()` listens on it, and the returned
-   * {@link Server}'s `close()` closes it.
-   *
-   * @default net.createServer()
+   * TLS for the listener, passed to `tls.createServer()` unchanged. Without
+   * it, the server listens on plain TCP.
    */
-  server?: NetServer;
+  tls?: TlsOptions;
 }
 
 /**
@@ -161,15 +157,14 @@ export interface Server {
  *   ```
  *
  * @param app - The {@link Mllp} application that will handle each message.
- * @param options - Server configuration: the listener, port, timeouts, and
- *   callbacks.
+ * @param options - Server configuration: port, TLS, timeouts, and callbacks.
  * @returns A {@link Server} handle that exposes the bound port and a `close()`
  *   method for graceful shutdown.
  */
 export function serve(app: Mllp, options: ServeOptions): Server {
   const adapter = nodeAdapter({
-    server: options.server,
     socketTimeout: options.socketTimeout,
+    tls: options.tls,
   });
 
   const lifecycle: LifecycleOptions = {

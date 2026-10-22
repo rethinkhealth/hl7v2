@@ -1,11 +1,10 @@
 /**
  * Node.js TCP/TLS adapter for the MLLP server.
  *
- * Implements the {@link TcpAdapter} interface over a Node.js server: a new
- * `net.Server` by default, or the `net.Server` or `tls.Server` the caller
- * passes. Accepted sockets are wrapped into Web Streams-based
- * {@link AdapterSocket} objects so that the rest of the MLLP stack can work with
- * a platform-agnostic streaming API.
+ * Implements the {@link TcpAdapter} interface over a Node.js `net.Server`, or a
+ * `tls.Server` when TLS options are given. Accepted sockets are wrapped into
+ * Web Streams-based {@link AdapterSocket} objects so that the rest of the MLLP
+ * stack can work with a platform-agnostic streaming API.
  *
  * This module is internal to the `@glion/mllp` package and
  * is consumed by {@link serve} in `./serve.ts`.
@@ -17,7 +16,8 @@ import { once } from "node:events";
 import type { Server, Socket } from "node:net";
 import { createServer } from "node:net";
 import { Readable } from "node:stream";
-import { Server as TlsServer } from "node:tls";
+import { createServer as createTlsServer } from "node:tls";
+import type { TlsOptions } from "node:tls";
 import { promisify } from "node:util";
 
 import type {
@@ -46,13 +46,10 @@ export interface NodeAdapterOptions {
   socketTimeout?: number;
 
   /**
-   * The listener: a `net.Server`, or a `tls.Server` for TLS, created with
-   * Node's options. MUST NOT be listening yet, and MUST have no connection
-   * listener of its own. The adapter listens on it and closes it.
-   *
-   * @default net.createServer()
+   * TLS for the listener, passed to `tls.createServer()` unchanged. Without
+   * it, the adapter listens with `net.createServer()`.
    */
-  server?: Server;
+  tls?: TlsOptions;
 }
 
 /**
@@ -130,10 +127,9 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
 }
 
 /**
- * Create a Node.js {@link TcpAdapter} that listens on `server`: a new
- * `net.Server` unless the caller passes one. On a `tls.Server` it takes each
- * socket once its TLS handshake completes (`secureConnection`), and a socket
- * is `secure` when it is a `tls.TLSSocket`.
+ * Create a Node.js {@link TcpAdapter} that listens with `tls.createServer()`
+ * when `tls` is set, and with `net.createServer()` otherwise. A TLS socket is
+ * handed on once its TLS handshake completes.
  *
  * Each accepted socket gets the idle timeout via {@link configureSocket} and
  * is wrapped into an {@link AdapterSocket} before being handed to the
@@ -152,7 +148,7 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  * @internal
  */
 export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
-  const { socketTimeout = 0 } = options ?? {};
+  const { socketTimeout = 0, tls } = options ?? {};
 
   /**
    * Apply the idle timeout to an accepted connection: if `socketTimeout > 0`,
@@ -169,19 +165,15 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
 
   return {
     listen(listenOpts: ListenOptions, handler: ConnectionHandler): TcpHandle {
+      const secure = tls !== undefined;
       const onConnection = (socket: Socket) => {
         configureSocket(socket);
-        // `encrypted` is how Node tells a `tls.TLSSocket` from a `net.Socket`.
-        handler(wrapNodeSocket(socket, "encrypted" in socket));
+        handler(wrapNodeSocket(socket, secure));
       };
 
-      const server = options?.server ?? createServer();
-      // A `tls.Server` emits `connection` before the handshake and
-      // `secureConnection` after it.
-      server.on(
-        server instanceof TlsServer ? "secureConnection" : "connection",
-        onConnection
-      );
+      const server: Server = secure
+        ? createTlsServer(tls, onConnection)
+        : createServer(onConnection);
 
       let resolveListening!: (value: true) => void;
       let rejectListening!: (reason: unknown) => void;
