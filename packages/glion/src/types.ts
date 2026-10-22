@@ -20,7 +20,5 @@ export interface ChildManifest {
     ca?: string;
     passphrase?: string;
   };
-  keepAlive?: boolean;
-  keepAliveInitialDelay?: number;
   socketTimeout?: number;
 }

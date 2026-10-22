@@ -10,7 +10,8 @@
  * @module
  */
 
-import type { TlsOptions } from "node:tls";
+import type { createServer as createNetServer, ServerOpts } from "node:net";
+import type { createServer as createTlsServer, TlsOptions } from "node:tls";
 
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
 import { CharsetError, decodeBytes, encodeBytes } from "@glion/util-charset";
@@ -56,28 +57,40 @@ export type ErrorCallback = (
   messageInfo: MessageInfo | undefined
 ) => void | Promise<void>;
 
+/** A plain TCP listener: `net.createServer`, with Node's `net` server options. */
+export interface ServeNetListener {
+  /**
+   * Creates the listener.
+   *
+   * @default net.createServer
+   */
+  createServer?: typeof createNetServer;
+  /** Options `net.createServer()` is called with, passed unchanged. */
+  serverOptions?: ServerOpts;
+}
+
+/** A TLS listener: `tls.createServer`, with Node's TLS server options. */
+export interface ServeTlsListener {
+  /** Creates the listener. */
+  createServer: typeof createTlsServer;
+  /** Options `tls.createServer()` is called with, passed unchanged. */
+  serverOptions?: TlsOptions;
+}
+
 /**
- * Options for starting an MLLP server with {@link serve}.
+ * Options for starting an MLLP server with {@link serve}: the listener, and
+ * how the server binds and reports connections.
  */
-export interface ServeOptions {
+export type ServeOptions = ServeCommonOptions &
+  (ServeNetListener | ServeTlsListener);
+
+/** The options {@link serve} takes whatever creates the listener. */
+export interface ServeCommonOptions {
   /**
    * The hostname or IP address to bind the server to.
    * When omitted the OS will bind to all available interfaces (`0.0.0.0`).
    */
   hostname?: string;
-
-  /**
-   * Whether to enable TCP keep-alive on accepted sockets.
-   * Defaults to the adapter default (`true`).
-   */
-  keepAlive?: boolean;
-
-  /**
-   * The initial delay in milliseconds before the first TCP keep-alive probe
-   * is sent on an idle socket. Only meaningful when `keepAlive` is `true`.
-   * Defaults to the adapter default (`60 000`).
-   */
-  keepAliveInitialDelay?: number;
 
   /**
    * Called when a new TCP connection is accepted. Receives the connection
@@ -120,13 +133,6 @@ export interface ServeOptions {
    * to disable the timeout.
    */
   socketTimeout?: number;
-
-  /**
-   * TLS for the listener, passed to Node's `tls.createServer()` unchanged.
-   * Plain TCP when `undefined`. Its `keepAlive` and `keepAliveInitialDelay`
-   * replace the options above, and its `noDelay` replaces the default `true`.
-   */
-  tls?: TlsOptions;
 }
 
 /**
@@ -171,16 +177,16 @@ export interface Server {
  *   ```
  *
  * @param app - The {@link Mllp} application that will handle each message.
- * @param options - Server configuration (port, TLS, timeouts, etc.).
+ * @param options - Server configuration: the listener, port, timeouts, and
+ *   callbacks.
  * @returns A {@link Server} handle that exposes the bound port and a `close()`
  *   method for graceful shutdown.
  */
 export function serve(app: Mllp, options: ServeOptions): Server {
   const adapter = nodeAdapter({
-    keepAlive: options.keepAlive,
-    keepAliveInitialDelay: options.keepAliveInitialDelay,
+    createServer: options.createServer,
+    serverOptions: options.serverOptions,
     socketTimeout: options.socketTimeout,
-    tls: options.tls,
   });
 
   const lifecycle: LifecycleOptions = {

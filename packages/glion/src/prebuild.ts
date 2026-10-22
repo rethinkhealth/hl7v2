@@ -91,8 +91,6 @@ export async function prepareChild(
     compiledEntry,
     entry: config.entry,
     hostname,
-    keepAlive: config.keepAlive,
-    keepAliveInitialDelay: config.keepAliveInitialDelay,
     port: config.port,
     socketTimeout: config.socketTimeout,
     tls: config.tls,

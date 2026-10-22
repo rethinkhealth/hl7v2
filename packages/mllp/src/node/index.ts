@@ -17,5 +17,8 @@ export type {
   ConnectionCallback,
   ErrorCallback,
   Server,
+  ServeCommonOptions,
+  ServeNetListener,
   ServeOptions,
+  ServeTlsListener,
 } from "./serve";

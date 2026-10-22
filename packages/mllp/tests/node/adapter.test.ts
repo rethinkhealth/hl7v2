@@ -131,36 +131,45 @@ afterEach(() => {
 });
 
 describe("nodeAdapter", () => {
-  it("listens with keep-alive after 60000 ms and Nagle off by default, and sets no timeout", () => {
+  it("listens with net.createServer() and no options by default, and sets no timeout", () => {
     const adapter = nodeAdapter();
     adapter.listen({ port: 2575 }, noop);
 
     const socket = createMockSocket();
     connectionHandler?.(socket);
 
-    expect(createServer).toHaveBeenLastCalledWith(
-      { keepAlive: true, keepAliveInitialDelay: 60_000, noDelay: true },
-      expect.any(Function)
-    );
+    expect(createServer).toHaveBeenLastCalledWith({}, expect.any(Function));
     expect(socket.setTimeout).not.toHaveBeenCalled();
   });
 
-  it("lets tls replace keepAlive, keepAliveInitialDelay, and noDelay", () => {
+  it("calls createServer with serverOptions unchanged", () => {
+    const serverOptions = {
+      cert: "cert",
+      keepAlive: true,
+      key: "key",
+      requestCert: true,
+    };
     const adapter = nodeAdapter({
-      tls: { cert: "cert", keepAlive: false, key: "key", noDelay: false },
+      createServer: createTlsServer,
+      serverOptions,
     });
     adapter.listen({ port: 2575 }, noop);
 
     expect(createTlsServer).toHaveBeenLastCalledWith(
-      {
-        cert: "cert",
-        keepAlive: false,
-        keepAliveInitialDelay: 60_000,
-        key: "key",
-        noDelay: false,
-      },
+      serverOptions,
       expect.any(Function)
     );
+  });
+
+  it("marks a TLS socket secure and a plain socket not", () => {
+    const accepted: boolean[] = [];
+    const adapter = nodeAdapter();
+    adapter.listen({ port: 2575 }, (socket) => accepted.push(socket.secure));
+
+    connectionHandler?.(Object.assign(createMockSocket(), { encrypted: true }));
+    connectionHandler?.(createMockSocket());
+
+    expect(accepted).toEqual([true, false]);
   });
 
   it("calls setTimeout when socketTimeout option is provided", () => {
@@ -183,16 +192,6 @@ describe("nodeAdapter", () => {
     expect(socket.destroy).not.toHaveBeenCalled();
     socket.emit("timeout");
     expect(socket.destroy).toHaveBeenCalled();
-  });
-
-  it("listens without keep-alive when keepAlive is false", () => {
-    const adapter = nodeAdapter({ keepAlive: false });
-    adapter.listen({ port: 2575 }, noop);
-
-    expect(createServer).toHaveBeenLastCalledWith(
-      { keepAlive: false, keepAliveInitialDelay: 60_000, noDelay: true },
-      expect.any(Function)
-    );
   });
 
   it("handle.port returns correct port and handle.close() resolves", async () => {
