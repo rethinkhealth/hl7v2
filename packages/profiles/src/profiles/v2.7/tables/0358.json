@@ -1,11 +1,7 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0358",
   "description": "Practitioner Group",
   "type": "user",
-  "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values defined"
-    }
-  ]
+  "codes": []
 }

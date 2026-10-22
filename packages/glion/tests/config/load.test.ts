@@ -34,7 +34,7 @@ describe("loadConfig — discovery and loading", () => {
     const resolved = await loadConfig({ cacheDir, cwd: dir });
     expect(resolved.entry).toBe(resolve(dir, "src", "app.ts"));
     expect(resolved.port).toBe(2600);
-    expect(resolved.hostname).toBe("0.0.0.0");
+    expect(resolved.hostname).toBeUndefined();
     expect(resolved.gracefulCloseMs).toBe(5000);
   });
 
@@ -48,7 +48,7 @@ describe("loadConfig — discovery and loading", () => {
     });
   });
 
-  it("surfaces every validation issue in the error message, not just the first", async () => {
+  it("names every invalid field in the hint, not just the first", async () => {
     // Three concurrent problems: missing required `entry`, wrong type
     // for `port`, and an unknown field. Zod returns all three in one
     // pass — the loader must format all three so users don't have to
@@ -63,10 +63,14 @@ describe("loadConfig — discovery and loading", () => {
     } catch (error) {
       expect(error).toBeInstanceOf(GlionError);
       const err = error as GlionError;
-      // All three fields must be mentioned in the human-readable message.
-      expect(err.message).toContain("entry");
-      expect(err.message).toContain("port");
-      expect(err.message).toContain("unknownField");
+      // The message states the fact; the fields the user has to fix are the
+      // hint, so all three must be there.
+      expect(err.message).toBe(
+        `The config file \`${join(dir, "glion.config.ts")}\` has options that are not valid.`
+      );
+      expect(err.hint).toContain("entry");
+      expect(err.hint).toContain("port");
+      expect(err.hint).toContain("unknownField");
       // And the structured context must carry every issue, not just one.
       const ctxIssues = (err.context as { issues: unknown[] }).issues;
       expect(ctxIssues.length).toBeGreaterThanOrEqual(3);
@@ -181,9 +185,43 @@ describe("loadConfig — discovery and loading", () => {
     }
   });
 
-  it("throws GlionError('config-not-found') when no config file exists", async () => {
-    await expect(loadConfig({ cacheDir, cwd: dir })).rejects.toMatchObject({
+  it("runs on the defaults when no config file exists", async () => {
+    await writeFile(join(dir, "glion.app.ts"), "export default {};");
+
+    const config = await loadConfig({ cacheDir, cwd: dir });
+
+    expect(config).toMatchObject({
+      entry: join(dir, "glion.app.ts"),
+      port: 2575,
+    });
+    // No bind address: `dev` and `start` each resolve their own.
+    expect(config.hostname).toBeUndefined();
+  });
+
+  it("names the conventional entry even when the project has none yet", async () => {
+    const config = await loadConfig({ cacheDir, cwd: dir });
+
+    expect(config).toMatchObject({
+      entry: join(dir, "glion.app.ts"),
+      port: 2575,
+    });
+  });
+
+  it("prefers src/glion.app.ts when the root has no app file", async () => {
+    await mkdir(join(dir, "src"));
+    await writeFile(join(dir, "src", "glion.app.ts"), "export default {};");
+
+    const config = await loadConfig({ cacheDir, cwd: dir });
+
+    expect(config.entry).toBe(join(dir, "src", "glion.app.ts"));
+  });
+
+  it("throws GlionError('config-not-found') when --config names a file that is not there", async () => {
+    await expect(
+      loadConfig({ cacheDir, cwd: dir, explicitPath: join(dir, "nope.ts") })
+    ).rejects.toMatchObject({
       kind: "config-not-found",
+      message: `No glion config file at \`${join(dir, "nope.ts")}\`.`,
     });
   });
 });
@@ -223,19 +261,39 @@ describe("loadConfig — path resolution", () => {
     expect(resolved.watch).toEqual([resolve(dir, "src")]);
   });
 
-  it("defaults hostname to 127.0.0.1 in dev mode and 0.0.0.0 in start mode", async () => {
-    await mkdir(join(dir, "src"));
-    await writeFile(join(dir, "src", "app.ts"), "export default {};");
+  it("leaves hostname absent when the config does not name one", async () => {
     await writeFile(
       join(dir, "glion.config.ts"),
-      `export default { entry: "./src/app.ts" };`
+      `export default { entry: "./a.ts" };`
     );
 
-    const dev = await loadConfig({ cacheDir, cwd: dir, mode: "dev" });
-    expect(dev.hostname).toBe("127.0.0.1");
+    const config = await loadConfig({ cacheDir, cwd: dir });
 
-    const start = await loadConfig({ cacheDir, cwd: dir, mode: "start" });
-    expect(start.hostname).toBe("0.0.0.0");
+    // Which address to bind is the binding command's decision, not the
+    // schema's, so the config says nothing when the project says nothing.
+    expect(config.hostname).toBeUndefined();
+  });
+
+  it("keeps an empty hostname, which Node reads as every interface", async () => {
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./a.ts", hostname: "" };`
+    );
+
+    const config = await loadConfig({ cacheDir, cwd: dir });
+
+    expect(config.hostname).toBe("");
+  });
+
+  it("keeps the hostname the config names", async () => {
+    await writeFile(
+      join(dir, "glion.config.ts"),
+      `export default { entry: "./a.ts", hostname: "10.0.0.5" };`
+    );
+
+    const config = await loadConfig({ cacheDir, cwd: dir });
+
+    expect(config.hostname).toBe("10.0.0.5");
   });
 
   it("sanitizes zod issue context to exclude raw user input", async () => {
@@ -261,9 +319,12 @@ describe("loadConfig — path resolution", () => {
       `throw new Error("ancestor config was loaded");`
     );
 
-    await expect(loadConfig({ cacheDir, cwd: project })).rejects.toMatchObject({
-      kind: "config-not-found",
-    });
+    // The ancestor config throws when imported, so reaching the defaults
+    // instead proves it was never discovered.
+    const config = await loadConfig({ cacheDir, cwd: project });
+
+    expect(config.configPath).toBe(join(project, "glion.config.ts"));
+    expect(config.entry).toBe(join(project, "glion.app.ts"));
   });
 });
 

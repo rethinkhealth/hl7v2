@@ -1,6 +1,7 @@
 import type { Delimiters, Root, Segment } from "@glion/ast";
 import { f, m, s } from "@glion/builder";
 import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
+import { EscapeSequenceError } from "@glion/utils";
 import { unified } from "unified";
 
 import { hl7v2EncodeEscapes } from "../src/index";
@@ -81,6 +82,23 @@ describe("hl7v2EncodeEscapes plugin", () => {
     expect(subValue(results)).toBe("a\\F\\b\\S\\c\\R\\d\\T\\e");
   });
 
+  it("writes a character whose escape code is a delimiter as a hexadecimal escape", async () => {
+    const tree = m(s("PID", f("a\\b")));
+    const results = await unified()
+      .use(hl7v2EncodeEscapes, { delimiters: { component: "E" } })
+      .run(tree);
+    expect(subValue(results)).toBe("a\\X5C\\b");
+  });
+
+  it("rejects a value no escape sequence can write with the delimiters", async () => {
+    const tree = m(s("PID", f("aSb")));
+    await expect(
+      unified()
+        .use(hl7v2EncodeEscapes, { delimiters: { component: "S", field: "X" } })
+        .run(tree)
+    ).rejects.toThrow(EscapeSequenceError);
+  });
+
   it("round-trips with decode: encode then decode restores original", async () => {
     const original = "Patient allergic to |Peanuts| and \rSevere reaction";
     const tree = m(s("PID", f(original)));
@@ -118,6 +136,40 @@ describe("hl7v2EncodeEscapes plugin", () => {
         ? pid.children[0]?.children[0]?.children[0]?.children[0]?.value
         : undefined;
     expect(value).toBe("before\\F\\after");
+  });
+
+  it("writes a formatting command as it is", async () => {
+    const tree = m(s("PID", f("\\H\\a|b\\N\\ \\.sp 2\\c")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("\\H\\a\\F\\b\\N\\ \\.sp 2\\c");
+  });
+
+  it("writes a locally defined sequence and a character set switch as they are", async () => {
+    const tree = m(s("PID", f("\\Zsite 7\\a|b\\C2842\\c\\M2442\\d")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBe("\\Zsite 7\\a\\F\\b\\C2842\\c\\M2442\\d");
+  });
+
+  it("leaves a subcomponent without a value as it is", async () => {
+    const tree = m(s("PID", f("x")));
+    const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
+      ?.children[0]?.children[0];
+    Object.assign(subcomponent ?? {}, { value: undefined });
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    expect(subValue(results)).toBeUndefined();
+  });
+
+  it("rewrites subcomponents only", async () => {
+    const tree = m(s("PID", f("a|b")));
+    const results = await unified().use(hl7v2EncodeEscapes).run(tree);
+    const segment = results.children[0] as Segment;
+    expect(segment).not.toHaveProperty("value");
+    expect(segment.children[0]).not.toHaveProperty("value");
+    expect(segment.children[0]?.children[0]).not.toHaveProperty("value");
+    expect(segment.children[0]?.children[0]?.children[0]).not.toHaveProperty(
+      "value"
+    );
+    expect(subValue(results)).toBe("a\\F\\b");
   });
 
   it("does not double-encode already-escaped values", async () => {

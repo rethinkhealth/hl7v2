@@ -1,5 +1,124 @@
 # @glion/mllp-client
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56), [`e2fb937`](https://github.com/rethinkhealth/glion/commit/e2fb9376aaba5e132a20091cfac91bc8b4f88ba9)]:
+  - @glion/to-hl7v2@0.29.0
+  - @glion/parser@0.29.0
+  - @glion/util-query@0.29.0
+  - @glion/ack@0.29.0
+  - @glion/ast@0.29.0
+  - @glion/mllp-codec@0.29.0
+  - @glion/util-charset@0.29.0
+
+## 0.28.0
+
+### Minor Changes
+
+- [#1001](https://github.com/rethinkhealth/glion/pull/1001) [`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: decode HL7v2 escape sequences while parsing and encode them while serializing, so a subcomponent `value` is always the content and a parsed message writes back as the same text.
+
+  - `hl7v2Parser` decodes `\F\`, `\S\`, `\R\`, `\T\`, `\E\`, `\.br\`, and `\Xdd\` in every value as it tokenizes, leaving MSH-2 as it is; pass `decodeEscapes: false` to keep the wire form in the tree
+  - A formatting command (`\H\`, `\N\`, `\.sp 2\`, …), a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) stay in the value as written and are written back as they are; `hl7v2DecodeEscapes` no longer removes `\H\` and `\N\`
+  - `hl7v2ToHl7v2` and `toHl7v2` write delimiters, the escape character, the segment delimiter, and other control characters in a value as escape sequences, leaving MSH-1 and MSH-2 as they are; pass `encodeEscapes: false` to write values as they are
+  - `parseHL7v2` from `@glion/hl7v2` no longer runs `hl7v2DecodeEscapes`; its output is unchanged
+  - Add `decodeEscapes(value, delimiters)` and `encodeEscapes(value, delimiters)` to `@glion/utils`
+  - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` are for trees handled with those options off; a parsed tree must not be decoded again
+  - `hl7v2EncodeEscapes` now writes a control character other than the segment delimiter as `\Xdd\`
+  - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` leave a subcomponent without a value as it is
+  - `MllpClient` and `glion send` send a message whose value holds a control character, written as `\Xdd\`, instead of rejecting it with `INVALID_MESSAGE`
+  - The bytes of a `\Xdd…\` are decoded as UTF-8; a sequence whose bytes are not UTF-8, or that has an odd number of digits, stays as written
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/parser@0.28.0
+  - @glion/to-hl7v2@0.28.0
+  - @glion/util-query@0.28.0
+  - @glion/ack@0.28.0
+  - @glion/ast@0.28.0
+  - @glion/mllp-codec@0.28.0
+  - @glion/util-charset@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ack@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/mllp-codec@0.27.1
+  - @glion/parser@0.27.1
+  - @glion/to-hl7v2@0.27.1
+  - @glion/util-charset@0.27.1
+  - @glion/util-query@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies [[`d702f6a`](https://github.com/rethinkhealth/glion/commit/d702f6a31ff95af55b3850e18d1d3f13f3accce7), [`799a57c`](https://github.com/rethinkhealth/glion/commit/799a57c8dd6bab65c3c655cef2515be4c0eb45d0), [`3dfa36e`](https://github.com/rethinkhealth/glion/commit/3dfa36e5ba03ad7bfe4ce037cc1bd12c53d42a1d), [`ac05055`](https://github.com/rethinkhealth/glion/commit/ac05055ab3348054d3c98429e53e7c105a82c02f), [`58c6ab6`](https://github.com/rethinkhealth/glion/commit/58c6ab6b4052d68c3361a9aa56c4057f7b034728), [`34d8e21`](https://github.com/rethinkhealth/glion/commit/34d8e217a9655cee2fdf42202ed58168c3ed72ed)]:
+  - @glion/util-query@0.27.0
+  - @glion/to-hl7v2@0.27.0
+  - @glion/ack@0.27.0
+  - @glion/ast@0.27.0
+  - @glion/mllp-codec@0.27.0
+  - @glion/parser@0.27.0
+  - @glion/util-charset@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ack@0.26.0
+  - @glion/ast@0.26.0
+  - @glion/mllp-codec@0.26.0
+  - @glion/parser@0.26.0
+  - @glion/to-hl7v2@0.26.0
+  - @glion/util-charset@0.26.0
+  - @glion/util-query@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ack@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/mllp-codec@0.25.0
+  - @glion/parser@0.25.0
+  - @glion/to-hl7v2@0.25.0
+  - @glion/util-charset@0.25.0
+  - @glion/util-query@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/parser@0.24.0
+  - @glion/to-hl7v2@0.24.0
+  - @glion/util-query@0.24.0
+  - @glion/ack@0.24.0
+  - @glion/ast@0.24.0
+  - @glion/mllp-codec@0.24.0
+  - @glion/util-charset@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ack@0.23.0
+  - @glion/ast@0.23.0
+  - @glion/mllp-codec@0.23.0
+  - @glion/parser@0.23.0
+  - @glion/to-hl7v2@0.23.0
+  - @glion/util-charset@0.23.0
+  - @glion/util-query@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

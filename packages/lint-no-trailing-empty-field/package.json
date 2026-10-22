@@ -1,6 +1,6 @@
 {
   "name": "@glion/lint-no-trailing-empty-field",
-  "version": "0.22.0",
+  "version": "0.29.0",
   "description": "hl7v2-lint rule to warn when an empty field (or more) is/are present at the end of a segment",
   "keywords": [
     "definition",
@@ -39,10 +39,11 @@
     "build": "tsdown && tsc --emitDeclarationOnly",
     "check-types": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
     "check:readme": "glion-check-readme",
+    "mutate": "stryker run",
+    "publint": "publint --strict",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest",
-    "publint": "publint --strict"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@glion/utils": "workspace:*",
@@ -55,8 +56,11 @@
     "@glion/ast": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
+    "@glion/parser": "workspace:*",
     "@glion/testing": "workspace:*",
     "@glion/tsconfig": "workspace:*",
+    "@stryker-mutator/core": "10.0.0",
+    "@stryker-mutator/vitest-runner": "10.0.0",
     "@types/node": "25.6.0",
     "@types/pluralize": "^0.0.33",
     "@types/unist": "^3.0.3",

@@ -1,5 +1,100 @@
 # @rethinkhealth/hl7v2-lint-profile-field-max-length
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56)]:
+  - @glion/utils@0.29.0
+  - @glion/annotate-profile-fields@0.29.0
+  - @glion/util-visit@0.29.0
+  - @glion/ast@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/utils@0.28.0
+  - @glion/annotate-profile-fields@0.28.0
+  - @glion/util-visit@0.28.0
+  - @glion/ast@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/util-visit@0.27.1
+  - @glion/annotate-profile-fields@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#987](https://github.com/rethinkhealth/glion/pull/987) [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d) Thanks [@meleksomai](https://github.com/meleksomai)! - Lint findings describe the node they are placed on, never name it, and never contain content from the message (ADR 0030). ``Field `PID-5` (Patient Name) is 300 characters long; it allows at most 250.`` is now `The value is 300 characters long; the field allows at most 250.` The finding's `place` and `ancestors` locate the node, and `actual` carries the content. Findings about a field, component, or segment the message does not contain still name it from the profile or event schema. The `ruleId` of every finding is unchanged; only the text changes.
+
+  - No value, part of a value, version, or Segment ID from the message appears in a finding's text: `lint-profile-withdrawn`, `lint-profile-backward-compatible`, `lint-profile-table-values`, `lint-profile-timestamps`, `lint-message-version`, `lint-required-message-header`, and `lint-segment-header-length` describe the content instead (`The day is past the end of its month; …`, `The Segment ID is 4 characters long; …`).
+  - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group.
+  - `lint-no-trailing-empty-field` and `lint-required-message-header` report a segment with an empty Segment ID with the same message as any other.
+  - `lint-profile-field-max-length`, `lint-profile-field-repetition`, `lint-profile-extra-components`, `lint-profile-withdrawn`, and `lint-profile-backward-compatible` check an element whose data has no `id`, such as one a site's own annotator sets.
+  - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
+
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e), [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/annotate-profile-fields@0.27.0
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-fields@0.26.0
+  - @glion/ast@0.26.0
+  - @glion/util-visit@0.26.0
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-fields@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-field-repetition` reports a field with more repetitions than its RP/# allows, whatever that number is. It used to check only fields that do not repeat, so a field with a limit such as 2 (v2.6 `OBR-17`) or 10 (v2.6 `ERR-6`) was never reported. The report reads ``Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.``, with the number of repetitions in `actual`.
+
+  `@glion/lint-profile-field-max-length` reports ``Field `MSH-10` (Message Control ID) is 28 characters long; it allows at most 20 characters.``, with the length in `actual`.
+
+  **Breaking:** both rules read `repetitions` and `maxLength` from `field.data`, so `@glion/annotate-profile-fields` must run before them. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses either rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`. Through the preset, `parseHL7v2` from `@glion/hl7v2` now reports a field over a numeric repetition limit greater than one.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/annotate-profile-fields@0.24.0
+  - @glion/utils@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b)]:
+  - @glion/util-visit@0.23.0
+  - @glion/ast@0.23.0
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

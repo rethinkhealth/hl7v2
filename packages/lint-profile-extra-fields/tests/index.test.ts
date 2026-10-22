@@ -39,7 +39,7 @@ describe("hl7v2LintExtraFields", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("warns when PID has fields beyond max sequence (v2.5.1 PID has 39 fields)", async () => {
+  it("reports a segment with more fields than its profile defines (v2.5.1 PID has 39 fields)", async () => {
     // Build a PID with 41 fields (fields 40 and 41 are beyond the max)
     const fields = [];
     for (let i = 1; i <= 41; i++) {
@@ -54,11 +54,11 @@ describe("hl7v2LintExtraFields", () => {
       .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
-    expect(errors).toHaveLength(2);
-    expect(errors[0]?.message).toContain("PID-40");
-    expect(errors[0]?.message).toContain("max: 39");
-    expect(errors[0]?.message).toContain("v2.5.1");
-    expect(errors[1]?.message).toContain("PID-41");
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.message).toBe(
+      "The segment has 41 fields; it allows at most 39 fields."
+    );
+    expect(errors[0]?.actual).toBe("41");
     expect(errors[0]?.source).toBe("hl7v2-lint");
   });
 
@@ -110,7 +110,7 @@ describe("hl7v2LintExtraFields", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("warns when MSH has fields beyond its max", async () => {
+  it("reports MSH once, however many fields it has beyond its last", async () => {
     // MSH with extra fields beyond the defined max
     const tree = m(
       s(
@@ -148,10 +148,40 @@ describe("hl7v2LintExtraFields", () => {
       .run(tree, file);
 
     const errors = file.messages.filter((msg) => msg.ruleId === "extra-fields");
-    expect(errors).toHaveLength(2);
-    for (const error of errors) {
-      expect(error.message).toContain("MSH");
-      expect(error.message).toContain("beyond the defined fields");
+    expect(errors).toHaveLength(1);
+    expect(errors[0]?.message).toBe(
+      "The segment has 23 fields; it allows at most 21 fields."
+    );
+    expect(errors[0]?.actual).toBe("23");
+  });
+
+  it("points a finding at the segment with extra fields", async () => {
+    const fields = [];
+    for (let i = 1; i <= 41; i++) {
+      fields.push(f(`val${i}`));
     }
+    const pid = s("PID", ...fields);
+    pid.position = {
+      end: { column: 250, line: 2, offset: 343 },
+      start: { column: 1, line: 2, offset: 94 },
+    };
+    const tree = m(msh("2.5.1"), pid);
+    const file = new VFile();
+
+    await unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2LintExtraFields)
+      .run(tree, file);
+
+    const [message] = file.messages;
+    expect(message?.place).toStrictEqual({
+      end: { column: 250, line: 2, offset: 343 },
+      start: { column: 1, line: 2, offset: 94 },
+    });
+    expect(message?.ancestors?.map((node) => node.type)).toStrictEqual([
+      "root",
+      "segment",
+    ]);
+    expect(message?.ancestors?.at(-1)).toBe(pid);
   });
 });

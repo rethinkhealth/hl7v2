@@ -7,13 +7,17 @@
  * an early return. A bench suite must fail loudly here, not measure nothing.
  */
 import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
+import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import { hl7v2AnnotateProfileTables } from "@glion/annotate-profile-tables";
 import { MllpClient } from "@glion/mllp-client";
 import { frame, unframe } from "@glion/mllp-codec";
 import { parseHL7v2 } from "@glion/parser";
 import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
-import { profiles, runner } from "@glion/profiles";
+import { profiles, repair, runner } from "@glion/profiles";
 import { hl7v2TransformProfileGroups } from "@glion/transform-profile-groups";
+import { select, selectAll, value } from "@glion/util-query";
+import { SKIP, visit } from "@glion/util-visit";
 import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
@@ -25,15 +29,52 @@ import {
   hl7File,
   ADT_A01_MINIMAL,
   ORU_R01_LARGE,
+  ORU_R01_HEADER,
   ORU_R01_MEDIUM,
   obxCodedLine,
+  obxEscapedLine,
+  oruObx,
+  repeat,
 } from "./fixtures/messages";
 import { source } from "./fixtures/streams";
 
 describe("canary — suites measure real work", () => {
+  it("visit: the ORU^R01 fixture has 205 segments and their fields", () => {
+    const tree = parseHL7v2(hl7(...ORU_R01_HEADER, ...repeat(oruObx, 200)));
+    let segments = 0;
+    let fields = 0;
+    visit(tree, "segment", (segment) => {
+      segments += 1;
+      visit(segment, "field", () => {
+        fields += 1;
+        return SKIP;
+      });
+      return SKIP;
+    });
+    expect(segments).toBe(205);
+    expect(fields).toBeGreaterThan(segments);
+  });
+
+  it("query: the 5,000-OBX ORU^R01 fixture answers every lookup", () => {
+    const tree = parseHL7v2(hl7(...ORU_R01_HEADER, ...repeat(oruObx, 5000)));
+    expect(value(tree, "MSH.12")?.value).toBe("2.5.1");
+    expect(select(tree, "OBX.5")).not.toBeNull();
+    expect(selectAll(tree, "OBX")).toHaveLength(5000);
+  });
+
   it("parser: ADT_A01_SMALL parses to 3 segments", () => {
     const tree = parseHL7v2(ADT_A01_SMALL);
     expect(tree.children).toHaveLength(3);
+  });
+
+  it("parser: the escaped ORU^R01 fixture decodes its escape sequences while parsing", () => {
+    const tree = parseHL7v2(
+      hl7(...ORU_R01_HEADER, ...repeat(obxEscapedLine, 200))
+    );
+    expect(tree.children).toHaveLength(205);
+    expect(value(tree, "OBX.5")?.value).toBe(
+      "Result 1 holds | and ^ and ~ and & and \\ chars"
+    );
   });
 
   it("profiles-runner: ORU_R01 fixtures match and group into ORDER_OBSERVATION", async () => {
@@ -48,6 +89,23 @@ describe("canary — suites measure real work", () => {
       const result = runner(schema, segmentIds);
       expect(result.type).toBe("matched");
       expect(JSON.stringify(result)).toContain('"id":"ORDER_OBSERVATION"');
+    }
+  });
+
+  it("profiles-repair: ORU_R01 fixtures without their first OBR repair with one missing OBR", async () => {
+    const schema = await profiles.events.load("2.5.1", "ORU_R01");
+    if (!schema) {
+      throw new Error("ORU_R01 is not bundled in 2.5.1");
+    }
+    for (const message of [ORU_R01_MEDIUM, ORU_R01_LARGE]) {
+      const segmentIds = parseHL7v2(message).children.map((node) =>
+        node.type === "segment" ? node.name : ""
+      );
+      const input = segmentIds.toSpliced(segmentIds.indexOf("OBR"), 1);
+      const edits = repair(schema, input);
+      expect(edits).toEqual([
+        expect.objectContaining({ segment: "OBR", type: "missing" }),
+      ]);
     }
   });
 
@@ -84,6 +142,17 @@ describe("canary — suites measure real work", () => {
     expect(annotated).toBe(true);
   });
 
+  it("annotate-profile: primitive values get their table entry", async () => {
+    const processor = unified()
+      .use(hl7v2AnnotateProfileContext)
+      .use(hl7v2AnnotateProfileFields)
+      .use(hl7v2AnnotateProfileDatatypes)
+      .use(hl7v2AnnotateProfileTables);
+    const tree = parseHL7v2(hl7(hl7File("adt-a01-coded"), obxCodedLine(1)));
+    await processor.run(tree, new VFile());
+    expect(JSON.stringify(tree)).toContain('"tableValue"');
+  });
+
   it("mllp-codec: frame → unframe round-trips the payload", async () => {
     const payload = new TextEncoder().encode(ADT_A01_MINIMAL);
     const reader = source([frame(payload)])
@@ -91,11 +160,11 @@ describe("canary — suites measure real work", () => {
       .getReader();
     const payloads: Uint8Array[] = [];
     while (true) {
-      const { done, value } = await reader.read();
+      const { done, value: chunk } = await reader.read();
       if (done) {
         break;
       }
-      payloads.push(value);
+      payloads.push(chunk);
     }
     expect(payloads).toHaveLength(1);
     expect(payloads[0]).toEqual(payload);

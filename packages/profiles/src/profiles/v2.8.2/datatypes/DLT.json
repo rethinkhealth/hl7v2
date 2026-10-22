@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "DLT",
   "version": "2.8.2",
   "kind": "composite",
@@ -7,26 +8,27 @@
     {
       "sequence": 1,
       "name": "Normal Range",
-      "datatypeId": "NR",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NR"
     },
     {
       "sequence": 2,
       "name": "Numeric Threshold",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "Change Computation",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70523"
     },
     {
       "sequence": 4,
       "name": "Days Retained",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     }
   ]
 }

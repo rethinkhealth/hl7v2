@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "EIP",
   "version": "2.4",
   "kind": "composite",
@@ -7,14 +8,12 @@
     {
       "sequence": 1,
       "name": "parent´s placer order number",
-      "datatypeId": "EI",
-      "required": false
+      "datatypeId": "EI"
     },
     {
       "sequence": 2,
       "name": "parent´s filler order number",
-      "datatypeId": "EI",
-      "required": false
+      "datatypeId": "EI"
     }
   ]
 }

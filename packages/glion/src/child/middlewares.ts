@@ -17,16 +17,18 @@
  *
  * ## ACK parsing
  *
- * HL7v2 acknowledgments contain an MSA segment with a two-letter
- * code: AA (accepted), AE (error), AR (rejected). The code is
- * extracted from the response's raw HL7v2 text via regex — no full
- * parse needed since MSA is always near the top of the ACK message.
- * Returns null for responses that don't follow the standard ACK
- * structure (custom responses, missing MSA).
+ * HL7v2 acknowledgments carry MSA-1, an HL7v2 Table 0008 code:
+ * AA/AE/AR at the application level, CA/CE/CR at the commit level.
+ * The code is extracted from the response's raw HL7v2 text via
+ * regex — no full parse needed since MSA is always near the top of
+ * the ACK message. Returns null for responses that don't follow the
+ * standard ACK structure (custom responses, missing MSA).
  */
 
 import { performance } from "node:perf_hooks";
 
+import { isAckCode } from "@glion/ack";
+import type { AckCode } from "@glion/ack";
 import type { Context, Middleware, Response } from "@glion/mllp";
 
 import type { PartialEvent } from "../events";
@@ -59,24 +61,19 @@ export function createMsgTelemetry(
 
 // ── ACK parsing ──────────────────────────────────────────────────
 
-/**
- * Extracts the ACK code (AA, AE, AR) from an HL7v2 ACK response.
- *
- * HL7v2 segments are separated by `\r`. The MSA segment contains
- * the acknowledgment code in its first field: `MSA|AA|...`. The
- * regex matches MSA at the start of a segment (after `\r` or at
- * position 0) and captures the two-letter code.
- */
-const MSA_PATTERN = /(?:^|\r)MSA\|([A-Z]{2})\|/;
+// MSH-1, the character after `MSH`, is the field separator; the
+// backreference `\1` reuses it to find MSA-1 in the segment that starts
+// with `MSA` after a `\r`:
+//
+//   MSH|^~\&|...\rMSA|CA|MSG001  →  CA
+//   MSH#|~\&#...\rMSA#CA#MSG001  →  CA
+const MSA_PATTERN = /^MSH(.).*?\rMSA\1([A-Z]{2})\1/s;
 
-function parseAckCode(raw: string | undefined): "AA" | "AE" | "AR" | null {
+/** MSA-1 of the reply in `raw`, or `null` when it holds no Table 0008 code. */
+function parseAckCode(raw: string | undefined): AckCode | null {
   if (!raw) {
     return null;
   }
-  const match = MSA_PATTERN.exec(raw);
-  const code = match?.[1];
-  if (code === "AA" || code === "AE" || code === "AR") {
-    return code;
-  }
-  return null;
+  const code = MSA_PATTERN.exec(raw)?.[2];
+  return code !== undefined && isAckCode(code) ? code : null;
 }

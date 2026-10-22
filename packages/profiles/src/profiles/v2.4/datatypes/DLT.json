@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "DLT",
   "version": "2.4",
   "kind": "composite",
@@ -7,26 +8,22 @@
     {
       "sequence": 1,
       "name": "Range",
-      "datatypeId": "NR",
-      "required": false
+      "datatypeId": "NR"
     },
     {
       "sequence": 2,
       "name": "numeric threshold",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "change computation",
-      "datatypeId": "ST",
-      "required": false
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "length of time-days",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

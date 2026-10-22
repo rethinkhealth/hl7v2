@@ -1,10 +1,10 @@
 # @glion/utils
 
-Shared helpers for HL7v2 AST work — diagnostics reporting, length/byte measurement, and conformance checks.
+Shared helpers for HL7v2 work — escape sequences, diagnostics reporting, length/byte measurement, and conformance checks.
 
 ## What it does
 
-Provides the low-level utilities used across the Glion ecosystem: a `report()` function for emitting diagnostics onto a `VFile`, `getLength`/`getByteLength` for measuring any AST node without serializing it, and stateless `checkOptionality`/`checkCardinality`/`checkLength` conformance validators. Linters and transformers reach for this package to avoid reimplementing these primitives.
+Provides the low-level utilities used across the Glion ecosystem: `decodeEscapes`/`encodeEscapes` for the escape sequences of a value, a `report()` function for emitting diagnostics onto a `VFile`, `getLength`/`getByteLength` for measuring any AST node without serializing it, and stateless `checkOptionality`/`checkCardinality`/`checkLength` conformance validators. Linters and transformers reach for this package to avoid reimplementing these primitives.
 
 ## Install
 
@@ -154,6 +154,55 @@ const subcomponent = { type: "subcomponent", value: "café" };
 
 getLength(subcomponent); // 4 (4 characters)
 getByteLength(subcomponent); // 5 (5 bytes in UTF-8: c-a-f-C3-A9)
+```
+
+### `decodeEscapes(value, delimiters)`
+
+The value `value` carries once its HL7v2 escape sequences are decoded. `\F\`, `\S\`, `\R\`, `\T\`, and `\E\` become the delimiter each stands for, `\.br\` the segment delimiter, and `\Xdd…\` the characters its bytes, named by pairs of hexadecimal digits, encode in UTF-8. A formatting command (`\H\`, `\N\`, `\.sp 2\`, …), a locally defined sequence (`\Z…\`), a character set switch (`\Cxxyy\`, `\Mxxyyzz\`), any other sequence, an `\X…\` whose content is not pairs of hexadecimal digits or whose bytes are not UTF-8, and an escape character without a closing one stay as they are.
+
+- `value` (`string`) — the value as it is on the wire.
+- `delimiters` (`Delimiters`) — the delimiters of the message.
+
+Returns the decoded `string`.
+
+```typescript
+import { decodeEscapes, DEFAULT_DELIMITERS } from "@glion/utils";
+
+decodeEscapes("DOE\\T\\SMITH", DEFAULT_DELIMITERS); // "DOE&SMITH"
+```
+
+### `encodeEscapes(value, delimiters)`
+
+The value `value` takes on the wire. The field, component, repetition, subcomponent, and escape delimiters are written as `\F\`, `\S\`, `\R\`, `\T\`, and `\E\`, the segment delimiter as `\.br\`, and any other character below U+0020 as `\Xdd\`. A character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, is written as `\Xdd\`, the hexadecimal escape of its UTF-8 bytes, with a digit `A`–`F` in lowercase when its uppercase form is a delimiter. A formatting command (`\H\`, `\N\`, `\.sp 2\`, `\.in+4\`, …), a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are. The encoded value holds no field, component, repetition, subcomponent, or segment delimiter, and `decodeEscapes(encodeEscapes(value, d), d)` is `value`.
+
+- `value` (`string`) — the value to write.
+- `delimiters` (`Delimiters`) — the delimiters of the message.
+
+Returns the encoded `string`. Throws `EscapeSequenceError` when a character must be escaped and every escape sequence that writes it holds a delimiter.
+
+```typescript
+import { encodeEscapes, DEFAULT_DELIMITERS } from "@glion/utils";
+
+encodeEscapes("DOE&SMITH", DEFAULT_DELIMITERS); // "DOE\\T\\SMITH"
+```
+
+### `EscapeSequenceError`
+
+Thrown by `encodeEscapes` for a character no escape sequence can write. `character` holds the character and `delimiters` the delimiters it was written with.
+
+```typescript
+import { encodeEscapes } from "@glion/utils";
+
+const delimiters = {
+  component: "S",
+  escape: "\\",
+  field: "X",
+  repetition: "~",
+  segment: "\r",
+  subcomponent: "&",
+};
+
+encodeEscapes("S", delimiters); // throws EscapeSequenceError
 ```
 
 ### Conformance utilities

@@ -1,4 +1,4 @@
-import type { Nodes, Root } from "@glion/ast";
+import type { Group, Nodes, Root, Segment } from "@glion/ast";
 
 import { select } from "./select";
 
@@ -9,7 +9,7 @@ import { select } from "./select";
  * This is a convenience function that automatically traverses through container
  * nodes (Field → FieldRepetition → Component → Subcomponent) to extract the
  * primary string value. When a container has multiple children, the first child
- * is selected (e.g., `value(tree, "MSH-12")` returns the first component of a
+ * is selected (e.g., `value(tree, "MSH.12")` returns the first component of a
  * composite VID field).
  *
  * Nodes with no children return `value: null` to differentiate between empty
@@ -17,68 +17,55 @@ import { select } from "./select";
  *
  * @example
  *   ```typescript
- *   const result = value(root, "PID-5.1");
+ *   const result = value(root, "PID.5.1");
  *   if (result) {
  *     console.log(result.value); // string | null
  *     console.log(result.node.type); // 'subcomponent'
  *     console.log(result.ancestors); // [Root, Segment, Field, ...]
  *   }
+ *
+ *   value(segment, "5.1"); // the same value, read from the PID segment
  *   ```;
  *
- * @param root - The root node to search from
+ * @param node - The message, group, or segment to read from
  * @param path - The HL7 path string
- * @returns Object containing the value, node, and ancestors, or null if not
- *   found
+ * @returns Object containing the value, node, and ancestors from `node`, or
+ *   null if not found
  */
 export function value(
-  root: Root,
+  node: Root | Group | Segment,
   path: string
 ): { value: string | null; node: Nodes; ancestors: Nodes[] } | null {
-  const selectResult = select(root, path);
-  if (!selectResult) {
-    return null;
+  const selected = select(node, path);
+  return selected ? drill(selected.node, selected.ancestors) : null;
+}
+
+/**
+ * The first subcomponent under `node`, with its value, or `node` with value
+ * `null` when a field, repetition, or component on the way has no children.
+ * `null` for a root, group, or segment.
+ */
+function drill(
+  node: Nodes,
+  ancestors: Nodes[]
+): { value: string | null; node: Nodes; ancestors: Nodes[] } | null {
+  switch (node.type) {
+    // Stryker disable next-line StringLiteral: select() never returns the root
+    case "root":
+    case "group":
+    case "segment": {
+      return null;
+    }
+    case "subcomponent": {
+      return { ancestors, node, value: node.value };
+    }
+    case "field":
+    case "field-repetition":
+    case "component": {
+      const first = node.children?.[0];
+      return first
+        ? drill(first, [...ancestors, node])
+        : { ancestors, node, value: null };
+    }
   }
-
-  let { node } = selectResult;
-  let { ancestors } = selectResult;
-
-  // Drill down through single children until we reach a subcomponent
-  while (node.type !== "subcomponent") {
-    // Segments and groups can't be drilled down
-    if (
-      node.type === "segment" ||
-      node.type === "group" ||
-      node.type === "root"
-    ) {
-      return null;
-    }
-
-    // Type guard: at this point, node must be Field | FieldRepetition | Component
-    if (!("children" in node && node.children)) {
-      return null;
-    }
-
-    if (node.children.length === 0) {
-      return {
-        ancestors: [...ancestors],
-        node,
-        value: null,
-      };
-    }
-
-    const next = node.children[0];
-    if (!next) {
-      return null;
-    }
-
-    ancestors = [...ancestors, node];
-    node = next;
-  }
-
-  // At this point, node.type === "subcomponent" is guaranteed
-  return {
-    ancestors,
-    node,
-    value: node.value,
-  };
 }

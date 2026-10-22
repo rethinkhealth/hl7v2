@@ -1,4 +1,5 @@
-import { Static, Text } from "ink";
+import { isAckNakCode, isAckSuccessCode } from "@glion/ack";
+import { Box, Static, Text } from "ink";
 import type { ReactElement, ReactNode } from "react";
 
 import type { LogLevel } from "../config/logging";
@@ -29,6 +30,17 @@ export function LogPane({ entries, epoch }: LogPaneProps): ReactElement {
 }
 
 // ── Formatters ───────────────────────────────────────────────────────
+
+/** The timestamp column every log line begins with, and the gap after it. */
+const LINE_GUTTER = " ".repeat(14);
+
+/** `text` with every line placed under the message above it. */
+function indent(text: string): string {
+  return text
+    .split("\n")
+    .map((line) => `${LINE_GUTTER}${line}`)
+    .join("\n");
+}
 
 /** HH:MM:SS.mmm from an ISO timestamp. */
 function ts(iso: string): string {
@@ -109,11 +121,11 @@ function LogLine({ event }: { event: Event }): ReactElement {
       const trigger = event.trigger;
       const duration = fmtMs(event.ms).padStart(W_DUR);
       const source = event.remote.padEnd(W_SRC);
-      const ack = (event.ack ?? "?").padEnd(W_ACK);
+      const ack = event.ack ?? "?";
       let ackColor: string | undefined;
-      if (event.ack === "AA") {
+      if (isAckSuccessCode(ack)) {
         ackColor = theme.success;
-      } else if (event.ack === "AE" || event.ack === "AR") {
+      } else if (isAckNakCode(ack)) {
         ackColor = theme.error;
       }
 
@@ -131,7 +143,7 @@ function LogLine({ event }: { event: Event }): ReactElement {
           <Text>{duration}</Text>
           {"  "}
           <Text dimColor>{source}</Text>
-          <Text color={ackColor}>{ack}</Text>
+          <Text color={ackColor}>{ack.padEnd(W_ACK)}</Text>
         </Text>
       );
     }
@@ -176,14 +188,24 @@ function LogLine({ event }: { event: Event }): ReactElement {
       );
     }
     case "fatal": {
+      // The message is the fact; the cause and what to do about it each get
+      // their own line rather than being folded into the sentence.
       return (
-        <Text>
-          <Text dimColor>{ts(event.ts)}</Text>
-          {"  "}
-          <Text color={theme.error} bold>
-            ✖ [{event.kind}] {event.message}
+        <Box flexDirection="column">
+          <Text>
+            <Text dimColor>{ts(event.ts)}</Text>
+            {"  "}
+            <Text color={theme.error} bold>
+              ✖ [{event.kind}] {event.message}
+            </Text>
           </Text>
-        </Text>
+          {event.cause === undefined ? null : (
+            <Text dimColor>{indent(event.cause)}</Text>
+          )}
+          {event.hint === undefined ? null : (
+            <Text color={theme.info}>{indent(event.hint)}</Text>
+          )}
+        </Box>
       );
     }
     case "log": {

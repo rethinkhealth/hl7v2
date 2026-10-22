@@ -3,7 +3,13 @@ import { pathToFileURL } from "node:url";
 
 import { GlionError } from "../errors";
 import { compileConfig } from "./compile";
-import { CONFIG_FILENAMES, discoverConfig } from "./discover";
+import {
+  CONFIG_FILENAMES,
+  discoverConfig,
+  discoverEntry,
+  ENTRY_FILENAMES,
+  isReadable,
+} from "./discover";
 import type { ResolvedConfig } from "./schema";
 import { makeGlionConfigSchema } from "./schema";
 
@@ -14,12 +20,24 @@ export interface LoadConfigOptions {
   cacheDir: string;
   /** Skip discovery and load this specific file. */
   explicitPath?: string;
-  /**
-   * Drives the default hostname:
-   * dev   → 127.0.0.1 (localhost only, safe for development)
-   * start → 0.0.0.0   (all interfaces, for production behind a firewall)
-   */
-  mode?: "dev" | "start";
+}
+
+/**
+ * The config a project without a config file runs on: the conventional app
+ * entry when the project has one, and the schema's default for every other
+ * field — port 2575, and no bind address, which each command resolves for
+ * itself.
+ *
+ * `configPath` is the config file the project would have had. Paths resolve
+ * against its directory, which is `cwd`; nothing is read from or written to
+ * it, and no cache directory is needed because there is nothing to compile.
+ */
+export async function defaultConfig(cwd: string): Promise<ResolvedConfig> {
+  const entry = (await discoverEntry(cwd)) ?? resolve(cwd, ENTRY_FILENAMES[0]);
+  return makeGlionConfigSchema({
+    configPath: resolve(cwd, CONFIG_FILENAMES[0]),
+    cwd,
+  }).parse({ entry });
 }
 
 /**
@@ -33,27 +51,24 @@ export interface LoadConfigOptions {
  *    `.glion/<name>.mjs`
  * 3. **Import** — native `import()` on the compiled JS
  * 4. **Validate + transform** — schema factory parses the value AND applies all
- *    normalizations (path resolution, mode-dependent hostname, watch default)
- *    via Zod transforms in a single pass.
+ *    normalizations (path resolution, the watch default) via Zod transforms in
+ *    a single pass.
  *
- * Throws `config-not-found` if no config file exists.
- * Throws `config-invalid` if the config fails schema validation.
+ * A project with no config file runs on {@link defaultConfig} — the
+ * conventional entry and the schema's defaults — so a config file is a way to
+ * change the defaults, not a requirement.
+ *
+ * Throws `config-not-found` if `explicitPath` names a file that is not there.
+ * Throws `config-invalid` if the config fails to compile, import, or validate.
  */
 export async function loadConfig(
   opts: LoadConfigOptions
 ): Promise<ResolvedConfig> {
-  const mode = opts.mode ?? "start";
-
   // Discovery: check each known filename in cwd, or use the explicit path.
   const configPath = opts.explicitPath ?? (await discoverConfig(opts.cwd));
 
   if (!configPath) {
-    throw new GlionError(
-      "config-not-found",
-      "No glion config file found.",
-      { cwd: opts.cwd, searched: CONFIG_FILENAMES },
-      `Create a config file:\n\n  import { defineConfig } from "@glion/cli/config";\n  export default defineConfig({ entry: "./src/app.ts" });`
-    );
+    return defaultConfig(opts.cwd);
   }
 
   // Normalize: explicit paths may be relative — resolve against cwd
@@ -69,6 +84,18 @@ export async function loadConfig(
     ? configPath
     : resolve(opts.cwd, configPath);
 
+  // A discovered path was proven readable by the discovery; a path the
+  // operator named may simply not be there, and saying so beats a compile
+  // error about a file that does not exist.
+  if (opts.explicitPath !== undefined && !(await isReadable(absConfigPath))) {
+    throw new GlionError(
+      "config-not-found",
+      `No glion config file at \`${absConfigPath}\`.`,
+      { configPath: absConfigPath },
+      "Check the path passed to --config."
+    );
+  }
+
   // Compile: rolldown transform() strips TS types and writes .mjs to
   // the cache dir. Any failure here (syntax error in the user's TS,
   // fs error writing to cacheDir, rolldown parse diagnostic) must
@@ -82,9 +109,9 @@ export async function loadConfig(
   } catch (error) {
     throw new GlionError(
       "config-invalid",
-      `Failed to compile glion config at ${absConfigPath}: ${errorMessage(error)}`,
+      `The config file \`${absConfigPath}\` could not be compiled.`,
       { configPath: absConfigPath, phase: "compile" },
-      "Check the config file for syntax errors.",
+      "Check it for syntax errors.",
       error
     );
   }
@@ -102,21 +129,20 @@ export async function loadConfig(
   } catch (error) {
     throw new GlionError(
       "config-invalid",
-      `Failed to import glion config at ${absConfigPath}: ${errorMessage(error)}`,
+      `The config file \`${absConfigPath}\` threw while it was loading.`,
       { configPath: absConfigPath, phase: "import" },
-      "Check that the config module loads without throwing at import time (missing dependency? top-level throw?).",
+      "Check what it runs at import time: a missing dependency, or a throw outside defineConfig.",
       error
     );
   }
 
   // Validate + transform in one pass. The schema factory closes over
-  // the runtime context (configPath, cwd, mode) so its `.transform()`
+  // the runtime context (configPath, cwd) so its `.transform()`
   // calls produce the fully-normalized ResolvedConfig directly — the
   // loader contributes zero fields to the output.
   const schema = makeGlionConfigSchema({
     configPath: absConfigPath,
     cwd: opts.cwd,
-    mode,
   });
   const parsed = schema.safeParse(mod.default ?? mod);
   if (!parsed.success) {
@@ -132,17 +158,16 @@ export async function loadConfig(
       message,
       path: path.map(String),
     }));
-    const body = issues
-      .map((i) => `  - ${i.path.join(".") || "(root)"}: ${i.message}`)
+    // One line per field to fix: the fields are what the user acts on, and a
+    // root-level issue (an unrecognized key) carries the key in its own
+    // wording. Presenters indent every line of a hint.
+    const hint = issues
+      .map((i) => `\`${i.path.join(".") || "config"}\`: ${i.message}`)
       .join("\n");
-    const hint =
-      issues.length === 1
-        ? `Check field: ${issues[0]?.path.join(".") || "(root)"}`
-        : `Fix the ${issues.length} fields listed above`;
 
     throw new GlionError(
       "config-invalid",
-      `Invalid glion config at ${absConfigPath}:\n${body}`,
+      `The config file \`${absConfigPath}\` has options that are not valid.`,
       { configPath: absConfigPath, issues },
       hint
       // No `cause`. The raw ZodError carries `issue.input` (in v4) and
@@ -154,9 +179,4 @@ export async function loadConfig(
   }
 
   return parsed.data;
-}
-
-/** Safely stringifies anything thrown for inclusion in a GlionError message. */
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err);
 }

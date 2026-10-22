@@ -46,7 +46,9 @@ function tableIdToCodeSystemId(tableRef: string): string {
  * - `field.data.codeSystem` — code system identity (same for all reps)
  * - `rep.data.code` — resolved value entry (different per rep)
  *
- * Requires the fields annotator to run first (preset guarantees ordering).
+ * Requires the fields annotator to run first.
+ *
+ * Experimental: its output may change in any release.
  */
 export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
   () => async (tree: Root, file: VFile) => {
@@ -69,7 +71,7 @@ export const hl7v2AnnotateProfileFieldsCodeSystems: Plugin<[], Root, Root> =
       const [tableRef] = entries[i] as (typeof entries)[number];
       if (result.status === "rejected") {
         const msg = file.message(
-          `Failed to load code system for table '${tableRef}'`
+          `The code system for table \`${tableRef}\` cannot be loaded; codes of this table are not annotated.`
         );
         msg.source = "hl7v2-annotate-profile-fields-code-systems";
         msg.cause = result.reason;

@@ -1,11 +1,12 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields",
   "segmentId": "CTI",
   "fields": [
     {
       "sequence": 1,
       "id": "CTI-1",
-      "required": true,
-      "repeatable": false,
+      "optionality": "R",
+      "repetitions": 1,
       "datatype": "EI",
       "name": "Sponsor Study ID",
       "item": "1011"
@@ -13,8 +14,8 @@
     {
       "sequence": 2,
       "id": "CTI-2",
-      "required": false,
-      "repeatable": false,
+      "optionality": "C",
+      "repetitions": 1,
       "datatype": "CWE",
       "name": "Study Phase Identifier",
       "item": "1022"
@@ -22,8 +23,8 @@
     {
       "sequence": 3,
       "id": "CTI-3",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "CWE",
       "name": "Study Scheduled Time Point",
       "item": "1055"

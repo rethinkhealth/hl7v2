@@ -1,5 +1,6 @@
 import type { Segment } from "@glion/ast";
 import { c, f, m, r, s } from "@glion/builder";
+import { hl7v2Parser } from "@glion/parser";
 import { unified } from "unified";
 import { VFile } from "vfile";
 
@@ -83,6 +84,18 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
   });
 
   describe("nON-PASSING CASES", () => {
+    it("reports a segment with an empty Segment ID with the same message", async () => {
+      const tree = m(s("", f("1"), f("")));
+      const file = new VFile();
+
+      await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.message).toBe(
+        "The segment ends with 1 empty field; a segment should end at its last field with a value."
+      );
+    });
+
     it("warns for a segment with trailing empty fields", async () => {
       const tree = m(
         s(
@@ -107,8 +120,8 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
       expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain(
-        "Segment has 1 trailing empty field"
+      expect(file.messages[0]?.message).toBe(
+        "The segment ends with 1 empty field; a segment should end at its last field with a value."
       );
     });
 
@@ -128,60 +141,59 @@ describe("hl7v2-lint:no-trailing-empty-field", () => {
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
       expect(file.messages).toHaveLength(1);
-      expect(file.messages[0]?.message).toContain(
-        "Segment has 3 trailing empty fields"
+      expect(file.messages[0]?.message).toBe(
+        "The segment ends with 3 empty fields; a segment should end at its last field with a value."
       );
     });
 
-    it("reports a range covering all trailing empty fields", async () => {
-      const tree = m(
-        s(
-          "PID",
-          f("1"),
-          f("DOE"),
-          f(""), // first trailing field
-          f("") // second trailing field
-        )
+    it("reports a range from the first trailing empty field to the end of the segment", async () => {
+      const file = new VFile("MSH|^~\\&|A\rPID|1|DOE|||\rPV1|1");
+      const processor = unified()
+        .use(hl7v2Parser)
+        .use(hl7v2LintNoTrailingEmptyField);
+      const tree = processor.parse(file);
+      await processor.run(tree, file);
+      const pid = tree.children[1] as Segment;
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.message).toBe(
+        "The segment ends with 2 empty fields; a segment should end at its last field with a value."
       );
-
-      const seg = tree.children[0] as Segment;
-      const fields = seg.children;
-
-      const point = (offset: number) => ({
-        column: offset + 1,
-        line: 1,
-        offset,
+      expect(file.messages[0]?.place).toStrictEqual({
+        end: { column: 13, line: 2, offset: 23 },
+        start: { column: 11, line: 2, offset: 21 },
       });
+      expect(file.messages[0]?.ancestors).toStrictEqual([tree, pid]);
+    });
 
-      seg.position = {
-        end: point(50),
-        start: point(0), // intentionally beyond the final field to expose the bug
+    it("reports a segment without a position with no range", async () => {
+      const trailing = f("");
+      trailing.position = {
+        end: { column: 7, line: 1, offset: 6 },
+        start: { column: 7, line: 1, offset: 6 },
       };
-
-      // oxlint-disable-next-line typescript/no-non-null-assertion
-      fields[0]!.position = { end: point(5), start: point(4) };
-      // oxlint-disable-next-line typescript/no-non-null-assertion
-      fields[1]!.position = { end: point(9), start: point(6) };
-      // oxlint-disable-next-line typescript/no-non-null-assertion
-      fields[2]!.position = { end: point(10), start: point(10) };
-      // oxlint-disable-next-line typescript/no-non-null-assertion
-      fields[3]!.position = { end: point(11), start: point(11) };
-
+      const tree = m(s("PID", f("1"), trailing));
       const file = new VFile();
 
       await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
 
       expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.place).toBeUndefined();
+    });
 
-      // End position should be +1 to include the field separator (offset 11 + 1 = 12)
-      expect(file.messages[0]?.place).toStrictEqual({
-        end: {
-          column: 13,
-          line: 1,
-          offset: 12,
-        },
-        start: fields[2]?.position?.start,
-      });
+    it("reports a trailing empty field without a position on the whole segment", async () => {
+      const segment = s("PID", f("1"), f(""));
+      segment.position = {
+        end: { column: 7, line: 1, offset: 6 },
+        start: { column: 1, line: 1, offset: 0 },
+      };
+      const tree = m(segment);
+      const file = new VFile();
+
+      await unified().use([hl7v2LintNoTrailingEmptyField]).run(tree, file);
+
+      expect(file.messages).toHaveLength(1);
+      expect(file.messages[0]?.place).toStrictEqual(segment.position);
     });
   });
 });

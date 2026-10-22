@@ -1,118 +1,92 @@
 // oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Field, FieldRepetition, Nodes, Root, Segment } from "@glion/ast";
-import type { DatatypeDefinition } from "@glion/profiles";
+// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
+import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Root } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
-import { isEmptyNode } from "@glion/utils";
+import { isEmptyNode, Optionality } from "@glion/utils";
 import { lintRule } from "unified-lint-rule";
-import type { VFile } from "vfile";
+
+const messages = {
+  absentComponent: (component: string, name: string) =>
+    `Component \`${component}\` (${name}) is not present; it is required.`,
+  emptyComponent: "The component is empty; it is required.",
+} as const;
 
 /**
- * Lint rule that validates required components in composite datatype fields.
+ * Lint rule that reports a required component that is absent or empty.
  *
- * For each field with a composite datatype, checks that all components
- * marked `required: true` in the datatype definition are present and
- * non-empty in every field repetition.
+ * For each valued field of a composite datatype, checks in every repetition
+ * the components whose optionality is `R`. `RE`, `C`, `B`, and `W` are not
+ * checked; before v2.5 the standard records no component optionality.
  *
- * Empty fields are skipped (the required-fields rule handles that).
- * Simple (non-composite) datatypes are skipped.
- * Segments without a known profile (e.g., Z-segments) are silently skipped.
+ * Reads `id` and `datatype` from `field.data`, so
+ * `@glion/annotate-profile-fields` MUST run before it.
  *
  * @example
  *   ```typescript
- *   unified().use(hl7v2LintRequiredComponents);
+ *   unified()
+ *     .use(hl7v2AnnotateProfileContext)
+ *     .use(hl7v2AnnotateProfileFields)
+ *     .use(hl7v2LintRequiredComponents);
  *   ```;
  */
 const hl7v2LintRequiredComponents = lintRule<Root>(
-  { origin: "hl7v2-lint:required-components" },
+  {
+    origin: "hl7v2-lint:required-components",
+    url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-components#readme",
+  },
   (tree, file) => {
-    const ctx = file.data.profile;
-    if (!ctx) {
+    const datatypes = file.data.profile?.datatypes;
+    if (datatypes === undefined) {
       return;
     }
 
-    visit(tree, "field", (fieldNode, ancestors, info) => {
-      // Check emptiness first — most fields in a message are empty,
-      // so this avoids segment/profile lookups for the majority of fields
-      if (isEmptyNode(fieldNode as Field)) {
+    visit(tree, "field", (field, ancestors) => {
+      // A component's R applies only when its field is present; an empty
+      // field is left to `@glion/lint-profile-required-fields`.
+      if (isEmptyNode(field)) {
         return SKIP;
       }
 
-      const segment = ancestors.at(-1) as Segment | undefined;
-      if (!segment || segment.type !== "segment") {
+      const { data } = field;
+      if (data?.id === undefined) {
+        return SKIP;
+      }
+      const datatype = data.datatype && datatypes.get(data.datatype);
+      if (!datatype) {
         return SKIP;
       }
 
-      const fieldDef = ctx.fields.get(segment.name);
-      if (!fieldDef) {
-        return SKIP;
-      }
+      // Loop over the datatype's components, not the message's: a component
+      // left out of the message has no node to visit. A primitive datatype
+      // has no components.
+      for (const repetition of field.children) {
+        for (const profile of datatype.componentsBySequence.values()) {
+          if (profile.optionality !== Optionality.Required) {
+            continue;
+          }
 
-      const fieldProfile = fieldDef.bySequence.get(info.sequence);
-      if (!fieldProfile) {
-        return SKIP;
-      }
+          const componentId = `${data.id}.${profile.sequence}`;
+          const component = repetition.children[profile.sequence - 1];
 
-      const dtDef = ctx.datatypes.get(fieldProfile.datatype);
-      if (
-        !dtDef ||
-        dtDef.kind !== "composite" ||
-        dtDef.requiredSequences.size === 0
-      ) {
-        return SKIP;
+          if (component === undefined) {
+            // Reported on the repetition, the closest node the message has.
+            file.message(messages.absentComponent(componentId, profile.name), {
+              ancestors: [...ancestors, field, repetition],
+              place: repetition.position,
+            });
+          } else if (isEmptyNode(component)) {
+            file.message(messages.emptyComponent, {
+              ancestors: [...ancestors, field, repetition, component],
+              place: component.position,
+            });
+          }
+        }
       }
-
-      for (const repetition of (fieldNode as Field).children) {
-        checkRepetition(
-          file,
-          dtDef,
-          repetition,
-          segment,
-          info.sequence,
-          ancestors,
-          fieldNode as Field
-        );
-      }
-
       return SKIP;
     });
   }
 );
-
-/** Check a single field repetition for missing required components. */
-function checkRepetition(
-  file: VFile,
-  dtDef: DatatypeDefinition,
-  repetition: FieldRepetition,
-  segment: Segment,
-  sequence: number,
-  ancestors: Nodes[],
-  fieldNode: Field
-): void {
-  for (const compSeq of dtDef.requiredSequences) {
-    const component = repetition.children[compSeq - 1];
-    const compHasValue =
-      component?.children[0]?.value !== undefined &&
-      component.children[0].value.length > 0;
-
-    if (!compHasValue) {
-      const compProfile = dtDef.componentsBySequence.get(compSeq);
-      const compName = compProfile?.name ? ` (${compProfile.name})` : "";
-      file.message(
-        `Required component ${segment.name}-${sequence}.${compSeq}${compName} is missing or empty`,
-        {
-          ancestors: [
-            ...ancestors,
-            fieldNode,
-            repetition,
-            ...(component ? [component] : []),
-          ],
-          place:
-            component?.position ?? repetition.position ?? fieldNode.position,
-        }
-      );
-    }
-  }
-}
 
 export default hl7v2LintRequiredComponents;

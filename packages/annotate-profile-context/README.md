@@ -28,7 +28,7 @@ const file = await processor.process(
 // file.data.profile.version       === "2.5"
 // file.data.profile.fields        === Map<"MSH" | "PID", FieldDefinition>
 // file.data.profile.datatypes     === Map<"ST" | "CX" | "XPN" | ..., DatatypeDefinition>
-// file.data.profile.tables        === Map<"0001" | "0003" | ..., TableDefinition>
+// file.data.profile.tables        === Map<"HL70001" | "HL70003" | ..., TableDefinition>
 // file.data.profile.segments.byId === Map<"MSH" | "PID" | ..., { title: string }>
 ```
 
@@ -85,8 +85,8 @@ interface ProfileContext {
   // Datatype definitions indexed by datatype id (e.g. "ST", "CWE", "XPN")
   datatypes: ReadonlyMap<string, DatatypeDefinition>;
 
-  // Table definitions indexed by normalized table id (e.g. "0001")
-  // Note: field profiles reference "HL70001"; this map uses "0001"
+  // Table definitions indexed by TBL# (e.g. "HL70001"), for the tables of the
+  // fields and of their datatypes' components
   tables: ReadonlyMap<string, TableDefinition>;
 
   // Segment titles indexed by segment id (e.g. "MSH", "PID", "OBX")

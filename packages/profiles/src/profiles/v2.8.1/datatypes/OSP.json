@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "OSP",
   "version": "2.8.1",
   "kind": "composite",
@@ -7,20 +8,21 @@
     {
       "sequence": 1,
       "name": "Occurrence Span Code",
+      "optionality": "R",
       "datatypeId": "CNE",
-      "required": true
+      "table": "HL70351"
     },
     {
       "sequence": 2,
       "name": "Occurrence Span Start Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "DT"
     },
     {
       "sequence": 3,
       "name": "Occurrence Span Stop Date",
-      "datatypeId": "DT",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "DT"
     }
   ]
 }

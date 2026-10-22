@@ -1,14 +1,12 @@
-import type { Root, Segment } from "@glion/ast";
+import type { Nodes, Root, Segment } from "@glion/ast";
 import { lintRule } from "unified-lint-rule";
 import { EXIT, visitParents } from "unist-util-visit-parents";
 
 const messages = {
   emptyMessage:
     "The message has no segments; it must start with the message header segment (`MSH`).",
-  emptySegmentId:
-    "The first segment has an empty Segment ID; a message must start with the message header segment (`MSH`).",
-  notMessageHeader: (segmentId: string) =>
-    `The first segment is \`${segmentId}\`; a message must start with the message header segment (\`MSH\`).`,
+  notMessageHeader:
+    "The first segment is not the message header segment; a message must start with the message header segment (`MSH`).",
 } as const;
 
 /**
@@ -17,7 +15,7 @@ const messages = {
  *
  * The first segment is found through any nested groups. Reports at most one
  * message per tree, with `expected` set to `MSH` and `actual` to the first
- * segment's Segment ID when there is one.
+ * segment's Segment ID when there is one, which is never in the text.
  */
 const hl7v2LintSegmentRequiredMessageHeader = lintRule<Root>(
   {
@@ -25,9 +23,9 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Root>(
     url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme",
   },
   (tree, file) => {
-    let first: Segment | undefined;
-    visitParents(tree, "segment", (node) => {
-      first = node;
+    let first: { segment: Segment; ancestors: Nodes[] } | undefined;
+    visitParents(tree, "segment", (segment, parents) => {
+      first = { ancestors: [...parents, segment], segment };
       return EXIT;
     });
 
@@ -40,25 +38,16 @@ const hl7v2LintSegmentRequiredMessageHeader = lintRule<Root>(
       return;
     }
 
-    if (first.name === "MSH") {
+    const { ancestors, segment } = first;
+    if (segment.name === "MSH") {
       return;
     }
 
-    if (first.name === "") {
-      const message = file.message(messages.emptySegmentId, {
-        ancestors: [first],
-        place: first.position,
-      });
-      message.actual = "";
-      message.expected = ["MSH"];
-      return;
-    }
-
-    const message = file.message(messages.notMessageHeader(first.name), {
-      ancestors: [first],
-      place: first.position,
+    const message = file.message(messages.notMessageHeader, {
+      ancestors,
+      place: segment.position,
     });
-    message.actual = first.name;
+    message.actual = segment.name;
     message.expected = ["MSH"];
   }
 );

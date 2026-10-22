@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "PCF",
   "version": "2.4",
   "kind": "composite",
@@ -7,20 +8,17 @@
     {
       "sequence": 1,
       "name": "pre-certification patient type",
-      "datatypeId": "IS",
-      "required": false
+      "datatypeId": "IS"
     },
     {
       "sequence": 2,
       "name": "pre-certification required",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 3,
       "name": "pre-certification window",
-      "datatypeId": "TS",
-      "required": false
+      "datatypeId": "TS"
     }
   ]
 }

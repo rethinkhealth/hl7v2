@@ -11,6 +11,7 @@
 <a href="https://www.npmjs.com/package/@glion/cli"><img alt="NPM Version" src="https://img.shields.io/npm/v/%40glion%2Fcli?style=for-the-badge"></a>
 <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/rethinkhealth/glion/.github%2Fworkflows%2Fci.yml?style=for-the-badge">
 <a href="https://scorecard.dev/viewer/?uri=github.com/rethinkhealth/glion"><img alt="OpenSSF Scorecard" src="https://img.shields.io/ossf-scorecard/github.com/rethinkhealth/glion?label=openssf%20scorecard&style=for-the-badge"></a>
+<a href="https://www.bestpractices.dev/projects/14728"><img alt="OpenSSF Best Practices" src="https://img.shields.io/cii/level/14728?label=openssf%20best%20practices&style=for-the-badge"></a>
 
 </div>
 
@@ -91,8 +92,9 @@ Composable plugins that annotate, enrich, and transform the AST.
 - **[@glion/annotate-profile-segments][glion-annotate-profile-segments]** — annotate segment nodes with profile metadata.
 - **[@glion/annotate-profile-fields][glion-annotate-profile-fields]** — annotate field nodes with profile metadata.
 - **[@glion/annotate-profile-datatypes][glion-annotate-profile-datatypes]** — annotate field repetitions, components, and subcomponents with datatype profile metadata.
-- **[@glion/annotate-profile-fields-code-systems][glion-annotate-profile-fields-code-systems]** — annotate field-level coded values with UTG code system metadata.
-- **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) into their literal values.
+- **[@glion/annotate-profile-fields-code-systems][glion-annotate-profile-fields-code-systems]** — annotate field-level coded values with UTG code system metadata (experimental).
+- **[@glion/annotate-profile-tables][glion-annotate-profile-tables]** — annotate primitive values with their entry in the table of the message's HL7v2 version.
+- **[@glion/decode-escapes][glion-decode-escapes]** — decode HL7v2 escape sequences (`\F\`, `\S\`, `\T\`, `\Xdd\`, `\.br\`) in a tree parsed with `decodeEscapes: false`.
 - **[@glion/encode-escapes][glion-encode-escapes]** — encode delimiter characters in subcomponent values as HL7v2 escape sequences before serialization.
 - **[@glion/transform-profile-groups][glion-transform-profile-groups]** — nest segments in the segment groups their event schema defines, such as `PATIENT_RESULT` and `ORDER_OBSERVATION`.
 
@@ -120,19 +122,22 @@ Linting rules and presets for HL7v2 message quality and conformance.
 - **[@glion/lint-profile-required-components][glion-lint-profile-required-components]** — validate that required components within composite data types are present.
 - **[@glion/lint-profile-field-max-length][glion-lint-profile-field-max-length]** — enforce field value maximum lengths defined in the HL7v2 profile.
 - **[@glion/lint-profile-field-repetition][glion-lint-profile-field-repetition]** — flag non-repeatable fields that contain multiple repetitions.
-- **[@glion/lint-profile-table-values][glion-lint-profile-table-values]** — validate coded values against HL7v2 table definitions (UTG).
+- **[@glion/lint-profile-table-values][glion-lint-profile-table-values]** — validate coded values against HL7v2 table definitions.
+- **[@glion/lint-profile-timestamps][glion-lint-profile-timestamps]** — flag DT, TM, and DTM values that are not valid dates or times.
 - **[@glion/lint-profile-segment-order][glion-lint-profile-segment-order]** — validate segment ordering per the event schema definition.
 - **[@glion/lint-profile-extra-fields][glion-lint-profile-extra-fields]** — flag segments that contain fields beyond the maximum sequence defined in the profile.
 - **[@glion/lint-profile-extra-components][glion-lint-profile-extra-components]** — flag composite fields that contain more components than the datatype profile defines.
+- **[@glion/lint-profile-withdrawn][glion-lint-profile-withdrawn]** — flag values in fields HL7v2 has withdrawn.
+- **[@glion/lint-profile-backward-compatible][glion-lint-profile-backward-compatible]** — flag values in fields HL7v2 keeps only for backward compatibility.
 
 #### Utilities
 
 - **[@glion/utils][glion-utils]** — shared helpers for delimiter detection, normalization, and other HL7v2-specific operations.
-- **[@glion/util-visit][glion-util-visit]** — a visitor pattern for traversing HL7v2 ASTs with full path context, metadata extraction, and control flow actions.
-- **[@glion/util-query][glion-util-query]** — canonical path querying with syntax like `MSH-9.3` or `ORDER-ORC-1` for `select`, `selectAll`, `value`, `set`, and `matches`.
+- **[@glion/util-visit][glion-util-visit]** — a visitor for traversing HL7v2 ASTs with each node's ancestors and control flow actions.
+- **[@glion/util-query][glion-util-query]** — canonical path querying with syntax like `MSH.9.3` or `ORDER.ORC.1` for `select`, `selectAll`, `value`, `format`, and `matches`.
 - **[@glion/util-charset][glion-util-charset]** — encode and decode HL7v2 wire bytes as UTF-8 (fatal — a non-UTF-8 feed fails loudly instead of being silently corrupted).
 - **[@glion/util-semver][glion-util-semver]** — tiny, fast HL7v2 version and range comparators.
-- **[@glion/util-timestamp][glion-util-timestamp]** — HL7v2 timestamp parsing, formatting, and conversion with precision tracking.
+- **[@glion/util-timestamp][glion-util-timestamp]** — HL7v2 DT, TM, and DTM parsing and formatting, with precision and calendar checks.
 - **[@glion/util-uid][glion-util-uid]** — time-ordered unique IDs for HL7v2 identifier fields, e.g. MSH-10 control IDs (the ULID idea resized to a 20-character default).
 - **[@glion/profiles][glion-profiles]** — HL7v2 version-specific profile definitions (fields, data types, tables, segments) with LRU-cached loading, used by the profile-based lint rules.
 - **[@glion/config][glion-config]** — configuration schema and loader for HL7v2 processing (`.hl7v2rc.json`).
@@ -159,6 +164,26 @@ pnpm add https://pkg.pr.new/@glion/parser@<commit-sha>
 
 Replace `@glion/parser` with any published `@glion/*` package. Preview URLs are surfaced as a bot comment on each open PR. See [ADR 0016](./docs/adr/0016-continuous-preview-releases.md) for rationale and scope.
 
+### Verifying a release
+
+Every `@glion/*` package and `create-glion` is published to npm from GitHub Actions with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), which links each version to the commit and workflow that built it. Each GitHub release that carries a `glion-<version>.sigstore.json` asset also carries the same tarballs that went to npm, and that file is a [Sigstore](https://www.sigstore.dev) bundle attesting that the release workflow built them.
+
+Check the registry signatures and provenance of every package installed in a project that uses npm. Run it in CI after `npm ci` to check every install:
+
+```bash
+npm audit signatures
+```
+
+Check a single tarball, downloaded from the release page or fetched with `npm pack @glion/parser@<version>`:
+
+```bash
+gh attestation verify glion-parser-<version>.tgz \
+  --repo rethinkhealth/glion \
+  --signer-workflow rethinkhealth/glion/.github/workflows/release.yml
+```
+
+Add `--bundle glion-<version>.sigstore.json` to check against the bundle attached to the release instead of the attestation GitHub stores.
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for more details.
@@ -175,9 +200,11 @@ To ensure a welcoming and positive environment, we have a [Code of Conduct](CODE
 
 ## License
 
-Copyright 2026 Rethink Health, SUARL. All rights reserved.
+Copyright 2023–2026 Rethink Health, SUARL.
 
 This program is licensed to you under the terms of the [MIT License](https://opensource.org/licenses/MIT). This program is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the [LICENSE](LICENSE) file for details.
+
+HL7® and Health Level Seven® are registered trademarks of Health Level Seven International. Glion is not an HL7 publication and is neither endorsed nor warranted by HL7; the HL7 standards material redistributed in `@glion/profiles` is attributed in that package's [NOTICE](packages/profiles/NOTICE).
 
 [github-unified]: https://github.com/unifiedjs/unified
 [glion-ack]: https://github.com/rethinkhealth/glion/tree/main/packages/ack#readme
@@ -186,6 +213,7 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [glion-annotate-profile-datatypes]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-datatypes#readme
 [glion-annotate-profile-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields#readme
 [glion-annotate-profile-fields-code-systems]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-fields-code-systems#readme
+[glion-annotate-profile-tables]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-tables#readme
 [glion-annotate-profile-segments]: https://github.com/rethinkhealth/glion/tree/main/packages/annotate-profile-segments#readme
 [glion-ast]: https://github.com/rethinkhealth/glion/tree/main/packages/ast#readme
 [glion-builder]: https://github.com/rethinkhealth/glion/tree/main/packages/builder#readme
@@ -199,6 +227,7 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [glion-lint-message-version]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-message-version#readme
 [glion-lint-no-trailing-empty-field]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-no-trailing-empty-field#readme
 [glion-lint-profile-segment-order]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-segment-order#readme
+[glion-lint-profile-backward-compatible]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-backward-compatible#readme
 [glion-lint-profile-extra-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-components#readme
 [glion-lint-profile-extra-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-extra-fields#readme
 [glion-lint-profile-field-max-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-field-max-length#readme
@@ -206,6 +235,8 @@ This program is licensed to you under the terms of the [MIT License](https://ope
 [glion-lint-profile-required-components]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-components#readme
 [glion-lint-profile-required-fields]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-required-fields#readme
 [glion-lint-profile-table-values]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-table-values#readme
+[glion-lint-profile-timestamps]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-timestamps#readme
+[glion-lint-profile-withdrawn]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-profile-withdrawn#readme
 [glion-lint-required-message-header]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-required-message-header#readme
 [glion-lint-segment-header-length]: https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme
 [glion-mllp]: https://github.com/rethinkhealth/glion/tree/main/packages/mllp#readme

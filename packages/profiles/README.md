@@ -1,6 +1,6 @@
 # @glion/profiles
 
-HL7v2 profile data for each version — event schemas, segments, fields, datatypes, tables, and code systems — with loaders, and a runner that validates and groups a message's segments against its event schema.
+HL7v2 profile data for each version — event schemas, segments, fields, datatypes, tables, and code systems — with loaders, a runner that validates and groups a message's segments against its event schema, and a repair that reads a message that does not fit as the nearest message that does.
 
 ## What it does
 
@@ -54,7 +54,7 @@ Resolves the segment definitions of a version: each segment ID with its title, o
 
 ### An event schema of your own
 
-An `EventSchema` is plain data, the shape `event-schema.schema.json` describes: `segment`, `group`, and `choice` elements, each with `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). `runner` takes it as it takes a bundled one.
+An `EventSchema` is plain data, the shape the `Event` definition of `hl7v2.schema.json` describes: `segment`, `group`, and `choice` elements, each with `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). `runner` takes it as it takes a bundled one.
 
 ```ts
 import type { EventSchema } from "@glion/profiles";
@@ -129,6 +129,32 @@ runner(schema, ["MSH", "PID", "ZPI", "OBR", "OBX"], { allowZSegments: false });
 // { type: "mismatched", index: 2, expected: ["NK1", "NTE", "OBR", …] }
 ```
 
+### `repair(schema, segmentIds[, options])`
+
+Reads a message's segment IDs as the message the event schema accepts with the fewest edits, and returns the edits in message order; none when the segments fit. An edit is a missing segment, one the schema requires and the message does not have, or an unexpected segment, one the message has and the schema does not allow there:
+
+| Field     | Missing (`type: "missing"`)                                                                                 | Unexpected (`type: "unexpected"`)                               |
+| --------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `segment` | The segment ID, as the schema names it                                                                      | The segment ID                                                  |
+| `index`   | Where it would be inserted, as by `segmentIds.splice(index, 0, segment)`; the number of segments at the end | Its index in `segmentIds`                                       |
+| `path`    | The IDs of the groups it belongs in, outermost first                                                        | The IDs of the groups of the segment before it, outermost first |
+
+```ts
+import { profiles, repair } from "@glion/profiles";
+
+const schema = await profiles.events.load("2.5", "ORU_R01");
+
+repair(schema, ["MSH", "PID", "OBX", "OBX"]);
+// [{ type: "missing", segment: "OBR", index: 2,
+//    path: ["PATIENT_RESULT", "ORDER_OBSERVATION"] }]
+
+repair(schema, ["MSH", "PID", "OBR", "OBX", "PV1", "OBX"]);
+// [{ type: "unexpected", segment: "PV1", index: 4,
+//    path: ["PATIENT_RESULT", "ORDER_OBSERVATION", "OBSERVATION"] }]
+```
+
+Of repairs with as many edits, `repair` returns one with the fewest unexpected segments; of those, the first in the runner's order, where at each segment the schema's reading comes first, then passing over a Z-segment, then the segment as unexpected in place of the schema's segment there, as missing, then a missing segment, then an unexpected one. A segment out of place is reported next to the segment it displaces: in `ADT_A01`, `MSH PIDX PV` reads as `EVN` missing and `PIDX` unexpected, then `PID` missing and `PV` unexpected, then `PV1` missing at the end. `MSH PID OBR OBX ORC OBX` reads as an `OBR` missing before the last `OBX`, not as an unexpected `ORC`. A Z-segment the schema does not name costs no edit unless `allowZSegments` is `false`, as for `runner`. Runs in time and memory proportional to the number of segments times the size of the schema, and shares the compiled schema with `runner`.
+
 ## Glossary
 
 ### HL7v2 terms
@@ -148,23 +174,24 @@ runner(schema, ["MSH", "PID", "ZPI", "OBR", "OBX"], { allowZSegments: false });
 
 ### Glion names
 
-| Name                                            | Meaning                                                                                                                                                                                             |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Profile                                         | The data this package bundles about one thing in one version: an event schema, a segment's fields, a datatype, a table, or the version's segments. Code systems are the one kind without a version. |
-| Event schema (`EventSchema`)                    | The structure an event's messages follow: its segments in order, nested in groups and choices, as the standard defines it. Its `id` is the message structure ID.                                    |
-| Event map (`EventMap`)                          | For each version, the event schema ID each event and each schema ID maps to, such as `ADT_A04` → `ADT_A01`.                                                                                         |
-| Element (`EventSchemaElement`)                  | One node of an event schema: a segment (`SegmentElement`), a named group of elements (`GroupElement`), or a choice between alternatives (`ChoiceElement`).                                          |
-| Occurrence (`Occurrence`)                       | Every element's `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). An element that is neither occurs exactly once.                                                                      |
-| Z-segment                                       | A locally defined segment: its ID starts with `Z`. HL7v2 allows one in any message and segment group.                                                                                               |
-| `anyZSegment`                                   | A segment element that matches any Z-segment. The HL7 v2 XML schemas use it for a site's Z-segment, as in MFN_M01.                                                                                  |
-| `Hxx`                                           | A segment element that matches any segment ID.                                                                                                                                                      |
-| Runner (`runner`)                               | Runs a message's segment IDs through an event schema once: validates their order and groups them. Its result (`RunnerResult`) is `matched`, `mismatched`, or `incomplete`.                          |
-| Groups (`SegmentMatch`, `GroupMatch`)           | What a `matched` result carries: each segment's index in the message, nested in the group occurrences (`GroupMatch`) it belongs to.                                                                 |
-| Store (`profiles.events`, `profiles.fields`, …) | The loader of one kind of profile: `load(version, id)` resolves the profile, or `undefined` for one it does not bundle.                                                                             |
+| Name                                            | Meaning                                                                                                                                                                                                           |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Profile                                         | The data this package bundles about one thing in one version: an event schema, a segment's fields, a datatype, a table, or the version's segments. Code systems are the one kind without a version.               |
+| Event schema (`EventSchema`)                    | The structure an event's messages follow: its segments in order, nested in groups and choices, as the standard defines it. Its `id` is the message structure ID.                                                  |
+| Event map (`EventMap`)                          | For each version, the event schema ID each event and each schema ID maps to, such as `ADT_A04` → `ADT_A01`.                                                                                                       |
+| Element (`EventSchemaElement`)                  | One node of an event schema: a segment (`SegmentElement`), a named group of elements (`GroupElement`), or a choice between alternatives (`ChoiceElement`).                                                        |
+| Occurrence (`Occurrence`)                       | Every element's `optional` (the standard's `[ ]`) and `repeating` (its `{ }`). An element that is neither occurs exactly once.                                                                                    |
+| Z-segment                                       | A locally defined segment: its ID starts with `Z`. HL7v2 allows one in any message and segment group.                                                                                                             |
+| `anyZSegment`                                   | A segment element that matches any Z-segment. The HL7 v2 XML schemas use it for a site's Z-segment, as in MFN_M01.                                                                                                |
+| `Hxx`                                           | A segment element that matches any segment ID.                                                                                                                                                                    |
+| Runner (`runner`)                               | Runs a message's segment IDs through an event schema once: validates their order and groups them. Its result (`RunnerResult`) is `matched`, `mismatched`, or `incomplete`.                                        |
+| Repair (`repair`)                               | Reads a message's segment IDs as the message an event schema accepts with the fewest edits (`RepairEdit`): missing segments (`RepairMissing`) and unexpected segments (`RepairUnexpected`). It returns the edits. |
+| Groups (`SegmentMatch`, `GroupMatch`)           | What a `matched` result carries: each segment's index in the message, nested in the group occurrences (`GroupMatch`) it belongs to.                                                                               |
+| Store (`profiles.events`, `profiles.fields`, …) | The loader of one kind of profile: `load(version, id)` resolves the profile, or `undefined` for one it does not bundle.                                                                                           |
 
 ### Naming convention
 
-- **Event** names what is keyed or looked up by trigger event: `profiles.events`, `profiles.eventMaps`. **Event schema** names the data an event resolves to: `EventSchema`, `event-schema.schema.json`. **Message structure** names only the MSH-9.3 value, the schema's `id`.
+- **Event** names what is keyed or looked up by trigger event: `profiles.events`, `profiles.eventMaps`. **Event schema** names the data an event resolves to: `EventSchema`. **Message structure** names only the MSH-9.3 value, the schema's `id`.
 - **`…Definition`** is what a store resolves: `FieldDefinition`, `DatatypeDefinition`, `TableDefinition`, `SegmentDefinition`, `CodeSystemDefinition`. **`…Profile`** and **`…Entry`** are one item inside it: `FieldProfile`, `ComponentProfile`, `SegmentProfile`, `TableCodeEntry`, `UtgCodeEntry`. **`…Module`** is the shape of a bundled data file.
 - **`…Element`** is a node of an event schema; **`…Match`** is a node of the groups a `runner` result carries.
 - A version is a string without a prefix, `"2.5.1"`. A table loads by its number, `"0001"`, while a field names it with the HL7 prefix, `"HL70001"`. A code system ID has the UTG prefix, `"v2-0001"`.
@@ -187,21 +214,23 @@ interface SegmentDefinition {
 interface FieldDefinition {
   segmentId: string; // "MSH"
   bySequence: ReadonlyMap<number, FieldProfile>; // 9 → MSH-9
-  requiredSequences: ReadonlySet<number>;
+  requiredSequences: ReadonlySet<number>; // the fields whose optionality is "R"
 }
 
 interface FieldProfile {
   sequence: number; // 9
   id: string; // "MSH-9"
   name?: string; // "Message Type"
-  datatype: string; // "MSG"
-  required: boolean;
-  repeatable: boolean;
+  datatype?: string; // "MSG"; absent on a withdrawn field with no datatype
+  optionality?: Optionality; // OPT, from @glion/utils; absent where the standard records none
+  repetitions: number | "unbounded"; // RP/#; 1 when the field does not repeat
   maxLength?: number;
   table?: string; // "HL70001" when the field is coded
   item?: string; // the HL7 data element number
 }
 ```
+
+`Optionality` (from `@glion/utils`) is the OPT column as printed: `"R" | "RE" | "O" | "C" | "X" | "B" | "W"`, with named constants such as `Optionality.Withdrawn`.
 
 ### Datatypes
 
@@ -212,14 +241,15 @@ interface DatatypeDefinition {
   kind: string; // "primitive" or "composite"
   title?: string;
   componentsBySequence: ReadonlyMap<number, ComponentProfile>; // empty for a primitive
-  requiredSequences: ReadonlySet<number>;
+  requiredSequences: ReadonlySet<number>; // the components whose optionality is "R"
 }
 
 interface ComponentProfile {
-  sequence: number;
-  name: string;
-  datatypeId: string;
-  required: boolean;
+  sequence: number; // 7
+  name: string; // "Name Type Code"
+  optionality?: Optionality; // "O"; absent before v2.5
+  datatypeId?: string; // "ID"; absent on a withdrawn component
+  table?: string; // "HL70200"
   maxLength?: number;
 }
 ```
@@ -249,12 +279,26 @@ type EventSchemaElement =
 
 `optional` is the standard's `[ ]` and `repeating` its `{ }`. A group's `id`, such as `PATIENT_VISIT`, holds only uppercase letters, digits, and `_`; its `name` is the group name for display, in title case with abbreviations spelled out, such as `Patient Visit` or `Master File Test Battery Detail`. A `choice` is the standard's `< A | B >`: exactly one alternative per occurrence, and every alternative matches at least one segment.
 
-### Event schema JSON Schema
+### JSON Schema
 
-`@glion/profiles/event-schema.schema.json` is the JSON Schema (draft-07) of an event schema, with `$id` `https://glion.dev/schemas/event-schema/v2.json`. Every bundled schema names it by that `$id` in `$schema` and conforms to it. The schema checks the shape; `runner` also requires that every choice alternative matches at least one segment.
+`@glion/profiles/hl7v2.schema.json` is the JSON Schema (draft-07) of every profile file, with `$id` `https://glion.dev/schemas/hl7v2/v1.json`. It has one definition per kind of file:
+
+| Definition   | File                               |
+| ------------ | ---------------------------------- |
+| `Event`      | an event schema, such as `ADT_A01` |
+| `Fields`     | the fields of a segment            |
+| `Datatype`   | a datatype                         |
+| `Table`      | a table                            |
+| `CodeSystem` | an HL7 Terminology code system     |
+
+Every bundled profile file names its definition in `$schema`, such as `https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields`, and conforms to it. The event map and the segment list of each version (`event-map.json`, `segments.json`) are lookups, not profiles, and are not in the schema. The root accepts a file of any kind; select a definition to validate one kind. The schema checks the shape; `runner` also requires that every choice alternative of an event schema matches at least one segment.
 
 ```ts
-import schema from "@glion/profiles/event-schema.schema.json" with { type: "json" };
+import { Ajv } from "ajv";
+import schema from "@glion/profiles/hl7v2.schema.json" with { type: "json" };
+
+const ajv = new Ajv({ schemas: [schema] });
+const validateEventSchema = ajv.getSchema(`${schema.$id}#/definitions/Event`);
 ```
 
 ### Tables and code systems

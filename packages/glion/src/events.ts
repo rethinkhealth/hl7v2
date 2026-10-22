@@ -1,5 +1,7 @@
+import type { AckCode } from "@glion/ack";
+
 import type { LogLevel } from "./config/logging";
-import { GlionError } from "./errors";
+import { causeMessage, GlionError } from "./errors";
 import type { GlionErrorKind } from "./errors";
 
 /**
@@ -37,7 +39,7 @@ export type Event =
       trigger: string;
       control: string;
       pattern: string | null;
-      ack: "AA" | "AE" | "AR" | null;
+      ack: AckCode | null;
       ms: number;
       ts: string;
     }
@@ -56,6 +58,10 @@ export type Event =
       t: "fatal";
       kind: GlionErrorKind;
       message: string;
+      /** What to do about it, when the failure knows. */
+      hint?: string;
+      /** The message of the underlying error, when there was one. */
+      cause?: string;
       stack?: string;
       context?: Record<string, unknown>;
       ts: string;
@@ -147,8 +153,12 @@ const KNOWN_EVENT_KINDS: Record<Event["t"], true> = {
 export function fatalEvent(error: unknown): Event {
   const ts = new Date().toISOString();
   if (error instanceof GlionError) {
+    // `message` is the fact alone, so the hint and the underlying error
+    // travel as their own fields rather than being folded into it.
     return {
+      cause: causeMessage(error.cause),
       context: error.context,
+      hint: error.hint,
       kind: error.kind,
       message: error.message,
       stack: error.stack,

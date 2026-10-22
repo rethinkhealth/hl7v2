@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0458",
   "description": "OCE edit code",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": ""
-    },
     {
       "name": "1",
       "description": "Invalid diagnosis code"

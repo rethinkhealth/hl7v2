@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "UVC",
   "version": "2.5",
   "kind": "composite",
@@ -7,14 +8,15 @@
     {
       "sequence": 1,
       "name": "Value Code",
+      "optionality": "R",
       "datatypeId": "CNE",
-      "required": false
+      "table": "HL70153"
     },
     {
       "sequence": 2,
       "name": "Value Amount",
-      "datatypeId": "MO",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "MO"
     }
   ]
 }

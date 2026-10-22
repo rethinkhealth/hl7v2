@@ -1,5 +1,81 @@
 # @rethinkhealth/hl7v2-lint-no-trailing-empty-field
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56)]:
+  - @glion/utils@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/utils@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#987](https://github.com/rethinkhealth/glion/pull/987) [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d) Thanks [@meleksomai](https://github.com/meleksomai)! - Lint findings describe the node they are placed on, never name it, and never contain content from the message (ADR 0030). ``Field `PID-5` (Patient Name) is 300 characters long; it allows at most 250.`` is now `The value is 300 characters long; the field allows at most 250.` The finding's `place` and `ancestors` locate the node, and `actual` carries the content. Findings about a field, component, or segment the message does not contain still name it from the profile or event schema. The `ruleId` of every finding is unchanged; only the text changes.
+
+  - No value, part of a value, version, or Segment ID from the message appears in a finding's text: `lint-profile-withdrawn`, `lint-profile-backward-compatible`, `lint-profile-table-values`, `lint-profile-timestamps`, `lint-message-version`, `lint-required-message-header`, and `lint-segment-header-length` describe the content instead (`The day is past the end of its month; …`, `The Segment ID is 4 characters long; …`).
+  - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group.
+  - `lint-no-trailing-empty-field` and `lint-required-message-header` report a segment with an empty Segment ID with the same message as any other.
+  - `lint-profile-field-max-length`, `lint-profile-field-repetition`, `lint-profile-extra-components`, `lint-profile-withdrawn`, and `lint-profile-backward-compatible` check an element whose data has no `id`, such as one a site's own annotator sets.
+  - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
+
+- [#982](https://github.com/rethinkhealth/glion/pull/982) [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad) Thanks [@meleksomai](https://github.com/meleksomai)! - Fix where `@glion/lint-no-trailing-empty-field` points a finding.
+
+  - End the range at the end of the segment, so it no longer runs over the segment terminator when the segment does not end with a field separator, as in `PID|1|^`
+  - End `ancestors` at the segment, without the trailing fields after it
+
+- Updated dependencies []:
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/utils@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- [#905](https://github.com/rethinkhealth/glion/pull/905) [`7cb9a7c`](https://github.com/rethinkhealth/glion/commit/7cb9a7c2e7713cbaeea9a6aaa12543b52a310f34) Thanks [@meleksomai](https://github.com/meleksomai)! - Name the segment in the report, as one sentence:
+
+  - `Segment \`PID\` ends with 2 empty fields; a segment should end at its last field with a value.`
+  - `A segment with an empty Segment ID ends with 2 empty fields; a segment should end at its last field with a value.`
+
+  The rule's `url` points to its README in this repository.
+
+- Updated dependencies []:
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

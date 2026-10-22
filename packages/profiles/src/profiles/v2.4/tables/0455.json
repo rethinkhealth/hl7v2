@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0455",
   "description": "Type of bill code",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": ""
-    },
     {
       "name": "131",
       "description": "Hospital - Outpatient - Admit thru Discharge Claim"

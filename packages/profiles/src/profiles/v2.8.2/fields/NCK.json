@@ -1,11 +1,12 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields",
   "segmentId": "NCK",
   "fields": [
     {
       "sequence": 1,
       "id": "NCK-1",
-      "required": true,
-      "repeatable": false,
+      "optionality": "R",
+      "repetitions": 1,
       "datatype": "DTM",
       "maxLength": 24,
       "name": "System Date/Time",

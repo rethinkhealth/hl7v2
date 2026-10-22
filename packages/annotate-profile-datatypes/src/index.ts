@@ -1,7 +1,9 @@
-// oxlint-disable-next-line no-unused-vars -- triggers VFile DataMap augmentation
 import type { ProfileContext } from "@glion/annotate-profile-context";
-import type { Component, Field, FieldRepetition, Root } from "@glion/ast";
+// oxlint-disable-next-line no-unused-vars -- triggers FieldData augmentation
+import type { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
+import type { Component, Root, Subcomponent } from "@glion/ast";
 import { SKIP, visit } from "@glion/util-visit";
+import type { Optionality } from "@glion/utils";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 
@@ -13,16 +15,22 @@ declare module "@glion/ast" {
     kind?: string | undefined;
     /** Datatype title (e.g., "String Data", "Coded with Exceptions"). */
     title?: string | undefined;
+    /** The field's table (TBL#), such as "HL70001". */
+    table?: string | undefined;
   }
   interface ComponentData {
+    /** Position in the parent datatype (SEQ). */
+    sequence?: number | undefined;
     /** Component identifier (e.g., "CWE.1", "XPN.2"). */
     id?: string | undefined;
     /** Component name from the parent datatype definition. */
     name?: string | undefined;
-    /** Whether this component is required in the parent datatype. */
-    required?: boolean | undefined;
+    /** OPT of this component in the parent datatype (e.g., "R", "O"). */
+    optionality?: Optionality | undefined;
     /** Datatype ID for this component (e.g., "ST", "ID"). */
     datatypeId?: string | undefined;
+    /** Table of this component's codes (e.g., "HL70200"). */
+    table?: string | undefined;
     /** Maximum allowed length for this component. */
     maxLength?: number | undefined;
     /** Datatype kind: "primitive" or "composite". */
@@ -31,18 +39,66 @@ declare module "@glion/ast" {
     title?: string | undefined;
   }
   interface SubcomponentData {
+    /** Position in the parent datatype (SEQ). */
+    sequence?: number | undefined;
     /** Subcomponent identifier (e.g., "FN.1", "HD.2"). */
     id?: string | undefined;
     /** Subcomponent name from the parent component's datatype definition. */
     name?: string | undefined;
-    /** Whether this subcomponent is required. */
-    required?: boolean | undefined;
+    /** OPT of this subcomponent in the component's datatype. */
+    optionality?: Optionality | undefined;
     /** Datatype ID for this subcomponent. */
     datatypeId?: string | undefined;
+    /** Table of this subcomponent's codes. */
+    table?: string | undefined;
+    /** Maximum allowed length for this subcomponent. */
+    maxLength?: number | undefined;
     /** Datatype kind: "primitive" or "composite". */
     kind?: string | undefined;
     /** Datatype title. */
     title?: string | undefined;
+  }
+}
+
+type Datatypes = ProfileContext["datatypes"];
+type DatatypeDefinition = NonNullable<ReturnType<Datatypes["get"]>>;
+
+const findDatatype = (datatypes: Datatypes, id: string | undefined) =>
+  id === undefined ? undefined : datatypes.get(id);
+
+/**
+ * Annotates each component or subcomponent `datatype` defines with its row,
+ * and the subcomponents of each component whose datatype is composite.
+ */
+function annotateComponents(
+  children: readonly (Component | Subcomponent)[],
+  datatype: DatatypeDefinition,
+  datatypes: Datatypes
+): void {
+  for (const [sequence, profile] of datatype.componentsBySequence) {
+    const child = children[sequence - 1];
+    if (child === undefined) {
+      continue;
+    }
+
+    const childDatatype = findDatatype(datatypes, profile.datatypeId);
+    Object.assign((child.data ??= {}), {
+      id: `${datatype.id}.${sequence}`,
+      ...profile,
+      kind: childDatatype?.kind,
+      title: childDatatype?.title,
+    });
+    switch (child.type) {
+      case "component": {
+        if (childDatatype?.kind === "composite") {
+          annotateComponents(child.children, childDatatype, datatypes);
+        }
+        break;
+      }
+      case "subcomponent": {
+        break;
+      }
+    }
   }
 }
 
@@ -65,99 +121,29 @@ declare module "@glion/ast" {
  */
 export const hl7v2AnnotateProfileDatatypes: Plugin<[], Root, Root> =
   () => (tree: Root, file: VFile) => {
-    const ctx = file.data.profile;
-    if (!ctx) {
+    const datatypes = file.data.profile?.datatypes;
+    if (datatypes === undefined) {
       return tree;
     }
 
-    // Pass 1: field-repetitions — entry point for the cascade
-    visit(tree, "field-repetition", (rep, ancestors) => {
-      const field = ancestors.at(-1) as Field | undefined;
-      const datatypeId = (field?.data as Record<string, unknown> | undefined)
-        ?.datatype as string | undefined;
-
-      const dtDef = datatypeId ? ctx.datatypes.get(datatypeId) : undefined;
-      if (!dtDef) {
-        return;
-      }
-
-      if (!rep.data) {
-        rep.data = {};
-      }
-      rep.data.datatypeId = dtDef.id;
-      rep.data.kind = dtDef.kind;
-      if (dtDef.title !== undefined) {
-        rep.data.title = dtDef.title;
-      }
-    });
-
-    // Pass 2: components — only when parent repetition is composite
-    visit(tree, "component", (component, ancestors, info) => {
-      const rep = ancestors.at(-1) as FieldRepetition | undefined;
-      if (rep?.data?.kind !== "composite" || !rep.data.datatypeId) {
+    visit(tree, "field", (field) => {
+      const datatype = findDatatype(datatypes, field.data?.datatype);
+      if (datatype === undefined) {
         return SKIP;
       }
 
-      const dtDef = ctx.datatypes.get(rep.data.datatypeId);
-      if (!dtDef) {
-        return SKIP;
-      }
-
-      const compProfile = dtDef.componentsBySequence.get(info.sequence);
-      if (!compProfile) {
-        return SKIP;
-      }
-
-      if (!component.data) {
-        component.data = {};
-      }
-      component.data.id = `${dtDef.id}.${info.sequence}`;
-      component.data.name = compProfile.name;
-      component.data.required = compProfile.required;
-      component.data.datatypeId = compProfile.datatypeId;
-      if (compProfile.maxLength !== undefined) {
-        component.data.maxLength = compProfile.maxLength;
-      }
-
-      const compDtDef = ctx.datatypes.get(compProfile.datatypeId);
-      if (compDtDef) {
-        component.data.kind = compDtDef.kind;
-        if (compDtDef.title !== undefined) {
-          component.data.title = compDtDef.title;
+      for (const repetition of field.children) {
+        Object.assign((repetition.data ??= {}), {
+          datatypeId: datatype.id,
+          kind: datatype.kind,
+          table: field.data?.table,
+          title: datatype.title,
+        });
+        if (datatype.kind === "composite") {
+          annotateComponents(repetition.children, datatype, datatypes);
         }
       }
-
       return SKIP;
-    });
-
-    // Pass 3: subcomponents — only when parent component is composite
-    visit(tree, "subcomponent", (subcomponent, ancestors, info) => {
-      const component = ancestors.at(-1) as Component | undefined;
-      if (component?.data?.kind !== "composite" || !component.data.datatypeId) {
-        return;
-      }
-
-      const compDtDef = ctx.datatypes.get(component.data.datatypeId);
-      const subProfile = compDtDef?.componentsBySequence.get(info.sequence);
-      if (!subProfile) {
-        return;
-      }
-
-      if (!subcomponent.data) {
-        subcomponent.data = {};
-      }
-      subcomponent.data.id = `${component.data.datatypeId}.${info.sequence}`;
-      subcomponent.data.name = subProfile.name;
-      subcomponent.data.required = subProfile.required;
-      subcomponent.data.datatypeId = subProfile.datatypeId;
-
-      const subDtDef = ctx.datatypes.get(subProfile.datatypeId);
-      if (subDtDef) {
-        subcomponent.data.kind = subDtDef.kind;
-        if (subDtDef.title !== undefined) {
-          subcomponent.data.title = subDtDef.title;
-        }
-      }
     });
 
     return tree;

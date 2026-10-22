@@ -1,5 +1,110 @@
 # @rethinkhealth/hl7v2-profiles
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56)]:
+  - @glion/utils@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/utils@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- [#994](https://github.com/rethinkhealth/glion/pull/994) [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0) Thanks [@meleksomai](https://github.com/meleksomai)! - A bundled profile is imported once per process. A later load of the same profile resolves from memory instead of importing it again, which removes most of the fixed cost the profile-aware plugins paid on every message. A load after a failed import imports again.
+- Updated dependencies []:
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#939](https://github.com/rethinkhealth/glion/pull/939) [`7c24dbc`](https://github.com/rethinkhealth/glion/commit/7c24dbce0ae8ce90b04e69f5c4d6da290ba43650) Thanks [@meleksomai](https://github.com/meleksomai)! - Ship a `NOTICE` file naming the sources the HL7v2 profile data derives from.
+
+  - Add `NOTICE` to the published package, attributing the HL7v2 normative database, the HL7v2 XML schemas, the chapter 2A component tables, and HL7 Terminology (UTG)
+  - Record that the MIT license covers this package's code and data representation, not the underlying HL7 standard content
+
+- Updated dependencies []:
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- [#940](https://github.com/rethinkhealth/glion/pull/940) [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283) Thanks [@meleksomai](https://github.com/meleksomai)! - Tables no longer hold rows that are not values. These rows are gone:
+
+  - the `...` and `…` rows the standard prints for a table with no suggested values;
+  - the row in table 0550 whose only code is a non-breaking space (`External Jugular`);
+  - the non-breaking space after `CHEST` and `KIDN` in table 0550;
+  - note text held as values in tables 0203, 0391, 0725, 0836 and 0838.
+
+  Table 0010 in v2.5.1, for example, now has no codes, where it had one coded `...`. A table whose `...` row pointed to an outside code set, such as 0399 (ISO 3166), now has no codes, and that pointer is no longer in the data. Printed ranges such as `E1 ... E9` in table 0141 are still held as printed.
+
+- Updated dependencies []:
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - A datatype component mirrors its row in the HL7v2 component table. `optionality` is the OPT column and `table` the TBL# column, both from chapter 2A of the standard for v2.5 through v2.8.2, and absent before v2.5, whose standard prints no component tables. A withdrawn component stays at its sequence with `optionality: "W"` and no datatype, as v2.7 XPN-6 (Degree). `requiredSequences` lists the components whose optionality is `"R"`. `@glion/annotate-profile-datatypes` copies the component profile onto `component.data` and `subcomponent.data` as the profile gives it, `sequence` included, so they have `optionality` and `table` in place of `required`.
+
+  Fields and components share `Optionality` from `@glion/utils`, which includes `"RE"` (`Optionality.RequiredButMayBeEmpty`), printed by v2.7 and later for XPN-1 (Family Name).
+
+  **Breaking:** `ComponentProfile.required` is removed, and so is `required` on `component.data` and `subcomponent.data`; read `optionality === "R"`. `ComponentProfile.datatypeId` is optional.
+
+  **Breaking:** `required-components` now checks the components v2.5 and v2.5.1 print as required, which the profiles did not mark before. A v2.5 message whose MSH-9 is `ADT^A01`, without the message structure `ADT_A01`, now gets ``Component `MSH-9.3` (Message Structure) is not present; it is required.``, an error in `@glion/preset-lint-profile-recommended` and so in `parseHL7v2` from `@glion/hl7v2`. Send the message structure, or turn the rule off after the preset with `.use(hl7v2LintRequiredComponents, false)`.
+
+  With components carrying `optionality`, `@glion/lint-profile-withdrawn` and `@glion/lint-profile-backward-compatible` report components as well as fields, with no change to the rules: a valued v2.7 XPN.6 (Degree) is an error, and a valued v2.5.1 XTN.1 (Telephone Number) is a warning, once per repetition.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - A field profile mirrors its row in the HL7v2 segment attribute table. `optionality` is the OPT column, an `Optionality` from `@glion/utils` (`Optionality.Required` is `"R"`, `Optionality.Withdrawn` is `"W"`, and so on), absent where the standard records none. `repetitions` is the RP/# column, the most occurrences the field may have or `"unbounded"`, and `1` when it does not repeat. They replace `required` and `repeatable`; `requiredSequences` lists the fields whose optionality is `"R"`. `@glion/annotate-profile-fields` copies the field profile onto `field.data` as the profile gives it, `sequence` included, so `field.data` has `optionality` and `repetitions` in place of `required` and `repeatable`, and leaves out what the profile leaves out.
+
+  Both come from HL7DB, so fields where it disagrees with the XML schemas change: DG1-2 and PR1-2 are required in v2.3.1 through v2.5.1, OBX-2 in v2.8, and fields such as ERR-6 and OBR-17 repeat a set number of times from v2.6.
+
+  **Breaking:** `FieldProfile.required` and `FieldProfile.repeatable` are removed, and so are `required` and `repeatable` on `field.data`. Read `optionality === "R"` in place of `required`, and `repetitions !== 1` in place of `repeatable`.
+
+  **Breaking:** `@glion/utils` exports `Optionality`, a const object and type of the OPT codes named after the standard (`Required`, `RequiredButMayBeEmpty`, `Optional`, `Conditional`, `NotUsed`, `BackwardCompatible`, `Withdrawn`), in place of `OptionalityCode`. `NotSupported` is now `NotUsed`, and `RequiredOrEmpty` is now `RequiredButMayBeEmpty`.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - Give every v2.6 through v2.8.2 field profile its HL7v2 sequence. Fields after a withdrawn one had the sequence of their place in the list, so `bySequence` returned the wrong field and the profile rules checked a valid message against another field's datatype, table, and optionality ([#916](https://github.com/rethinkhealth/glion/issues/916)).
+
+  Every field the standard lists is present at its sequence, including the withdrawn fields the XML schemas leave out, such as DG1-2 from v2.6 and the UB1 segment from v2.7. v2.5.1 OBX-23 to OBX-25 hold the profiles that sat at OBX-20 to OBX-22, and v2.8.1 RF1-18 (Remaining Benefit Amount), which the v2.8.1 sources omit, is present as v2.8 and v2.8.2 list it.
+
+  **Breaking:** `FieldProfile.datatype` is optional. A withdrawn field the standard gives no datatype has none, and the component rules skip such fields. Code that reads `field.datatype` must handle `undefined`.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/profiles/hl7v2.schema.json` is the JSON Schema of every profile file, with `$id` `https://glion.dev/schemas/hl7v2/v1.json` and one definition per kind of profile: `Event`, `Fields`, `Datatype`, `Table`, and `CodeSystem`. Every bundled profile file names its definition in `$schema`, such as `https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields`. Its root accepts a file of any kind; `ajv.getSchema("https://glion.dev/schemas/hl7v2/v1.json#/definitions/Event")` selects one kind. The event map and segment list of each version are lookups, not profiles, and are not in the schema.
+
+  **Breaking:** `@glion/profiles/hl7v2.schema.json` replaces the `@glion/profiles/event-schema.schema.json` export, and bundled event schemas name `https://glion.dev/schemas/hl7v2/v1.json#/definitions/Event` in `$schema` in place of `https://glion.dev/schemas/event-schema/v2.json`.
+
+- [#895](https://github.com/rethinkhealth/glion/pull/895) [`e21c0a0`](https://github.com/rethinkhealth/glion/commit/e21c0a0e51db47f36e42926d9ec5a7a5f730b4d8) Thanks [@meleksomai](https://github.com/meleksomai)! - `repair(schema, segmentIds[, options])` reads a message's segment IDs as the message the event schema accepts with the fewest edits. Each edit is a `missing` segment, one the schema requires and the message does not have, or an `unexpected` segment, one the message has and the schema does not allow there, with its index and the IDs of the groups it sits in. A message `runner` matches has no edits.
+
+  `MSH PID OBX OBX` against v2.5 `ORU_R01` repairs as one edit: `OBR` missing at index 2, in `PATIENT_RESULT` > `ORDER_OBSERVATION`.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/utils@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Minor Changes

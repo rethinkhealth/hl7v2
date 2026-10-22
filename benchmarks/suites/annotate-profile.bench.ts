@@ -1,6 +1,7 @@
 /**
  * Profile annotation benchmarks — the cost of enriching AST nodes with
- * profile metadata (field definitions, datatype cascade, code systems).
+ * profile metadata (field definitions, datatype cascade, tables, code
+ * systems).
  *
  * Every processor includes hl7v2AnnotateProfileContext: the downstream
  * plugins read `file.data.profile` and bail without it, so a processor
@@ -14,6 +15,7 @@ import { hl7v2AnnotateProfileContext } from "@glion/annotate-profile-context";
 import { hl7v2AnnotateProfileDatatypes } from "@glion/annotate-profile-datatypes";
 import { hl7v2AnnotateProfileFields } from "@glion/annotate-profile-fields";
 import { hl7v2AnnotateProfileFieldsCodeSystems } from "@glion/annotate-profile-fields-code-systems";
+import { hl7v2AnnotateProfileTables } from "@glion/annotate-profile-tables";
 import { parseHL7v2 } from "@glion/parser";
 import hl7v2PresetAnnotateProfileRecommended from "@glion/preset-annotate-profile-recommended";
 import { unified } from "unified";
@@ -35,6 +37,12 @@ const fieldsAndCodeSystems = unified()
   .use(hl7v2AnnotateProfileContext)
   .use(hl7v2AnnotateProfileFields)
   .use(hl7v2AnnotateProfileFieldsCodeSystems);
+
+const fieldsDatatypesAndTables = unified()
+  .use(hl7v2AnnotateProfileContext)
+  .use(hl7v2AnnotateProfileFields)
+  .use(hl7v2AnnotateProfileDatatypes)
+  .use(hl7v2AnnotateProfileTables);
 
 const preset = unified().use(hl7v2PresetAnnotateProfileRecommended);
 
@@ -62,6 +70,10 @@ describe("annotate-profile", () => {
 
   bench("annotate: fields + code-systems (12 segments)", async () => {
     await fieldsAndCodeSystems.run(structuredClone(medium), new VFile());
+  });
+
+  bench("annotate: fields + datatypes + tables (12 segments)", async () => {
+    await fieldsDatatypesAndTables.run(structuredClone(medium), new VFile());
   });
 
   bench("annotate: full preset (12 segments)", async () => {

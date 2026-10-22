@@ -1,5 +1,148 @@
 # @rethinkhealth/hl7v2
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`e2fb937`](https://github.com/rethinkhealth/glion/commit/e2fb9376aaba5e132a20091cfac91bc8b4f88ba9)]:
+  - @glion/parser@0.29.0
+  - @glion/preset-lint-profile-recommended@0.29.0
+  - @glion/preset-lint-recommended@0.29.0
+  - @glion/ast@0.29.0
+  - @glion/jsonify@0.29.0
+
+## 0.28.0
+
+### Minor Changes
+
+- [#1001](https://github.com/rethinkhealth/glion/pull/1001) [`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: decode HL7v2 escape sequences while parsing and encode them while serializing, so a subcomponent `value` is always the content and a parsed message writes back as the same text.
+
+  - `hl7v2Parser` decodes `\F\`, `\S\`, `\R\`, `\T\`, `\E\`, `\.br\`, and `\Xdd\` in every value as it tokenizes, leaving MSH-2 as it is; pass `decodeEscapes: false` to keep the wire form in the tree
+  - A formatting command (`\H\`, `\N\`, `\.sp 2\`, …), a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) stay in the value as written and are written back as they are; `hl7v2DecodeEscapes` no longer removes `\H\` and `\N\`
+  - `hl7v2ToHl7v2` and `toHl7v2` write delimiters, the escape character, the segment delimiter, and other control characters in a value as escape sequences, leaving MSH-1 and MSH-2 as they are; pass `encodeEscapes: false` to write values as they are
+  - `parseHL7v2` from `@glion/hl7v2` no longer runs `hl7v2DecodeEscapes`; its output is unchanged
+  - Add `decodeEscapes(value, delimiters)` and `encodeEscapes(value, delimiters)` to `@glion/utils`
+  - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` are for trees handled with those options off; a parsed tree must not be decoded again
+  - `hl7v2EncodeEscapes` now writes a control character other than the segment delimiter as `\Xdd\`
+  - `hl7v2DecodeEscapes` and `hl7v2EncodeEscapes` leave a subcomponent without a value as it is
+  - `MllpClient` and `glion send` send a message whose value holds a control character, written as `\Xdd\`, instead of rejecting it with `INVALID_MESSAGE`
+  - The bytes of a `\Xdd…\` are decoded as UTF-8; a sequence whose bytes are not UTF-8, or that has an odd number of digits, stays as written
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/parser@0.28.0
+  - @glion/preset-lint-profile-recommended@0.28.0
+  - @glion/preset-lint-recommended@0.28.0
+  - @glion/ast@0.28.0
+  - @glion/jsonify@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/decode-escapes@0.27.1
+  - @glion/preset-lint-profile-recommended@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/jsonify@0.27.1
+  - @glion/parser@0.27.1
+  - @glion/preset-lint-recommended@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies [[`7470329`](https://github.com/rethinkhealth/glion/commit/747032939dec8b334465c63ce654aaf460b20830)]:
+  - @glion/preset-lint-profile-recommended@0.27.0
+  - @glion/preset-lint-recommended@0.27.0
+  - @glion/ast@0.27.0
+  - @glion/decode-escapes@0.27.0
+  - @glion/jsonify@0.27.0
+  - @glion/parser@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/decode-escapes@0.26.0
+  - @glion/jsonify@0.26.0
+  - @glion/parser@0.26.0
+  - @glion/preset-lint-profile-recommended@0.26.0
+  - @glion/preset-lint-recommended@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/preset-lint-profile-recommended@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/decode-escapes@0.25.0
+  - @glion/jsonify@0.25.0
+  - @glion/parser@0.25.0
+  - @glion/preset-lint-recommended@0.25.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-field-repetition` reports a field with more repetitions than its RP/# allows, whatever that number is. It used to check only fields that do not repeat, so a field with a limit such as 2 (v2.6 `OBR-17`) or 10 (v2.6 `ERR-6`) was never reported. The report reads ``Field `OBR-17` (Order Callback Phone Number) has 3 repetitions; it allows at most 2 repetitions.``, with the number of repetitions in `actual`.
+
+  `@glion/lint-profile-field-max-length` reports ``Field `MSH-10` (Message Control ID) is 28 characters long; it allows at most 20 characters.``, with the length in `actual`.
+
+  **Breaking:** both rules read `repetitions` and `maxLength` from `field.data`, so `@glion/annotate-profile-fields` must run before them. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses either rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`. Through the preset, `parseHL7v2` from `@glion/hl7v2` now reports a field over a numeric repetition limit greater than one.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-required-components` reports an absent required component and an empty one as two causes: ``Component `MSH-9.3` (Message Structure) is not present; it is required.`` and ``Component `MSH-9.2` (Trigger Event) is empty; it is required.`` A component counts as empty when none of its subcomponents has a value, not only its first.
+
+  **Breaking:** the rule reads `id` and `datatype` from `field.data`, so `@glion/annotate-profile-fields` must run before it. `@glion/preset-lint-profile-recommended` already runs it. A pipeline that uses the rule on its own adds `.use(hl7v2AnnotateProfileFields)` after `hl7v2AnnotateProfileContext`.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/lint-profile-withdrawn` reports a value in any element whose optionality is `W` (withdrawn), and `@glion/lint-profile-backward-compatible` one whose optionality is `B` (backward compatible). Each is one visit over the tree that reads `optionality` from `node.data`, so it covers fields, components and subcomponents alike, and names the element by its `id`, such as `` `AL1-6` (Identification Date) has a value; it is withdrawn in v2.7 and must be empty. ``. Both accept an empty element and the explicit null `""`, carry the element's value in `actual`, and list the accepted values (empty and `""`) in `expected`. They need `@glion/annotate-profile-fields` and `@glion/annotate-profile-datatypes` to run first.
+
+  `@glion/preset-lint-profile-recommended` runs those two annotators after `annotate-profile-context`, and includes `withdrawn` as an error and `backward-compatible` as a warning: a withdrawn element must be empty, while HL7v2 still allows a value in a backward-compatible one.
+
+  **Breaking:** through the preset, `parseHL7v2` from `@glion/hl7v2` now marks a message fatal when it values a withdrawn field, such as EVN-1, MSA-3 or PID-19 from v2.7, and warns on a valued backward-compatible field, such as EVN-1 in v2.5 or v2.5.1. The preset's annotators also leave profile metadata on `node.data` of fields, components and subcomponents. To keep the old behavior, compose the profile rules without the preset, or turn a rule off after it: `.use(hl7v2LintWithdrawn, false)`.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - A datatype component mirrors its row in the HL7v2 component table. `optionality` is the OPT column and `table` the TBL# column, both from chapter 2A of the standard for v2.5 through v2.8.2, and absent before v2.5, whose standard prints no component tables. A withdrawn component stays at its sequence with `optionality: "W"` and no datatype, as v2.7 XPN-6 (Degree). `requiredSequences` lists the components whose optionality is `"R"`. `@glion/annotate-profile-datatypes` copies the component profile onto `component.data` and `subcomponent.data` as the profile gives it, `sequence` included, so they have `optionality` and `table` in place of `required`.
+
+  Fields and components share `Optionality` from `@glion/utils`, which includes `"RE"` (`Optionality.RequiredButMayBeEmpty`), printed by v2.7 and later for XPN-1 (Family Name).
+
+  **Breaking:** `ComponentProfile.required` is removed, and so is `required` on `component.data` and `subcomponent.data`; read `optionality === "R"`. `ComponentProfile.datatypeId` is optional.
+
+  **Breaking:** `required-components` now checks the components v2.5 and v2.5.1 print as required, which the profiles did not mark before. A v2.5 message whose MSH-9 is `ADT^A01`, without the message structure `ADT_A01`, now gets ``Component `MSH-9.3` (Message Structure) is not present; it is required.``, an error in `@glion/preset-lint-profile-recommended` and so in `parseHL7v2` from `@glion/hl7v2`. Send the message structure, or turn the rule off after the preset with `.use(hl7v2LintRequiredComponents, false)`.
+
+  With components carrying `optionality`, `@glion/lint-profile-withdrawn` and `@glion/lint-profile-backward-compatible` report components as well as fields, with no change to the rules: a valued v2.7 XPN.6 (Degree) is an error, and a valued v2.5.1 XTN.1 (Telephone Number) is a warning, once per repetition.
+
+- [#896](https://github.com/rethinkhealth/glion/pull/896) [`1fc821c`](https://github.com/rethinkhealth/glion/commit/1fc821c7d8c337d83faf289bcbc67c774d158b20) Thanks [@meleksomai](https://github.com/meleksomai)! - When a message does not fit its event schema, the rule reports each edit of the repair with the fewest edits, where it reported the first segment that did not fit. A segment the schema requires and the message does not have is reported as ``Segment `OBR` of segment group `PATIENT_RESULT > ORDER_OBSERVATION` is missing; the event schema requires it at this point.``, placed at the point where it would be inserted, with `expected` its ID. A segment the schema does not allow there is reported as ``Segment `PV1` is out of place; the event schema does not allow it at this point.``, or ``Segment `ZPI` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > PATIENT`.`` when it is read in a segment group, on that segment, with `actual` its ID. A missing slot the schema fills with any segment (`Hxx`) or any Z-segment is described in words, with no `expected`. The `Expected:` lists and `Message ended prematurely` are gone. The rule's `url` points to its README.
+
+  An `ADT_A01` with only `MSH` and `PID` now reports both `EVN` and `PV1` missing. A segment after the end of the message is reported as out of place. A segment in place of a required one is reported as out of place, next to the required one it displaces, reported as missing: `MSH PIDX PV` against `ADT_A01` reports `EVN` missing and `PIDX` out of place, then `PID` missing and `PV` out of place, then `PV1` missing at the end.
+
+  The rule reports at most 20 edits for a message, or 21 when the 21st is the out-of-place segment standing where the 20th, a missing one, belongs, then `The message has 6 more missing or out-of-place segments; the rule reports the first 20.` A message of more than 1,000 segments gets one report, in the new wording: the first segment that does not fit, or the end of the message when it ends early, with `expected` the segment IDs valid there and a `note` that says why. Through the preset, `parseHL7v2` from `@glion/hl7v2` reports the same.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`1fc821c`](https://github.com/rethinkhealth/glion/commit/1fc821c7d8c337d83faf289bcbc67c774d158b20)]:
+  - @glion/preset-lint-profile-recommended@0.24.0
+  - @glion/decode-escapes@0.24.0
+  - @glion/parser@0.24.0
+  - @glion/preset-lint-recommended@0.24.0
+  - @glion/ast@0.24.0
+  - @glion/jsonify@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`1281391`](https://github.com/rethinkhealth/glion/commit/128139121e07cf27b6c2d2641341bf891ef547ba)]:
+  - @glion/preset-lint-profile-recommended@0.23.0
+  - @glion/preset-lint-recommended@0.23.0
+  - @glion/ast@0.23.0
+  - @glion/decode-escapes@0.23.0
+  - @glion/jsonify@0.23.0
+  - @glion/parser@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

@@ -1,11 +1,12 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields",
   "segmentId": "PR1",
   "fields": [
     {
       "sequence": 1,
       "id": "PR1-1",
-      "required": true,
-      "repeatable": false,
+      "optionality": "R",
+      "repetitions": 1,
       "datatype": "SI",
       "maxLength": 4,
       "name": "Set ID - PR1",
@@ -13,9 +14,17 @@
     },
     {
       "sequence": 2,
+      "id": "PR1-2",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Procedure Coding Method",
+      "item": "392"
+    },
+    {
+      "sequence": 3,
       "id": "PR1-3",
-      "required": true,
-      "repeatable": false,
+      "optionality": "R",
+      "repetitions": 1,
       "datatype": "CNE",
       "maxLength": 705,
       "table": "HL70088",
@@ -23,20 +32,28 @@
       "item": "393"
     },
     {
-      "sequence": 3,
+      "sequence": 4,
+      "id": "PR1-4",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Procedure Description",
+      "item": "394"
+    },
+    {
+      "sequence": 5,
       "id": "PR1-5",
-      "required": true,
-      "repeatable": false,
+      "optionality": "R",
+      "repetitions": 1,
       "datatype": "DTM",
       "maxLength": 24,
       "name": "Procedure Date/Time",
       "item": "395"
     },
     {
-      "sequence": 4,
+      "sequence": 6,
       "id": "PR1-6",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "IS",
       "maxLength": 2,
       "table": "HL70230",
@@ -44,20 +61,28 @@
       "item": "396"
     },
     {
-      "sequence": 5,
+      "sequence": 7,
       "id": "PR1-7",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "NM",
       "maxLength": 4,
       "name": "Procedure Minutes",
       "item": "397"
     },
     {
-      "sequence": 6,
+      "sequence": 8,
+      "id": "PR1-8",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Anesthesiologist",
+      "item": "398"
+    },
+    {
+      "sequence": 9,
       "id": "PR1-9",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "IS",
       "maxLength": 2,
       "table": "HL70019",
@@ -65,20 +90,36 @@
       "item": "399"
     },
     {
-      "sequence": 7,
+      "sequence": 10,
       "id": "PR1-10",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "NM",
       "maxLength": 4,
       "name": "Anesthesia Minutes",
       "item": "400"
     },
     {
-      "sequence": 8,
+      "sequence": 11,
+      "id": "PR1-11",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Surgeon",
+      "item": "401"
+    },
+    {
+      "sequence": 12,
+      "id": "PR1-12",
+      "optionality": "W",
+      "repetitions": 1,
+      "name": "Procedure Practitioner",
+      "item": "402"
+    },
+    {
+      "sequence": 13,
       "id": "PR1-13",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "CWE",
       "maxLength": 250,
       "table": "HL70059",
@@ -86,10 +127,10 @@
       "item": "403"
     },
     {
-      "sequence": 9,
+      "sequence": 14,
       "id": "PR1-14",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "ID",
       "maxLength": 2,
       "table": "HL70418",
@@ -97,10 +138,10 @@
       "item": "404"
     },
     {
-      "sequence": 10,
+      "sequence": 15,
       "id": "PR1-15",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "CWE",
       "maxLength": 250,
       "table": "HL70051",
@@ -108,10 +149,10 @@
       "item": "772"
     },
     {
-      "sequence": 11,
+      "sequence": 16,
       "id": "PR1-16",
-      "required": false,
-      "repeatable": true,
+      "optionality": "O",
+      "repetitions": "unbounded",
       "datatype": "CNE",
       "maxLength": 705,
       "table": "HL70340",
@@ -119,10 +160,10 @@
       "item": "1316"
     },
     {
-      "sequence": 12,
+      "sequence": 17,
       "id": "PR1-17",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "IS",
       "maxLength": 20,
       "table": "HL70416",
@@ -130,10 +171,10 @@
       "item": "1501"
     },
     {
-      "sequence": 13,
+      "sequence": 18,
       "id": "PR1-18",
-      "required": false,
-      "repeatable": true,
+      "optionality": "O",
+      "repetitions": "unbounded",
       "datatype": "CWE",
       "maxLength": 250,
       "table": "HL70417",
@@ -141,20 +182,20 @@
       "item": "1502"
     },
     {
-      "sequence": 14,
+      "sequence": 19,
       "id": "PR1-19",
-      "required": false,
-      "repeatable": false,
+      "optionality": "C",
+      "repetitions": 1,
       "datatype": "EI",
       "maxLength": 427,
       "name": "Procedure Identifier",
       "item": "1848"
     },
     {
-      "sequence": 15,
+      "sequence": 20,
       "id": "PR1-20",
-      "required": false,
-      "repeatable": false,
+      "optionality": "C",
+      "repetitions": 1,
       "datatype": "ID",
       "maxLength": 1,
       "table": "HL70206",
@@ -162,10 +203,10 @@
       "item": "1849"
     },
     {
-      "sequence": 16,
+      "sequence": 21,
       "id": "PR1-21",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "IS",
       "maxLength": 20,
       "table": "HL70761",
@@ -173,10 +214,10 @@
       "item": "2177"
     },
     {
-      "sequence": 17,
+      "sequence": 22,
       "id": "PR1-22",
-      "required": false,
-      "repeatable": false,
+      "optionality": "O",
+      "repetitions": 1,
       "datatype": "IS",
       "maxLength": 20,
       "table": "HL70763",

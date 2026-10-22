@@ -1,5 +1,4 @@
 import { hl7v2AnnotateDelimiters } from "@glion/annotate-delimiters";
-import { hl7v2DecodeEscapes } from "@glion/decode-escapes";
 import { hl7v2Jsonify } from "@glion/jsonify";
 import { hl7v2Parser } from "@glion/parser";
 import hl7v2PresetLintProfileRecommended from "@glion/preset-lint-profile-recommended";
@@ -12,7 +11,6 @@ import { unified } from "unified";
 export const parseHL7v2 = unified()
   .use(hl7v2Parser)
   .use(hl7v2AnnotateDelimiters)
-  .use(hl7v2DecodeEscapes)
   .use(hl7v2PresetLintRecommended)
   .use(hl7v2PresetLintProfileRecommended)
   .use(hl7v2Jsonify)

@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0487",
   "description": "Specimen Type",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": "No suggested values"
-    },
     {
       "name": "ABS",
       "description": "Abscess"

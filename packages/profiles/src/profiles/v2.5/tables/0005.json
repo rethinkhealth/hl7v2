@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0005",
   "description": "Race",
   "type": "user",
   "codes": [
-    {
-      "name": "...",
-      "description": "see chapter 3"
-    },
     {
       "name": "1002-5",
       "description": "American Indian or Alaska Native"

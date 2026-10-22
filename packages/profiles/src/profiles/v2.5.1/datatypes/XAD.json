@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "XAD",
   "version": "2.5.1",
   "kind": "composite",
@@ -7,86 +8,91 @@
     {
       "sequence": 1,
       "name": "Street Address",
-      "datatypeId": "SAD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "SAD"
     },
     {
       "sequence": 2,
       "name": "Other Designation",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 3,
       "name": "City",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 4,
       "name": "State or Province",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 5,
       "name": "Zip or Postal Code",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 6,
       "name": "Country",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70399"
     },
     {
       "sequence": 7,
       "name": "Address Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70190"
     },
     {
       "sequence": 8,
       "name": "Other Geographic Designation",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 9,
       "name": "County/Parish Code",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70289"
     },
     {
       "sequence": 10,
       "name": "Census Tract",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70288"
     },
     {
       "sequence": 11,
       "name": "Address Representation Code",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70465"
     },
     {
       "sequence": 12,
       "name": "Address Validity Range",
-      "datatypeId": "DR",
-      "required": false
+      "optionality": "B",
+      "datatypeId": "DR"
     },
     {
       "sequence": 13,
       "name": "Effective Date",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     },
     {
       "sequence": 14,
       "name": "Expiration Date",
-      "datatypeId": "TS",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TS"
     }
   ]
 }

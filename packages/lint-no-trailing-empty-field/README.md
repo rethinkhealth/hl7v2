@@ -37,7 +37,7 @@ console.error(reporter([file]));
 
 A `unified` lint rule plugin. Takes no options.
 
-Visits every `segment` node, scans its `field` children from the end, and reports one message per segment that has trailing empty fields. The reported position spans the first empty field to the end of the segment (including the separator after the last empty field).
+Visits every `segment` node, scans its `field` children from the end, and reports one message per segment that has trailing empty fields. The reported position spans the first trailing empty field to the end of the segment.
 
 ```ts
 import type { Plugin } from "unified";
@@ -72,10 +72,10 @@ PID|1||PATID1234^^^HOSP^MR||DOE^JANE||19800101|F||
 Reported message:
 
 ```
-Segment has 2 trailing empty fields
+The segment ends with 2 empty fields; a segment should end at its last field with a value.
 ```
 
-The count of trailing fields is interpolated with pluralization (`1 trailing empty field`, `2 trailing empty fields`). One message is reported per offending segment.
+One message is reported per offending segment, whatever its Segment ID.
 
 ## Part of Glion
 

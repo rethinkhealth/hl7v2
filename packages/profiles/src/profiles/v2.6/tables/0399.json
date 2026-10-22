@@ -1,11 +1,7 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0399",
   "description": "Country code",
   "type": "hl7",
-  "codes": [
-    {
-      "name": "...",
-      "description": "use 3-character (alphabetic) form of ISO 3166"
-    }
-  ]
+  "codes": []
 }

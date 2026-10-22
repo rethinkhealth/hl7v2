@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { renderHuman, renderJson } from "../../src/commands/send-render";
+import {
+  renderConnected,
+  renderHuman,
+  renderJson,
+} from "../../src/commands/send-render";
 import type {
   SendAcceptOutcome,
   SendInvalidOutcome,
@@ -140,6 +144,76 @@ describe("renderHuman", () => {
       expect(out).not.toContain("\n");
       expect(out).toContain("begin with an MSH segment");
     });
+
+    it("names the control id of the message that was refused", () => {
+      const out = renderHuman({
+        ...invalid,
+        code: "INVALID_MESSAGE",
+        request: REQUEST,
+      });
+      expect(out).toBe(
+        "x  MSH-10 MSG00001  INVALID_MESSAGE  Not an HL7v2 message: it must begin with an MSH segment."
+      );
+    });
+
+    it("names the endpoint the send was aimed at, when one is known", () => {
+      const out = renderHuman({ ...invalid, target: TARGET });
+      expect(out).toBe(
+        "x  127.0.0.1:2575  Not an HL7v2 message: it must begin with an MSH segment."
+      );
+    });
+
+    it("indents every line of a hint that names several things to fix", () => {
+      const out = renderHuman({
+        ...invalid,
+        hint: "`entry`: Required.\n`port`: Expected number.",
+      });
+      expect(out.split("\n")).toEqual([
+        "x  Not an HL7v2 message: it must begin with an MSH segment.",
+        "   `entry`: Required.",
+        "   `port`: Expected number.",
+      ]);
+    });
+
+    it("puts the cause and the hint on their own lines under the fact", () => {
+      const out = renderHuman({
+        ...invalid,
+        cause: "ENOENT: no such file or directory",
+        hint: "Pass `--host` with the system to send to.",
+      });
+      expect(out.split("\n")).toEqual([
+        "x  Not an HL7v2 message: it must begin with an MSH segment.",
+        "   ENOENT: no such file or directory",
+        "   Pass `--host` with the system to send to.",
+      ]);
+    });
+
+    it("leaves out the control id when the message has none", () => {
+      const out = renderHuman({
+        ...invalid,
+        code: "INVALID_MESSAGE",
+        request: { ...REQUEST, controlId: "" },
+      });
+      expect(out).toBe(
+        "x  INVALID_MESSAGE  Not an HL7v2 message: it must begin with an MSH segment."
+      );
+    });
+  });
+});
+
+describe("renderConnected", () => {
+  it("marks a plain connection, a verified one, and an unverified one", () => {
+    expect(renderConnected(TARGET, 12, "plain")).toBe(
+      "== connected  127.0.0.1:2575  12.00ms"
+    );
+    expect(renderConnected(TARGET, 12, "tls")).toBe(
+      "== connected  127.0.0.1:2575  TLS  12.00ms"
+    );
+    // `rejectUnauthorized: false` means no certificate was checked, so the
+    // line must not claim one was.
+    expect(renderConnected(TARGET, 12, "tls-unverified")).toBe(
+      "== connected  127.0.0.1:2575  TLS unverified  12.00ms"
+    );
   });
 });
 
@@ -239,6 +313,21 @@ describe("renderJson", () => {
       const json = JSON.parse(renderJson({ ...invalid, target: TARGET }));
       expect(json.host).toBe("127.0.0.1");
       expect(json.port).toBe(2575);
+    });
+
+    it("carries the hint as its own field", () => {
+      const json = JSON.parse(
+        renderJson({ ...invalid, hint: "Pass `--host`." })
+      );
+      expect(json.hint).toBe("Pass `--host`.");
+      expect(json.message).toBe(
+        "Not an HL7v2 message: it must begin with an MSH segment."
+      );
+    });
+
+    it("identifies the refused message by its request control id", () => {
+      const json = JSON.parse(renderJson({ ...invalid, request: REQUEST }));
+      expect(json.requestControlId).toBe("MSG00001");
     });
   });
 });

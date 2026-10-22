@@ -73,18 +73,7 @@ describe("hl7v2DecodeEscapes plugin", () => {
     ).toBe("Unknown\\ABC\\Value");
   });
 
-  it("strips highlight start and end escapes", async () => {
-    const tree = m(s("MSH", f("Before\\H\\Bold\\N\\After")));
-
-    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
-
-    expect(
-      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
-        ?.children[0]?.value
-    ).toBe("BeforeBoldAfter");
-  });
-
-  it("strips highlight escapes while decoding delimiter escapes", async () => {
+  it("keeps highlight commands while decoding delimiter escapes", async () => {
     const tree = m(s("MSH", f("\\H\\Important\\N\\ value\\F\\pipe")));
 
     const results = await unified().use(hl7v2DecodeEscapes).run(tree);
@@ -92,18 +81,7 @@ describe("hl7v2DecodeEscapes plugin", () => {
     expect(
       (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
         ?.children[0]?.value
-    ).toBe("Important value|pipe");
-  });
-
-  it("strips standalone highlight start escape", async () => {
-    const tree = m(s("MSH", f("Text\\H\\Highlighted")));
-
-    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
-
-    expect(
-      (results.children[0] as Segment)?.children[0]?.children[0]?.children[0]
-        ?.children[0]?.value
-    ).toBe("TextHighlighted");
+    ).toBe("\\H\\Important\\N\\ value|pipe");
   });
 
   it("handles unterminated escape sequences", async () => {
@@ -131,6 +109,18 @@ describe("hl7v2DecodeEscapes plugin", () => {
       (results.children[0] as Segment)?.children[2]?.children[0]?.children[0]
         ?.children[0]?.value
     ).toBe("Value*More");
+  });
+
+  it("leaves a subcomponent without a value as it is", async () => {
+    const tree = m(s("PID", f("x")));
+    const subcomponent = (tree.children[0] as Segment).children[0]?.children[0]
+      ?.children[0]?.children[0];
+    Object.assign(subcomponent ?? {}, { value: undefined });
+    const results = await unified().use(hl7v2DecodeEscapes).run(tree);
+    expect(
+      (results.children[0] as Segment).children[0]?.children[0]?.children[0]
+        ?.children[0]?.value
+    ).toBeUndefined();
   });
 
   it("does nothing when there are no escapes", async () => {

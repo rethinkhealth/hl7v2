@@ -1,107 +1,82 @@
 /**
- * Resolve the MLLP target for `glion send`.
+ * Resolve where a `glion send` is aimed: the `--host`/`--port` pair the
+ * invocation names, and the TLS it dials with.
  *
- * Without `--local`, the target is the explicit `--host`/`--port` pair. With
- * `--local`, host and port come from the project's `glion.config.ts` (the same
- * config `dev`/`start` load), so a message can be fired at the server this
- * project defines without retyping the address. Flags still override the
- * individual fields the config provides.
+ * The command is a client: it sends to the system the operator points it at,
+ * and takes no part in what address a server of this project binds.
  *
- * The address-mapping logic ({@link deriveLocalTarget}) is pure and lives apart
- * from the config IO ({@link resolveTarget}) so it can be tested directly.
+ * @module
  */
 
-import { loadConfig } from "../config/load";
-import { ensureCacheDir } from "../prebuild";
-import type { SendArgs } from "./send";
+import type { NodeSocketOptions } from "@glion/mllp-client/node";
 
-const LOOPBACK_V4 = "127.0.0.1";
-const LOOPBACK_V6 = "::1";
+import { DEFAULT_PORT } from "../constants";
+import { causeMessage, GlionError } from "../errors";
+import type { SendArgs } from "./send";
+import type { SendTarget } from "./send-render";
+import { loadTls } from "./send-tls";
 
 export type TargetResult =
   | { ok: true; host: string; port: number }
-  | { ok: false; reason: string };
-
-/** The fields {@link deriveLocalTarget} reads from a resolved server config. */
-interface ConnectableConfig {
-  hostname: string;
-  port: number;
-  tls?: unknown;
-}
+  | { ok: false; reason: string; hint?: string };
 
 /**
- * Map a server *bind* address to the address a client dials. A server bound to
- * a wildcard (`0.0.0.0` / `::` / `""`) accepts connections on loopback, so that
- * is what we connect to — dialing the wildcard itself is not meaningful.
+ * Resolve the MLLP target. `--host` names the receiver; `--port` defaults to
+ * {@link DEFAULT_PORT}, the port MLLP standardizes on. The port is a protocol
+ * constant, while the host is the identity of the system that receives the
+ * message and is never assumed.
  */
-function toConnectHost(hostname: string): string {
-  if (hostname === "::") {
-    return LOOPBACK_V6;
-  }
-  if (hostname === "0.0.0.0" || hostname === "") {
-    return LOOPBACK_V4;
-  }
-  return hostname;
-}
-
-/**
- * Derive a connect target from a project's server config. Pure — the config IO
- * lives in {@link resolveTarget}. `--host`/`--port` override individual fields.
- */
-export function deriveLocalTarget(
-  config: ConnectableConfig,
-  overrides: { host?: string; port?: number }
-): TargetResult {
-  if (config.tls) {
+export function resolveTarget(args: SendArgs): TargetResult {
+  if (args.host === undefined) {
     return {
+      hint: "Pass `--host` with the system to send to.",
       ok: false,
-      reason:
-        "The server config enables TLS, but `glion send` has no TLS client yet. Send to a plaintext endpoint, or pass --host/--port without --local.",
+      reason: "No target host is defined.",
     };
   }
-
-  const port = overrides.port ?? config.port;
-  if (port === 0) {
-    return {
-      ok: false,
-      reason:
-        "The server config uses port 0 (an OS-assigned ephemeral port), so a target can't be derived. Pass --port explicitly.",
-    };
-  }
-
-  return {
-    host: overrides.host ?? toConnectHost(config.hostname),
-    ok: true,
-    port,
-  };
+  return { host: args.host, ok: true, port: args.port ?? DEFAULT_PORT };
 }
 
+/** Where a `glion send` is aimed, and how the connection is secured. */
+export type DestinationResult =
+  | { ok: true; target: SendTarget; tls: NodeSocketOptions["tls"] }
+  | {
+      ok: false;
+      reason: string;
+      hint?: string;
+      cause?: string;
+      target?: SendTarget;
+    };
+
 /**
- * Resolve the MLLP target. Without `--local`, `--host` and `--port` are both
- * required. With `--local`, the target comes from `glion.config.ts` (loaded the
- * same way `dev`/`start` do), with `--host`/`--port` overriding.
+ * Resolves where the message goes and how the connection is secured: the
+ * target {@link resolveTarget} reads from `args`, and the certificate files
+ * the invocation names read into memory. A host that is not defined and a
+ * file that cannot be read are `reason`s, each with the failure's own hint
+ * and cause; anything else propagates.
  */
-export async function resolveTarget(
-  args: SendArgs,
-  cwd: string
-): Promise<TargetResult> {
-  if (!args.local) {
-    if (args.host === undefined || args.port === undefined) {
+export async function resolveDestination(
+  args: SendArgs
+): Promise<DestinationResult> {
+  const resolved = resolveTarget(args);
+  if (!resolved.ok) {
+    return resolved;
+  }
+  const target = { host: resolved.host, port: resolved.port };
+  try {
+    return { ok: true, target, tls: await loadTls(args.tls) };
+  } catch (error) {
+    if (error instanceof GlionError) {
+      // The target was resolved first, so a certificate file that cannot be
+      // read still reports the endpoint the send was aimed at.
       return {
+        cause: causeMessage(error.cause),
+        hint: error.hint,
         ok: false,
-        reason:
-          "Specify a target with --host and --port, or use --local to read it from glion.config.ts.",
+        reason: error.message,
+        target,
       };
     }
-    return { host: args.host, ok: true, port: args.port };
+    throw error;
   }
-
-  const cacheDir = await ensureCacheDir(cwd);
-  const config = await loadConfig({
-    cacheDir,
-    cwd,
-    explicitPath: args.configPath,
-    mode: "dev",
-  });
-  return deriveLocalTarget(config, { host: args.host, port: args.port });
 }

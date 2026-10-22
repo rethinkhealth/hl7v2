@@ -1,10 +1,10 @@
 # @glion/util-query
 
-Reads HL7v2 ASTs using canonical paths like `PID-5[1].2.1` or `ORDER-ORC-1`.
+Reads HL7v2 ASTs using canonical paths like `PID.5[1].2.1` or `ORDER.ORC.1`.
 
 ## What it does
 
-Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using the same path syntax found in HL7 specs. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER-TIMING-TQ1`), field repetitions (`PID-5[2]`), components (`PID-5[1].2`), and subcomponents (`PID-5[1].2.1`). Path parsing is memoized in an LRU cache so repeated lookups stay fast.
+Provides six path-based helpers — `parse`, `select`, `selectAll`, `value`, `matches`, `format` — that operate on HL7v2 AST trees using dotted paths: segment groups, the segment, and the field are each separated with `.`, so HL7 element `PID-5.1` is the path `PID.5.1`. Paths can address segments (`PID`), groups (`ORDER`), nested groups and segments (`ORDER.TIMING.TQ1`), field repetitions (`PID.5[2]`), components (`PID.5[1].2`), and subcomponents (`PID.5[1].2.1`).
 
 ## Install
 
@@ -32,8 +32,8 @@ OBX|1||8675-3^Glucose^LN||120|mg/dL|70-105|H|||F`;
 const ast = parseHL7v2(message);
 
 // Values: drills to subcomponents automatically when the path is unique
-const lastName = value(ast, "PID-5[1].1.1"); // "Smith"
-const sendingApp = value(ast, "MSH-3[1].1.1"); // "MyApp"
+const lastName = value(ast, "PID.5[1].1.1"); // "Smith"
+const sendingApp = value(ast, "MSH.3[1].1.1"); // "MyApp"
 
 // Single node: grab the first matching AST node
 const pidSegment = select(ast, "PID");
@@ -48,22 +48,22 @@ for (const { node } of allObservations) {
 }
 
 // Existence check
-if (matches(ast, "PID-5")) {
+if (matches(ast, "PID.5")) {
   console.log("Patient has a name field");
 }
 
 // Path parsing
-const parsed = parse("ORDERS[2]-OBX-5[1].2.1");
+const parsed = parse("ORDERS[2].OBX.5[1].2.1");
 ```
 
 ## API
 
 ### `parse(path: string): PathParts`
 
-Breaks a canonical HL7 path into structured pieces. Useful for tooling and diagnostics.
+Breaks a canonical HL7 path into structured pieces.
 
 ```typescript
-parse("PID-5[1].2.1");
+parse("PID.5[1].2.1");
 // {
 //   segment: { name: 'PID' },
 //   field: 5,
@@ -73,25 +73,27 @@ parse("PID-5[1].2.1");
 // }
 ```
 
-`parse` memoizes up to 1,000 unique paths using an LRU cache so repeated lookups stay fast without leaking memory.
+`parse` returns a new `PathParts` on every call.
 
-### `select<Path>(root: Root, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
+### `select<Path>(node: Root | Group | Segment, path: Path): { node: InferNodeType<Path>; ancestors: Nodes[] } | null`
 
-Returns the first AST node addressed by the path, along with its ancestor chain, or `null` when it cannot be found. The return type is automatically inferred from the path string.
+Returns the node the path addresses under `node`, along with its ancestor chain, or `null` when it cannot be found. `node` is a message, a group, or a segment; a path read from a segment starts with the field. A step without `[n]` names the first child with that name, so `select` returns `null` when that child does not lead to a match, even if a later one does. The return type is inferred from the path string.
 
 ```typescript
-const result = select(ast, "PID-5[1].2");
+const result = select(ast, "PID.5[1].2");
 if (result) {
   result.node; // Type: Component
   result.ancestors; // [Root, Segment, Field, FieldRepetition]
 }
+
+select(pid, "5[1].2"); // the same component, read from the PID segment
 ```
 
-The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the root node, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
+The `ancestors` array follows the [`unist-util-visit-parents`](https://github.com/syntax-tree/unist-util-visit-parents) convention: it starts at the node passed to `select`, ends with the immediate parent, and never includes the node itself. You can rely on `ancestors[ancestors.length - 1]` being the direct parent.
 
-### `selectAll<Path>(root: Root, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
+### `selectAll<Path>(node: Root | Group | Segment, path: Path): Array<{ node: InferNodeType<Path>; ancestors: Nodes[] }>`
 
-Returns all AST nodes that match the path. Useful when a message contains multiple segments or groups of the same type.
+Returns every node the path addresses under `node`, in document order. `node` is a message, a group, or a segment, as in `select`.
 
 ```typescript
 // Get all OBX segments
@@ -107,36 +109,38 @@ for (const { node } of orders) {
 }
 
 // Get all observation values
-const values = selectAll(ast, "OBX-5");
+const values = selectAll(ast, "OBX.5");
 for (const { node } of values) {
   console.log(node.type); // 'field'
 }
 ```
 
-### `value(root: Root, path: string): { value: string; node: Nodes; ancestors: Nodes[] } | null`
+### `value(node: Root | Group | Segment, path: string): { value: string | null; node: Nodes; ancestors: Nodes[] } | null`
 
-Returns the string value stored at the path. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
+Returns the string value stored at the path under `node`, a message, a group, or a segment. If the node is not a subcomponent, it walks through single-child layers (field → field repetition → component → subcomponent) automatically.
 
 ```typescript
-const result = value(ast, "PID-3[1].1.1");
+const result = value(ast, "PID.3[1].1.1");
 if (result) {
   console.log(result.value); // "123456789"
   console.log(result.node.type); // "subcomponent"
   console.log(result.ancestors); // [Root, Segment, Field, ...]
 }
+
+value(pid, "3[1].1.1")?.value; // "123456789", read from the PID segment
 ```
 
-### `matches(root: Root, path: string): boolean`
+### `matches(node: Root | Group | Segment, path: string): boolean`
 
-Returns `true` when the path points to an existing node, otherwise `false`.
+Returns `true` when `select` finds a node at the path under `node`, otherwise `false`.
 
 ```typescript
-if (!matches(ast, "OBX-5")) {
+if (!matches(ast, "OBX.5")) {
   throw new Error("Missing observation value");
 }
 
-if (matches(ast, "PID-5")) {
-  const name = value(ast, "PID-5.1.1");
+if (matches(ast, "PID.5")) {
+  const name = value(ast, "PID.5.1.1");
 }
 ```
 
@@ -146,34 +150,55 @@ The inverse of `select`. Given a node and its ancestor chain (as returned by `vi
 
 ```typescript
 // With select
-const result = select(ast, "PID-5.2");
+const result = select(ast, "PID.5.2");
 if (result) {
-  format(result.node, result.ancestors); // "PID-5.2"
+  format(result.node, result.ancestors); // "PID.5.2"
 }
 
 // With visit
 visit(ast, "field", (node, ancestors) => {
-  const path = format(node, ancestors); // "PID-5", "OBX-1", etc.
+  const path = format(node, ancestors); // "PID.5", "OBX.1", etc.
   console.log(`Visiting ${path}`);
 });
 
-// Round-trip: format(select(root, path)) === path
+// select(root, format(node, ancestors)) returns node
 ```
 
-### `clearParseCache(): void`
+### `delimiters(root: Root): Delimiters`
 
-Clears the memoized parse results. Useful for long-running services that want to release memory during idle periods or before reloading configuration.
+Returns the message's delimiters, read from MSH-1 and MSH-2, with the HL7v2 defaults for any character the message does not give.
 
-### `getParseCacheSize(): number`
+```typescript
+delimiters(ast); // { field: "|", component: "^", repetition: "~", escape: "\\", subcomponent: "&", … }
+```
 
-Returns the current number of cached path entries so you can monitor cache pressure.
+### `QueryError`
+
+Every function that takes a path throws a `QueryError` when it cannot read the path; `path` carries the path.
+
+| `code`         | Cause                                      |
+| -------------- | ------------------------------------------ |
+| `EMPTY_PATH`   | The path is empty.                         |
+| `INVALID_PATH` | The path does not follow the path grammar. |
+
+```typescript
+import { QueryError } from "@glion/util-query";
+
+try {
+  select(ast, userPath);
+} catch (error) {
+  if (error instanceof QueryError && error.code === "INVALID_PATH") {
+    // userPath is not a path; error.path holds it
+  }
+}
+```
 
 ### Types
 
 ```typescript
 type PathParts = {
   groups?: Array<{ name: string; repetition?: number }>;
-  segment: { name: string; repetition?: number };
+  segment?: { name: string; repetition?: number };
   field?: number;
   repetition?: number;
   component?: number;
@@ -186,24 +211,29 @@ type PathParts = {
 Canonical path grammar:
 
 - `SEGMENT` — segment (e.g., `PID`)
-- `SEGMENT-FIELD` — field (e.g., `PID-5`)
-- `SEGMENT-FIELD[REP]` — field repetition (e.g., `PID-5[2]`)
-- `SEGMENT-FIELD[REP].COMP` — component (e.g., `PID-5[1].2`)
-- `SEGMENT-FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID-5[1].2.1`)
-- `GROUP[N]-...` — qualify with group ID and optional repetition (e.g., `ORDER_OBSERVATION[2]-OBX-5`)
+- `SEGMENT.FIELD` — field (e.g., `PID.5`)
+- `SEGMENT.FIELD[REP]` — field repetition (e.g., `PID.5[2]`)
+- `SEGMENT.FIELD[REP].COMP` — component (e.g., `PID.5[1].2`)
+- `SEGMENT.FIELD[REP].COMP.SUB` — subcomponent (e.g., `PID.5[1].2.1`)
+- `GROUP[N].` — qualify with group ID and optional repetition (e.g., `PATIENT_RESULT.ORDER_OBSERVATION[2].OBR.4`)
+- `FIELD[REP].COMP.SUB` — the same steps without the segment, read from a segment (e.g., `5[1].2.1`)
+
+Every step of a path is separated with `.`. A name starts with a letter and a field is a number, so the first numeric step is the field: in `ORDER.OBR.5.1`, `ORDER` is a group, `OBR` the segment, `5` the field, and `1` the component. Positions count from 1. A string that does not follow this grammar, such as `PID-5.1`, `PID.0`, or `" PID"`, throws `INVALID_PATH`.
 
 A segment name or group ID is an uppercase letter followed by uppercase letters, digits, and underscores, such as `PID` or `PATIENT_RESULT`. A path names a group by its `id`, not its `name`: a group with ID `PATIENT_VISIT` and name `Patient Visit` is `PATIENT_VISIT`.
 
-Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` assume `[1]`.
+Repetition indexes are **1-based**. If you omit `[n]`, `select`/`value`/`matches` take the first child with that name at that step, and `selectAll` takes every one. In a message whose first `ORDER` has no `OBX` and whose second has one, `select(ast, "ORDER.OBX")` returns `null` and `selectAll(ast, "ORDER.OBX")` returns the second `ORDER`'s `OBX`; `ORDER[2].OBX` selects it.
 
-Paths select whatever exists in the AST — segments or groups. A bare name (`NAME`) returns whichever exists, trying segments first; adding a field suffix (`NAME-N`) forces segment access because field numbers only apply to segments. Groups can also appear as navigation prefixes (`ORDER-ORC`, `ORDER-TIMING-TQ1-1`).
+Every step names a direct child of the node before it, and the first step names a direct child of the node the path is read from: a message or a group holds segments and groups, and a segment holds fields, so a path read from a segment starts with the field. A path that starts with the field finds nothing in a message or a group, and a path that starts with a name finds nothing in a segment. `ORDER.ORC` is an `ORC` directly inside an `ORDER` group directly under the message; an `ORC` nested deeper is not matched. A path to a node inside a group therefore names every group from the message down: in an `ORU_R01` grouped by `@glion/transform-profile-groups`, the patient is `PATIENT_RESULT.PATIENT.PID` and an observation is `PATIENT_RESULT.ORDER_OBSERVATION.OBSERVATION.OBX`.
 
-Group prefixes and the final name resolve differently. Each group in the prefix must be a direct child of the previous scope (`INSURANCE-ORDER` matches only an `ORDER` group directly inside `INSURANCE`). The final name is searched at any depth below that scope, in document order, so `select(ast, "OBX")` finds an `OBX` nested inside `ORDER-RESULT` and `select(ast, "RESULT")` finds the nested `RESULT` group. `[n]` on the final name indexes that document-order list across depths, matching the segment-sequence convention of the HL7 `ERL` data type: `OBX[3]` is the third `OBX` in the message regardless of grouping, and `ORDER[2]` may be a nested `ORDER` that opens before the second top-level one. Use a group prefix to pin the level when a name occurs at several depths.
+A path's meaning depends on the tree's grouping. On a flat tree, as the parser produces it, every segment is a direct child of the message, so `PID.3` and `OBX[2].5` match. After grouping, only segments left at the top level, such as `MSH`, match by name alone; `PID.3` returns `null` until the path names `PID`'s groups.
 
-Because the final name ignores grouping, a bare segment path returns the same node whether or not a grouping plugin has run on the tree.
+`[n]` counts the direct children with that name, segments and groups together: in `[MSH, PID, OBX, PID]`, the second `PID` is `PID[2]`, and a group `ZZZ` after a segment `ZZZ` is `ZZZ[2]`. A step without a field number matches a segment or a group; a field number matches only a segment.
+
+`format(node, ancestors)` returns the path that `select` resolves back to `node`.
 
 ```typescript
-// Selecting groups directly
+// Selecting a top-level group
 const orderGroup = select(ast, "ORDER");
 if (orderGroup?.node.type === "group") {
   console.log("Found ORDER group");
@@ -216,8 +246,8 @@ if (pid?.node.type === "segment") {
 }
 
 // Navigation through groups to segments
-value(ast, "ORDER-ORC-1"); // Order control
-value(ast, "ORDER-TIMING-TQ1-1"); // Timing quantity
+value(ast, "ORDER.ORC.1"); // Order control
+value(ast, "ORDER.TIMING.TQ1.1"); // Timing quantity
 ```
 
 ## Common recipes
@@ -225,25 +255,26 @@ value(ast, "ORDER-TIMING-TQ1-1"); // Timing quantity
 ### Patient demographics
 
 ```typescript
-const lastName = value(ast, "PID-5[1].1.1")?.value;
-const firstName = value(ast, "PID-5[1].2.1")?.value;
-const middleName = value(ast, "PID-5[1].3.1")?.value;
-const dob = value(ast, "PID-7[1].1.1")?.value;
+const lastName = value(ast, "PID.5[1].1.1")?.value;
+const firstName = value(ast, "PID.5[1].2.1")?.value;
+const middleName = value(ast, "PID.5[1].3.1")?.value;
+const dob = value(ast, "PID.7[1].1.1")?.value;
 ```
 
 ### Observations
 
 ```typescript
-// Single observation
-const obsValue = value(ast, "OBX-5[1].1.1")?.value;
-const units = value(ast, "OBX-6[1].1.1")?.value;
-const refRange = value(ast, "OBX-7[1].1.1")?.value;
+import { selectAll, value } from "@glion/util-query";
 
-// Multiple observations
-const allOBX = selectAll(ast, "OBX");
-for (const { node } of allOBX) {
-  const val = value(node, "OBX-5")?.value;
-  const u = value(node, "OBX-6")?.value;
+// Single observation
+const obsValue = value(ast, "OBX.5[1].1.1")?.value;
+const units = value(ast, "OBX.6[1].1.1")?.value;
+const refRange = value(ast, "OBX.7[1].1.1")?.value;
+
+// Multiple observations: read each OBX from the segment
+for (const { node: obx } of selectAll(ast, "OBX")) {
+  const val = value(obx, "5")?.value;
+  const u = value(obx, "6")?.value;
   console.log(`${val} ${u}`);
 }
 ```
@@ -252,19 +283,13 @@ for (const { node } of allOBX) {
 
 ```typescript
 if (!matches(ast, "MSH")) throw new Error("Missing message header");
-if (!matches(ast, "PID-3[1].1.1")) throw new Error("Missing patient ID");
+if (!matches(ast, "PID.3[1].1.1")) throw new Error("Missing patient ID");
 
 if (matches(ast, "OBX")) {
   const observations = selectAll(ast, "OBX");
   console.log(`Found ${observations.length} observations`);
 }
 ```
-
-## Error messages
-
-- Invalid formats throw with guidance, e.g. `"Invalid HL7 path format: \"PID-\""`.
-- Out-of-range indexes throw, e.g. `"Field number must be ≥1, got: 0"`.
-- Whitespace is rejected to catch accidental typos.
 
 ## Part of Glion
 

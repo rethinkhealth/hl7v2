@@ -1,5 +1,89 @@
 # @rethinkhealth/hl7v2-annotate-profile-fields-code-systems
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/profiles@0.29.0
+  - @glion/util-visit@0.29.0
+  - @glion/ast@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/util-visit@0.28.0
+  - @glion/profiles@0.28.0
+  - @glion/ast@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0), [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/profiles@0.27.1
+  - @glion/util-visit@0.27.1
+  - @glion/ast@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#987](https://github.com/rethinkhealth/glion/pull/987) [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d) Thanks [@meleksomai](https://github.com/meleksomai)! - Lint findings describe the node they are placed on, never name it, and never contain content from the message (ADR 0030). ``Field `PID-5` (Patient Name) is 300 characters long; it allows at most 250.`` is now `The value is 300 characters long; the field allows at most 250.` The finding's `place` and `ancestors` locate the node, and `actual` carries the content. Findings about a field, component, or segment the message does not contain still name it from the profile or event schema. The `ruleId` of every finding is unchanged; only the text changes.
+
+  - No value, part of a value, version, or Segment ID from the message appears in a finding's text: `lint-profile-withdrawn`, `lint-profile-backward-compatible`, `lint-profile-table-values`, `lint-profile-timestamps`, `lint-message-version`, `lint-required-message-header`, and `lint-segment-header-length` describe the content instead (`The day is past the end of its month; …`, `The Segment ID is 4 characters long; …`).
+  - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group.
+  - `lint-no-trailing-empty-field` and `lint-required-message-header` report a segment with an empty Segment ID with the same message as any other.
+  - `lint-profile-field-max-length`, `lint-profile-field-repetition`, `lint-profile-extra-components`, `lint-profile-withdrawn`, and `lint-profile-backward-compatible` check an element whose data has no `id`, such as one a site's own annotator sets.
+  - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
+
+- Updated dependencies [[`7c24dbc`](https://github.com/rethinkhealth/glion/commit/7c24dbce0ae8ce90b04e69f5c4d6da290ba43650), [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/profiles@0.27.0
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- [#950](https://github.com/rethinkhealth/glion/pull/950) [`0a425f0`](https://github.com/rethinkhealth/glion/commit/0a425f015f61ae5c4543e00218f9e0dedc29010d) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/preset-annotate-profile-recommended` runs `@glion/annotate-profile-tables` in place of `@glion/annotate-profile-fields-code-systems`. A primitive value bound to a table now carries `data.tableValue`, read from the tables of the message's HL7v2 version, and fields no longer carry `data.codeSystem` nor repetitions `data.code`. Composite coded values, such as a CWE field, are not annotated by the preset.
+
+  `@glion/annotate-profile-fields-code-systems` is experimental: its output may change in any release.
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/profiles@0.26.0
+  - @glion/util-visit@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies [[`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283)]:
+  - @glion/profiles@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`e21c0a0`](https://github.com/rethinkhealth/glion/commit/e21c0a0e51db47f36e42926d9ec5a7a5f730b4d8)]:
+  - @glion/profiles@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b)]:
+  - @glion/util-visit@0.23.0
+  - @glion/ast@0.23.0
+  - @glion/profiles@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

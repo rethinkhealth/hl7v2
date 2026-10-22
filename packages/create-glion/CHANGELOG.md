@@ -1,5 +1,31 @@
 # create-glion
 
+## 0.29.0
+
+No changes in this release.
+
+## 0.28.0
+
+No changes in this release.
+
+## 0.27.1
+
+No changes in this release.
+
+## 0.27.0
+
+### Patch Changes
+
+- [#954](https://github.com/rethinkhealth/glion/pull/954) [`f3d04ba`](https://github.com/rethinkhealth/glion/commit/f3d04bab8eafc416993a86abfe5c5331e316d901) Thanks [@meleksomai](https://github.com/meleksomai)! - Update `giget` to 3.2.0, which has no dependencies and bundles `tar` 7 with its security fixes.
+
+## 0.26.0
+
+No changes in this release.
+
+## 0.25.0
+
+No changes in this release.
+
 ## 0.2.0
 
 ### Minor Changes

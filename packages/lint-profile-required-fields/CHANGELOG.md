@@ -1,5 +1,101 @@
 # @rethinkhealth/hl7v2-lint-profile-required-fields
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies [[`c76a45d`](https://github.com/rethinkhealth/glion/commit/c76a45d2c9345db5ad6550f74b4fdc7546d2fd56)]:
+  - @glion/utils@0.29.0
+  - @glion/util-visit@0.29.0
+  - @glion/ast@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies [[`ccd49ff`](https://github.com/rethinkhealth/glion/commit/ccd49ff4fb7e82a628ef05ac905110a9c9e173ad)]:
+  - @glion/utils@0.28.0
+  - @glion/util-visit@0.28.0
+  - @glion/ast@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/util-visit@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/utils@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#987](https://github.com/rethinkhealth/glion/pull/987) [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d) Thanks [@meleksomai](https://github.com/meleksomai)! - Lint findings describe the node they are placed on, never name it, and never contain content from the message (ADR 0030). ``Field `PID-5` (Patient Name) is 300 characters long; it allows at most 250.`` is now `The value is 300 characters long; the field allows at most 250.` The finding's `place` and `ancestors` locate the node, and `actual` carries the content. Findings about a field, component, or segment the message does not contain still name it from the profile or event schema. The `ruleId` of every finding is unchanged; only the text changes.
+
+  - No value, part of a value, version, or Segment ID from the message appears in a finding's text: `lint-profile-withdrawn`, `lint-profile-backward-compatible`, `lint-profile-table-values`, `lint-profile-timestamps`, `lint-message-version`, `lint-required-message-header`, and `lint-segment-header-length` describe the content instead (`The day is past the end of its month; …`, `The Segment ID is 4 characters long; …`).
+  - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group.
+  - `lint-no-trailing-empty-field` and `lint-required-message-header` report a segment with an empty Segment ID with the same message as any other.
+  - `lint-profile-field-max-length`, `lint-profile-field-repetition`, `lint-profile-extra-components`, `lint-profile-withdrawn`, and `lint-profile-backward-compatible` check an element whose data has no `id`, such as one a site's own annotator sets.
+  - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
+
+- [#982](https://github.com/rethinkhealth/glion/pull/982) [`785ad9c`](https://github.com/rethinkhealth/glion/commit/785ad9caf1ddd532cebcfe1511bb9a3a8e6ceaad) Thanks [@meleksomai](https://github.com/meleksomai)! - Name a missing required field whose profile gives it no name by its ID alone, such as ``Field `ZPD-2` is not present; it is required.``, instead of with empty parentheses.
+- Updated dependencies [[`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+  - @glion/utils@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/util-visit@0.26.0
+  - @glion/utils@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.25.0
+  - @glion/util-visit@0.25.0
+  - @glion/utils@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- [#910](https://github.com/rethinkhealth/glion/pull/910) [`b63c126`](https://github.com/rethinkhealth/glion/commit/b63c12656eff968e8ae24e0c5d822b7f5e025db0) Thanks [@meleksomai](https://github.com/meleksomai)! - Report a required field that is not present apart from one that is empty, each as one sentence:
+
+  - ``Field `PID-3` (Patient Identifier List) is not present; it is required.``
+  - ``Field `PID-3` (Patient Identifier List) is empty; it is required.``
+
+  The rule has a `url` to its README in this repository.
+
+- [#917](https://github.com/rethinkhealth/glion/pull/917) [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68) Thanks [@meleksomai](https://github.com/meleksomai)! - A field profile mirrors its row in the HL7v2 segment attribute table. `optionality` is the OPT column, an `Optionality` from `@glion/utils` (`Optionality.Required` is `"R"`, `Optionality.Withdrawn` is `"W"`, and so on), absent where the standard records none. `repetitions` is the RP/# column, the most occurrences the field may have or `"unbounded"`, and `1` when it does not repeat. They replace `required` and `repeatable`; `requiredSequences` lists the fields whose optionality is `"R"`. `@glion/annotate-profile-fields` copies the field profile onto `field.data` as the profile gives it, `sequence` included, so `field.data` has `optionality` and `repetitions` in place of `required` and `repeatable`, and leaves out what the profile leaves out.
+
+  Both come from HL7DB, so fields where it disagrees with the XML schemas change: DG1-2 and PR1-2 are required in v2.3.1 through v2.5.1, OBX-2 in v2.8, and fields such as ERR-6 and OBR-17 repeat a set number of times from v2.6.
+
+  **Breaking:** `FieldProfile.required` and `FieldProfile.repeatable` are removed, and so are `required` and `repeatable` on `field.data`. Read `optionality === "R"` in place of `required`, and `repetitions !== 1` in place of `repeatable`.
+
+  **Breaking:** `@glion/utils` exports `Optionality`, a const object and type of the OPT codes named after the standard (`Required`, `RequiredButMayBeEmpty`, `Optional`, `Conditional`, `NotUsed`, `BackwardCompatible`, `Withdrawn`), in place of `OptionalityCode`. `NotSupported` is now `NotUsed`, and `RequiredOrEmpty` is now `RequiredButMayBeEmpty`.
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/utils@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b)]:
+  - @glion/util-visit@0.23.0
+  - @glion/ast@0.23.0
+  - @glion/utils@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

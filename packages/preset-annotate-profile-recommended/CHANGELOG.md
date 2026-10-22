@@ -1,5 +1,99 @@
 # @rethinkhealth/hl7v2-preset-annotate-profile-recommended
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-datatypes@0.29.0
+  - @glion/annotate-profile-fields@0.29.0
+  - @glion/annotate-profile-tables@0.29.0
+  - @glion/annotate-profile-context@0.29.0
+  - @glion/annotate-profile-segments@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-fields@0.28.0
+  - @glion/annotate-profile-tables@0.28.0
+  - @glion/annotate-profile-datatypes@0.28.0
+  - @glion/annotate-profile-context@0.28.0
+  - @glion/annotate-profile-segments@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-context@0.27.1
+  - @glion/annotate-profile-fields@0.27.1
+  - @glion/annotate-profile-segments@0.27.1
+  - @glion/annotate-profile-datatypes@0.27.1
+  - @glion/annotate-profile-tables@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- Updated dependencies [[`cb4c228`](https://github.com/rethinkhealth/glion/commit/cb4c2284ffe7925108a3ea7b9f5bd1b3ec39641e)]:
+  - @glion/annotate-profile-datatypes@0.27.0
+  - @glion/annotate-profile-fields@0.27.0
+  - @glion/annotate-profile-tables@0.27.0
+  - @glion/annotate-profile-context@0.27.0
+  - @glion/annotate-profile-segments@0.27.0
+
+## 0.26.0
+
+### Minor Changes
+
+- [#950](https://github.com/rethinkhealth/glion/pull/950) [`0a425f0`](https://github.com/rethinkhealth/glion/commit/0a425f015f61ae5c4543e00218f9e0dedc29010d) Thanks [@meleksomai](https://github.com/meleksomai)! - `@glion/preset-annotate-profile-recommended` runs `@glion/annotate-profile-tables` in place of `@glion/annotate-profile-fields-code-systems`. A primitive value bound to a table now carries `data.tableValue`, read from the tables of the message's HL7v2 version, and fields no longer carry `data.codeSystem` nor repetitions `data.code`. Composite coded values, such as a CWE field, are not annotated by the preset.
+
+  `@glion/annotate-profile-fields-code-systems` is experimental: its output may change in any release.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-context@0.26.0
+  - @glion/annotate-profile-datatypes@0.26.0
+  - @glion/annotate-profile-fields@0.26.0
+  - @glion/annotate-profile-segments@0.26.0
+  - @glion/annotate-profile-tables@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies [[`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283), [`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283)]:
+  - @glion/annotate-profile-context@0.25.0
+  - @glion/annotate-profile-datatypes@0.25.0
+  - @glion/annotate-profile-fields@0.25.0
+  - @glion/annotate-profile-fields-code-systems@0.25.0
+  - @glion/annotate-profile-segments@0.25.0
+
+## 0.24.0
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68)]:
+  - @glion/annotate-profile-datatypes@0.24.0
+  - @glion/annotate-profile-context@0.24.0
+  - @glion/annotate-profile-fields@0.24.0
+  - @glion/annotate-profile-fields-code-systems@0.24.0
+  - @glion/annotate-profile-segments@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/annotate-profile-context@0.23.0
+  - @glion/annotate-profile-datatypes@0.23.0
+  - @glion/annotate-profile-fields@0.23.0
+  - @glion/annotate-profile-fields-code-systems@0.23.0
+  - @glion/annotate-profile-segments@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

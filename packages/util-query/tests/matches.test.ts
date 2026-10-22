@@ -8,21 +8,33 @@ describe(matches, () => {
   it("returns true for existing paths", () => {
     expect(matches(message, "MSH")).toBeTruthy();
     expect(matches(message, "PID")).toBeTruthy();
-    expect(matches(message, "PID-1")).toBeTruthy();
-    expect(matches(message, "PID-1.1")).toBeTruthy();
+    expect(matches(message, "PID.1")).toBeTruthy();
+    expect(matches(message, "PID.1.1")).toBeTruthy();
   });
 
   it("returns false for non-existent paths", () => {
     expect(matches(message, "OBX")).toBeFalsy();
-    expect(matches(message, "PID-99")).toBeFalsy();
-    expect(matches(message, "PID-1.99")).toBeFalsy();
+    expect(matches(message, "PID.99")).toBeFalsy();
+    expect(matches(message, "PID.1.99")).toBeFalsy();
   });
 
   it("can be used in conditional logic", () => {
-    if (matches(message, "PID-1")) {
+    if (matches(message, "PID.1")) {
       expect(true).toBeTruthy();
     } else {
       throw new Error("Should have matched");
     }
+  });
+});
+
+describe("matches from a segment", () => {
+  const pid = s("PID", f(r(c("Smith"), c("John"))));
+
+  it("finds a field the segment holds", () => {
+    expect(matches(pid, "1.2")).toBeTruthy();
+  });
+
+  it("finds nothing past the segment's last field", () => {
+    expect(matches(pid, "2")).toBeFalsy();
   });
 });

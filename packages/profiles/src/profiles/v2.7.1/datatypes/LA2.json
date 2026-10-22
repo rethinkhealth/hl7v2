@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "LA2",
   "version": "2.7.1",
   "kind": "composite",
@@ -7,98 +8,107 @@
     {
       "sequence": 1,
       "name": "Point of Care",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70302"
     },
     {
       "sequence": 2,
       "name": "Room",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70303"
     },
     {
       "sequence": 3,
       "name": "Bed",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70304"
     },
     {
       "sequence": 4,
       "name": "Facility",
-      "datatypeId": "HD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "HD"
     },
     {
       "sequence": 5,
       "name": "Location Status",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70306"
     },
     {
       "sequence": 6,
       "name": "Patient Location Type",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70305"
     },
     {
       "sequence": 7,
       "name": "Building",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70307"
     },
     {
       "sequence": 8,
       "name": "Floor",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70308"
     },
     {
       "sequence": 9,
       "name": "Street Address",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 10,
       "name": "Other Designation",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 11,
       "name": "City",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 12,
       "name": "State or Province",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 13,
       "name": "Zip or Postal Code",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 14,
       "name": "Country",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70399"
     },
     {
       "sequence": 15,
       "name": "Address Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70190"
     },
     {
       "sequence": 16,
       "name": "Other Geographic Designation",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     }
   ]
 }

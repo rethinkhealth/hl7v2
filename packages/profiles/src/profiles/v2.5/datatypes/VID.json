@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "VID",
   "version": "2.5",
   "kind": "composite",
@@ -7,20 +8,22 @@
     {
       "sequence": 1,
       "name": "Version ID",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70104"
     },
     {
       "sequence": 2,
       "name": "Internationalization Code",
+      "optionality": "O",
       "datatypeId": "CE",
-      "required": false
+      "table": "HL70399"
     },
     {
       "sequence": 3,
       "name": "International Version ID",
-      "datatypeId": "CE",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CE"
     }
   ]
 }

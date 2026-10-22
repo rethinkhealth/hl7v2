@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "MA",
   "version": "2.4",
   "kind": "composite",
@@ -7,38 +8,32 @@
     {
       "sequence": 1,
       "name": "sample 1 from channel 1",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "sample 1 from channel 2",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "sample 1 from channel 3",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "sample 1 from channel 4",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 5,
       "name": "sample 1 from channel 5",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 6,
       "name": "sample 1 from channel 6",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     }
   ]
 }

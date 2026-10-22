@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "MO",
   "version": "2.3",
   "kind": "composite",
@@ -7,14 +8,12 @@
     {
       "sequence": 1,
       "name": "quantity",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "denomination",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     }
   ]
 }

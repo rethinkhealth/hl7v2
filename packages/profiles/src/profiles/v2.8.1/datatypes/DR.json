@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "DR",
   "version": "2.8.1",
   "kind": "composite",
@@ -7,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Range Start Date/Time",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     },
     {
       "sequence": 2,
       "name": "Range End Date/Time",
-      "datatypeId": "DTM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "DTM"
     }
   ]
 }

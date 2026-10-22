@@ -5,7 +5,7 @@
     { "repo": "rethinkhealth/glion" }
   ],
   "commit": false,
-  "fixed": [["@glion/*"]],
+  "fixed": [["@glion/*", "create-glion"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

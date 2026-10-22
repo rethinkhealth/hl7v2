@@ -29,6 +29,35 @@ describe("LogPane", () => {
     expect(lastFrame()).toContain("AA");
   });
 
+  it("renders a fatal event's message, cause, and every line of its hint", () => {
+    // A config with two bad fields produces one hint line per field, and two
+    // fields can fail the same way — so the lines can repeat.
+    const entries = toEntries([
+      {
+        cause: "Unexpected token",
+        hint: "`client.sendTimeoutMs`: expected number\n`client.connectTimeoutMs`: expected number",
+        kind: "config-invalid",
+        message:
+          "The config file `/p/glion.config.ts` has options that are not valid.",
+        t: "fatal",
+        ts: "2026-04-05T12:34:56.000Z",
+      },
+    ]);
+    const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);
+    const out = lastFrame() ?? "";
+
+    // The message wraps at the terminal width, so assert its opening.
+    expect(out).toContain("The config file");
+    expect(out).toContain("Unexpected token");
+    const hintLines = out
+      .split("\n")
+      .filter((line) => line.includes("expected number"));
+    expect(hintLines).toHaveLength(2);
+    for (const line of hintLines) {
+      expect(line.startsWith("              ")).toBe(true);
+    }
+  });
+
   it("renders error events distinctly", () => {
     const entries = toEntries([{ message: "boom", t: "error", ts: "x" }]);
     const { lastFrame } = render(<LogPane entries={entries} epoch={0} />);

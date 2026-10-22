@@ -101,7 +101,7 @@ Contract clauses stay terse and stack as fragments, not prose:
 
 ## Inline comments
 
-Same rule, one step looser — see CLAUDE.md §10. Default to none. A comment earns its place only for a non-obvious invariant, a deliberate trade-off, a platform workaround, or a spec section. Never reference the current task or PR.
+Same rule, one step looser — see CLAUDE.md §10. Default to none. A comment earns its place only for a non-obvious invariant, a deliberate trade-off, a platform workaround, a spec section, or a short walkthrough of how a module's functions work together, shown on a concrete example (§10 sets its limits). Never reference the current task or PR.
 
 ## Self-check
 

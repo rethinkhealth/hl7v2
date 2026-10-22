@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CK",
   "version": "2.4",
   "kind": "composite",
@@ -7,26 +8,22 @@
     {
       "sequence": 1,
       "name": "ID number (NM)",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 2,
       "name": "check digit (NM)",
-      "datatypeId": "NM",
-      "required": false
+      "datatypeId": "NM"
     },
     {
       "sequence": 3,
       "name": "code identifying the check digit scheme employed",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 4,
       "name": "assigning authority",
-      "datatypeId": "HD",
-      "required": false
+      "datatypeId": "HD"
     }
   ]
 }

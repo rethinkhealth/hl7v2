@@ -22,11 +22,12 @@ describe("hl7v2-lint:segment-header-length", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]).toMatchObject({
+      actual: "PID_ADDED",
       message:
-        "Unexpected 9 header length, expected 3 characters, remove 6 characters",
+        "The Segment ID is 9 characters long; a Segment ID must be exactly 3 characters.",
       ruleId: "segment-header-length",
       source: "hl7v2-lint",
-      url: "https://github.com/rethinkhealth/hl7v2/tree/main/packages/hl7v2-lint-segment-header-length#readme",
+      url: "https://github.com/rethinkhealth/glion/tree/main/packages/lint-segment-header-length#readme",
     });
   });
 
@@ -38,8 +39,9 @@ describe("hl7v2-lint:segment-header-length", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]).toMatchObject({
+      actual: "PI",
       message:
-        "Unexpected 2 header length, expected 3 characters, add 1 character",
+        "The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters.",
     });
   });
 
@@ -66,8 +68,9 @@ describe("hl7v2-lint:segment-header-length", () => {
 
     expect(file.messages).toHaveLength(1);
     expect(file.messages[0]).toMatchObject({
+      actual: "PIDAFD",
       message:
-        "Unexpected 6 header length, expected 3 characters, remove 3 characters",
+        "The Segment ID is 6 characters long; a Segment ID must be exactly 3 characters.",
     });
   });
 
@@ -82,8 +85,12 @@ describe("hl7v2-lint:segment-header-length", () => {
     await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
 
     expect(file.messages).toHaveLength(2);
-    expect(file.messages[0].message).toContain("Unexpected 6 header length");
-    expect(file.messages[1].message).toContain("Unexpected 2 header length");
+    expect(file.messages[0].message).toBe(
+      "The Segment ID is 6 characters long; a Segment ID must be exactly 3 characters."
+    );
+    expect(file.messages[1].message).toBe(
+      "The Segment ID is 2 characters long; a Segment ID must be exactly 3 characters."
+    );
   });
 
   it("should warn for invalid headers in groups", async () => {
@@ -96,6 +103,64 @@ describe("hl7v2-lint:segment-header-length", () => {
     await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
 
     expect(file.messages).toHaveLength(1);
-    expect(file.messages[0].message).toContain("Unexpected 7 header length");
+    expect(file.messages[0].message).toBe(
+      "The Segment ID is 7 characters long; a Segment ID must be exactly 3 characters."
+    );
+  });
+
+  it("names an empty Segment ID in the report", async () => {
+    const tree = m(s("", f("1")));
+    const file = new VFile();
+
+    await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]).toMatchObject({
+      actual: "",
+      message:
+        "The segment has an empty Segment ID; a Segment ID must be exactly 3 characters.",
+    });
+  });
+
+  // The report points at the segment, and its ancestors run from the message
+  // through any group to the segment, so tools can highlight it.
+  it("places the report on a segment whose Segment ID is not 3 characters", async () => {
+    const segment = s("PIDLONG", f("1"));
+    segment.position = {
+      end: { column: 10, line: 2, offset: 21 },
+      start: { column: 1, line: 2, offset: 12 },
+    };
+    const group = g("PATIENT", segment);
+    const tree = m(s("MSH", f("|"), f("^~\\&")), group);
+    const file = new VFile();
+
+    await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.place).toEqual({
+      end: { column: 10, line: 2, offset: 21 },
+      start: { column: 1, line: 2, offset: 12 },
+    });
+    expect(file.messages[0]?.ancestors).toEqual([tree, group, segment]);
+  });
+
+  it("places the report on a segment with an empty Segment ID", async () => {
+    const segment = s("", f("1"));
+    segment.position = {
+      end: { column: 3, line: 2, offset: 14 },
+      start: { column: 1, line: 2, offset: 12 },
+    };
+    const group = g("PATIENT", segment);
+    const tree = m(s("MSH", f("|"), f("^~\\&")), group);
+    const file = new VFile();
+
+    await unified().use([hl7v2LintSegmentHeaderLength]).run(tree, file);
+
+    expect(file.messages).toHaveLength(1);
+    expect(file.messages[0]?.place).toEqual({
+      end: { column: 3, line: 2, offset: 14 },
+      start: { column: 1, line: 2, offset: 12 },
+    });
+    expect(file.messages[0]?.ancestors).toEqual([tree, group, segment]);
   });
 });

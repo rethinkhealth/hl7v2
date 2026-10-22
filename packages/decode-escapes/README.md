@@ -4,7 +4,9 @@ Unified plugin to decode HL7v2 escape sequences in literal values.
 
 ## What it does
 
-Walks an HL7v2 AST and decodes escape sequences found in `subcomponent` nodes, replacing `node.value` with the decoded text. It handles the HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`), hexadecimal escapes (`\Xdddd\`), line-break directives (`\.br\`), and strips the highlighting markers (`\H\`, `\N\`). The original raw text is preserved on `node.data.raw` so the transformation is non-destructive.
+Walks an HL7v2 AST and decodes escape sequences found in `subcomponent` nodes, replacing `node.value` with the decoded text. It handles the HL7 delimiter escapes (`\F\`, `\S\`, `\R\`, `\T\`, `\E\`), hexadecimal escapes (`\Xdddd\`), and line-break directives (`\.br\`). A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) stay as written.
+
+`@glion/parser` decodes escape sequences while parsing, so this plugin is for a tree parsed with `decodeEscapes: false`. A decoded value must not be decoded again: `\E\F\E\` on the wire is the value `\F\`, and decoding it a second time gives `|`.
 
 ## Install
 
@@ -22,7 +24,7 @@ import { unified } from "unified";
 const msg = `OBX|1|TX|ID123||Patient allergic to \\F\\Peanuts\\F\\ and \\.br\\Severe reaction`;
 
 const file = await unified()
-  .use(hl7v2Parser)
+  .use(hl7v2Parser, { decodeEscapes: false })
   .use(hl7v2DecodeEscapes)
   .process(msg);
 ```
@@ -55,7 +57,7 @@ Decode HL7v2 escape sequences in literal nodes.
 
 ###### Parameters
 
-- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `Root.data.delimiters` (set by the parser). Defaults to the HL7 standard (`| ^ ~ & \`).
+- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `file.data.delimiters` (set by `@glion/annotate-delimiters`). Defaults to the HL7 standard (`| ^ ~ & \`).
 
 ###### Returns
 
@@ -63,7 +65,7 @@ Nothing (`undefined`). Mutates the AST in-place.
 
 ## Behavior
 
-The plugin visits every `subcomponent` node and rewrites `node.value`. The original text is preserved on `node.data.raw` so downstream plugins can recover it.
+The plugin visits every `subcomponent` node and rewrites `node.value`.
 
 Each escape sequence is decoded as follows:
 
@@ -74,12 +76,15 @@ Each escape sequence is decoded as follows:
 | `\R\`     | repetition separator (default `~`)             |
 | `\T\`     | subcomponent separator (default `&`)           |
 | `\E\`     | escape character (default `\`)                 |
-| `\Xdddd\` | character(s) for the given hexadecimal code(s) |
+| `\Xdddd\` | the characters its bytes encode in UTF-8       |
 | `\.br\`   | carriage return (`\r`)                         |
-| `\H\`     | stripped (highlight-on marker, no output)      |
-| `\N\`     | stripped (normal-text marker, no output)       |
+| `\H\`     | kept as written (highlight on)                 |
+| `\N\`     | kept as written (normal text)                  |
+| `\.sp 2\` | kept as written (any other formatting command) |
+| `\Z…\`    | kept as written (locally defined sequence)     |
+| `\C2842\` | kept as written (character set switch)         |
 
-Delimiter resolution order: `Root.data.delimiters` (preferred, set by the parser) → `options.delimiters` → HL7 defaults.
+Delimiter resolution order: `options.delimiters` → `file.data.delimiters` (set by `@glion/annotate-delimiters`) → HL7 defaults.
 
 The plugin only transforms AST nodes and does not execute code. The inverse operation is provided by [`@glion/encode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/encode-escapes).
 

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "RFR",
   "version": "2.5",
   "kind": "composite",
@@ -7,44 +8,45 @@
     {
       "sequence": 1,
       "name": "Numeric Range",
-      "datatypeId": "NR",
-      "required": false
+      "optionality": "R",
+      "datatypeId": "NR"
     },
     {
       "sequence": 2,
       "name": "Administrative Sex",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70001"
     },
     {
       "sequence": 3,
       "name": "Age Range",
-      "datatypeId": "NR",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NR"
     },
     {
       "sequence": 4,
       "name": "Gestational Age Range",
-      "datatypeId": "NR",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NR"
     },
     {
       "sequence": 5,
       "name": "Species",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 6,
       "name": "Race/subspecies",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 7,
       "name": "Conditions",
-      "datatypeId": "TX",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "TX"
     }
   ]
 }

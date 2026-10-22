@@ -4,7 +4,9 @@ Unified plugin to encode special characters as HL7v2 escape sequences in literal
 
 ## What it does
 
-Walks an HL7v2 AST and encodes delimiter characters found in `subcomponent` node values as HL7v2 escape sequences, so a tree that has been modified in memory can be safely serialized back to HL7v2 text without breaking the delimiter structure. It is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes): encode then decode round-trips to the original values.
+Walks an HL7v2 AST and encodes delimiter and control characters found in `subcomponent` node values as HL7v2 escape sequences. It is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes): encode then decode round-trips to the original values.
+
+`@glion/to-hl7v2` encodes escape sequences while serializing, so this plugin is for a tree written with `encodeEscapes: false`.
 
 ## Install
 
@@ -22,7 +24,7 @@ import { unified } from "unified";
 // After modifying AST values that may contain delimiters:
 const file = await unified()
   .use(hl7v2EncodeEscapes) // encode special chars as escape sequences
-  .use(hl7v2ToHl7v2) // serialize AST to HL7v2 text
+  .use(hl7v2ToHl7v2, { encodeEscapes: false }) // serialize AST to HL7v2 text
   .stringify(tree);
 ```
 
@@ -52,7 +54,7 @@ Encode special characters as HL7v2 escape sequences in literal nodes.
 
 ###### Parameters
 
-- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `Root.data.delimiters` (set by the parser). Defaults to the HL7 standard (`| ^ ~ & \`).
+- `options.delimiters` (optional) — Override delimiters. If omitted, the plugin reads them from `file.data.delimiters` (set by `@glion/annotate-delimiters`). Defaults to the HL7 standard (`| ^ ~ & \`).
 
 ###### Returns
 
@@ -60,18 +62,21 @@ Nothing (`undefined`). Mutates the AST in-place.
 
 ## Behavior
 
-The plugin visits every `subcomponent` node and rewrites `node.value`, substituting delimiter and control characters with their HL7v2 escape sequences:
+The plugin visits every `subcomponent` node and rewrites `node.value`, substituting delimiter and control characters with their HL7v2 escape sequences. A formatting command such as `\H\`, `\N\`, or `\.sp 2\`, a locally defined sequence (`\Z…\`), and a character set switch (`\Cxxyy\`, `\Mxxyyzz\`) are written as they are.
 
-| Input | Output                         |
-| ----- | ------------------------------ |
-| `\|`  | `\F\` (field separator)        |
-| `^`   | `\S\` (component separator)    |
-| `~`   | `\R\` (repetition separator)   |
-| `&`   | `\T\` (subcomponent separator) |
-| `\`   | `\E\` (escape character)       |
-| `\r`  | `\.br\` (line break directive) |
+| Input                         | Output                         |
+| ----------------------------- | ------------------------------ |
+| `\|`                          | `\F\` (field separator)        |
+| `^`                           | `\S\` (component separator)    |
+| `~`                           | `\R\` (repetition separator)   |
+| `&`                           | `\T\` (subcomponent separator) |
+| `\`                           | `\E\` (escape character)       |
+| `\r`                          | `\.br\` (line break directive) |
+| other characters below U+0020 | `\Xdd\` (hexadecimal escape)   |
 
-Delimiter resolution order: `Root.data.delimiters` (preferred, set by the parser) → `options.delimiters` → HL7 defaults.
+A character whose escape code holds a delimiter, such as `\E\` when `E` is the component separator, is written as `\Xdd\`, the hexadecimal escape of its UTF-8 bytes. A value holding a character that no escape sequence can write with the delimiters makes the plugin throw `EscapeSequenceError`, exported by `@glion/utils`.
+
+Delimiter resolution order: `options.delimiters` → `file.data.delimiters` (set by `@glion/annotate-delimiters`) → HL7 defaults.
 
 This is the inverse of [`@glion/decode-escapes`](https://github.com/rethinkhealth/glion/tree/main/packages/decode-escapes):
 

@@ -22,7 +22,7 @@ function ackFrameFor(payload: Uint8Array): Uint8Array {
   const crIndex = payload.indexOf(CR);
   const msh = crIndex === -1 ? payload : payload.subarray(0, crIndex);
   const controlId =
-    value(parseHL7v2(TEXT_DECODER.decode(msh)), "MSH-10")?.value ?? "";
+    value(parseHL7v2(TEXT_DECODER.decode(msh)), "MSH.10")?.value ?? "";
   const ack = m(
     s(
       "MSH",

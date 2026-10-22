@@ -10,20 +10,28 @@ import { readFile } from "node:fs/promises";
 
 import { AckException } from "@glion/ack";
 import type { Root } from "@glion/ast";
-import { MllpClient, MllpClientError } from "@glion/mllp-client";
+import {
+  MllpClient,
+  MllpClientError,
+  MllpInvalidMessageError,
+} from "@glion/mllp-client";
 import type { MllpClientOptions, MllpSocket } from "@glion/mllp-client";
 import { nodeSocket } from "@glion/mllp-client/node";
+import type { NodeSocketOptions } from "@glion/mllp-client/node";
 import { parseHL7v2 } from "@glion/parser";
-import { toHl7v2 } from "@glion/to-hl7v2";
+import { EscapeSequenceError, toHl7v2 } from "@glion/to-hl7v2";
 import { value } from "@glion/util-query";
 
-import { renderHuman, renderJson } from "./send-render";
+import { MAX_PORT } from "../constants";
+import { causeMessage } from "../errors";
+import { renderConnected, renderHuman, renderJson } from "./send-render";
 import type {
+  ConnectionSecurity,
   SendOutcome,
   SendRequestSummary,
   SendTarget,
 } from "./send-render";
-import { resolveTarget } from "./send-target";
+import { resolveDestination } from "./send-target";
 
 /** Connect + ACK-wait deadline used when `--timeout` is omitted. */
 export const DEFAULT_SEND_TIMEOUT_MS = 30_000;
@@ -33,21 +41,28 @@ export const DEFAULT_SEND_TIMEOUT_MS = 30_000;
  *
  * - `file` — positional message source. `undefined` or `"-"` both mean "read from
  *   stdin"; the handler treats them identically.
- * - `host` / `port` — explicit target. When `--local` is set these override the
- *   individual fields derived from the config.
- * - `local` — derive host/port from the project's `glion.config.ts`.
- * - `configPath` — config file used to resolve `--local` (same discovery as
- *   `dev`/`start`).
+ * - `host` / `port` — the target to send to.
+ * - `tls` — the TLS to dial with, or `undefined` to dial in plaintext.
  * - `timeoutMs` — deadline spanning connect + ACK wait.
  * - `json` — force JSON output even on a TTY.
  * - `help` — print subcommand help instead of sending.
  */
+export interface SendTlsArgs {
+  /** The authority to verify the receiver's certificate against. */
+  ca?: string;
+  /** The client certificate to present. */
+  cert?: string;
+  /** The private key for that certificate. */
+  key?: string;
+  /** Whether to dial without verifying the receiver's certificate. */
+  insecure: boolean;
+}
+
 export interface SendArgs {
   file?: string;
   host?: string;
   port?: number;
-  local: boolean;
-  configPath?: string;
+  tls?: SendTlsArgs;
   timeoutMs?: number;
   json: boolean;
   help: boolean;
@@ -58,9 +73,10 @@ export type ParseSendResult =
   | { ok: false; error: string };
 
 /**
- * Reads the token after a value flag at `index`, treating an end-of-argv
- * or a following `-`-prefixed token as "no value supplied". A returned
- * `string` is the captured value; a `{ error }` object is a usage failure.
+ * Reads the token after a value flag at `index`, treating an end-of-argv, an
+ * empty token, and a following `-`-prefixed token as "no value supplied". A
+ * returned `string` is the captured value; a `{ error }` object is a usage
+ * failure.
  */
 function takeFlagValue(
   argv: readonly string[],
@@ -68,8 +84,8 @@ function takeFlagValue(
   flag: string
 ): string | { error: string } {
   const next = argv[index + 1];
-  if (next === undefined || next.startsWith("-")) {
-    return { error: `${flag} requires a value` };
+  if (next === undefined || next === "" || next.startsWith("-")) {
+    return { error: `\`${flag}\` takes a value.` };
   }
   return next;
 }
@@ -89,11 +105,45 @@ function takeIntFlagValue(
     return raw;
   }
   if (!/^\d+$/.test(raw)) {
-    return { error: `${flag} requires an integer value, got: ${raw}` };
+    return { error: `\`${flag}\` takes a whole number.` };
   }
-  const parsed = Number.parseInt(raw, 10);
+  return Number.parseInt(raw, 10);
+}
+
+/**
+ * Reads the port value of `--port` at `index`. Folds the missing-value,
+ * non-integer, and out-of-range checks into one call so the parse loop carries
+ * a single guard for the flag — and so a port no host can listen on is
+ * rejected here, not after a dial that cannot succeed.
+ */
+function takePortValue(
+  argv: readonly string[],
+  index: number
+): number | { error: string } {
+  const parsed = takeIntFlagValue(argv, index, "--port");
+  if (typeof parsed === "object") {
+    return parsed;
+  }
+  if (parsed < 1 || parsed > MAX_PORT) {
+    return { error: `\`--port\` takes a port between 1 and ${MAX_PORT}.` };
+  }
+  return parsed;
+}
+
+/**
+ * Reads the millisecond value of `--timeout` at `index`. A deadline of zero
+ * is no deadline at all, so it is refused with the flag's own sentence.
+ */
+function takeTimeoutValue(
+  argv: readonly string[],
+  index: number
+): number | { error: string } {
+  const parsed = takeIntFlagValue(argv, index, "--timeout");
+  if (typeof parsed === "object") {
+    return parsed;
+  }
   if (parsed === 0) {
-    return { error: `${flag} requires a positive integer, got: 0` };
+    return { error: "`--timeout` takes a number of milliseconds above zero." };
   }
   return parsed;
 }
@@ -111,9 +161,12 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const positional: string[] = [];
   let host: string | undefined;
   let port: number | undefined;
-  let local = false;
-  let configPath: string | undefined;
   let timeoutMs: number | undefined;
+  let tls = false;
+  let insecure = false;
+  let ca: string | undefined;
+  let cert: string | undefined;
+  let key: string | undefined;
   let json = false;
   let help = false;
 
@@ -128,10 +181,6 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       json = true;
       continue;
     }
-    if (arg === "--local") {
-      local = true;
-      continue;
-    }
     if (arg === "--host") {
       const flagValue = takeFlagValue(argv, i, "--host");
       if (typeof flagValue === "object") {
@@ -142,7 +191,7 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       continue;
     }
     if (arg === "--port") {
-      const parsed = takeIntFlagValue(argv, i, "--port");
+      const parsed = takePortValue(argv, i);
       if (typeof parsed === "object") {
         return { error: parsed.error, ok: false };
       }
@@ -150,17 +199,31 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
       i += 1;
       continue;
     }
-    if (arg === "--config") {
-      const flagValue = argv[i + 1];
-      if (flagValue === undefined || flagValue.startsWith("-")) {
-        return { error: "--config requires a path argument", ok: false };
+    if (arg === "--tls") {
+      tls = true;
+      continue;
+    }
+    if (arg === "--insecure") {
+      insecure = true;
+      continue;
+    }
+    if (arg === "--ca" || arg === "--cert" || arg === "--key") {
+      const flagValue = takeFlagValue(argv, i, arg);
+      if (typeof flagValue === "object") {
+        return { error: flagValue.error, ok: false };
       }
-      configPath = flagValue;
+      if (arg === "--ca") {
+        ca = flagValue;
+      } else if (arg === "--cert") {
+        cert = flagValue;
+      } else {
+        key = flagValue;
+      }
       i += 1;
       continue;
     }
     if (arg === "--timeout") {
-      const parsed = takeIntFlagValue(argv, i, "--timeout");
+      const parsed = takeTimeoutValue(argv, i);
       if (typeof parsed === "object") {
         return { error: parsed.error, ok: false };
       }
@@ -171,13 +234,13 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
     // The bare "-" sentinel is a positional meaning "read from stdin",
     // not an unknown flag — accept it before the flag-rejection branch.
     if (arg !== "-" && arg.startsWith("-")) {
-      return { error: `Unknown flag: ${arg}`, ok: false };
+      return { error: `\`${arg}\` is not a \`glion send\` flag.`, ok: false };
     }
     positional.push(arg);
   }
 
   if (positional.length > 1) {
-    return { error: `Unexpected argument: ${positional[1]}`, ok: false };
+    return { error: "`glion send` takes one message source.", ok: false };
   }
 
   // "-" and absence both mean stdin; collapse the sentinel to undefined
@@ -185,8 +248,25 @@ export function parseSendArgs(argv: readonly string[]): ParseSendResult {
   const rawFile = positional[0];
   const file = rawFile === undefined || rawFile === "-" ? undefined : rawFile;
 
+  // Naming any TLS material is asking for TLS, so `--tls` is only needed when
+  // the invocation names none.
+  const wantsTls =
+    tls ||
+    insecure ||
+    ca !== undefined ||
+    cert !== undefined ||
+    key !== undefined;
+
   return {
-    args: { configPath, file, help, host, json, local, port, timeoutMs },
+    args: {
+      file,
+      help,
+      host,
+      json,
+      port,
+      timeoutMs,
+      tls: wantsTls ? { ca, cert, insecure, key } : undefined,
+    },
     ok: true,
   };
 }
@@ -204,12 +284,18 @@ Message source:
 
 Target:
   --host <host>          target host
-  --port <port>          target port
-  --local                read host/port from glion.config.ts (this project's
-                         server); --host/--port override individual fields
+  --port <port>          target port; defaults to 2575, the MLLP standard
+
+TLS:
+  --tls                  dial over TLS, verified against the system's authorities
+  --ca <path>            the authority that signed the receiver's certificate,
+                         or its own certificate when it signed itself
+  --cert <path>          client certificate to present
+  --key <path>           the private key for that certificate
+  --insecure             dial over TLS without verifying the certificate
+                         (any TLS flag dials over TLS; --tls is for the rest)
 
 Options:
-  --config <path>        config file to resolve --local (same discovery as dev/start)
   --timeout <ms>         deadline spanning connect + ACK wait (default 30000)
   --json                 print one JSON line instead of the human exchange view
   -h, --help             show this help
@@ -218,13 +304,10 @@ Exit codes:
   0  the peer accepted the message (AA/CA)
   1  the peer rejected the message (NAK: AE/AR/CE/CR)
   2  the message could not be delivered (transport, validation, or usage error)
-
-TLS targets are not supported yet.
 `;
 
 export interface RunSendOptions {
   argv: readonly string[];
-  cwd: string;
   stdout?: NodeJS.WritableStream;
   stderr?: NodeJS.WritableStream;
   /** Runtime socket; injectable for tests. Defaults to the Node TCP adapter. */
@@ -243,8 +326,9 @@ function exitCodeFor(outcome: SendOutcome): number {
     case "nak": {
       return 1;
     }
-    default: {
-      // transport and invalid both mean "not delivered".
+    case "transport":
+    case "invalid": {
+      // Both mean "not delivered".
       return 2;
     }
   }
@@ -260,36 +344,73 @@ async function readStream(stream: NodeJS.ReadableStream): Promise<string> {
   return data;
 }
 
-/** The peer's MSA-3 free text, when present and non-empty. */
-function ackText(tree: Root | undefined): string | undefined {
-  if (!tree) {
-    return undefined;
-  }
-  const found = value(tree, "MSA-3.1")?.value;
-  if (!found) {
-    return undefined;
-  }
-  return found;
-}
+/** The message text a source holds, or why it could not be read. */
+type ReadResult =
+  | { ok: true; text: string }
+  | { ok: false; reason: string; cause?: string };
 
 /**
- * `glion send` handler. Resolves the target, reads and structurally gates the
- * message, sends it over MLLP, and renders the outcome — the human exchange
- * view on a TTY, otherwise a single JSON line. Returns the process exit code;
- * it never calls process.exit, mirroring runDev/runStart.
+ * Reads the message from the file `args` names, or from stdin when it names
+ * none. A source that cannot be read is a `reason` naming it, with the
+ * underlying error as the `cause`.
  */
-function readMessageText(
+async function readMessageText(
   args: SendArgs,
   opts: RunSendOptions
-): Promise<string> {
-  return args.file === undefined
-    ? readStream(opts.stdin ?? process.stdin)
-    : readFile(args.file, "utf8");
+): Promise<ReadResult> {
+  try {
+    const text =
+      args.file === undefined
+        ? await readStream(opts.stdin ?? process.stdin)
+        : await readFile(args.file, "utf8");
+    return { ok: true, text };
+  } catch (error) {
+    const cause = causeMessage(error);
+    const reason =
+      args.file === undefined
+        ? "Standard input could not be read."
+        : `The message source \`${args.file}\` could not be read.`;
+    return { cause, ok: false, reason };
+  }
 }
 
 /**
- * Maps a failed exchange to its outcome. A NAK and a transport failure are
- * outcomes; anything else is a bug and propagates.
+ * How `tls` secures the connection: not at all, encrypted with the peer's
+ * certificate verified, or encrypted with verification turned off.
+ */
+function securityOf(tls: NodeSocketOptions["tls"]): ConnectionSecurity {
+  if (tls === undefined || tls === false) {
+    return "plain";
+  }
+  if (tls !== true && tls.rejectUnauthorized === false) {
+    return "tls-unverified";
+  }
+  return "tls";
+}
+
+/**
+ * Writes the connection's facts to `sink` as the client reports them: the
+ * line for the connection opening, how it is secured, with the time since the
+ * dial began. A connection that goes down is the exchange's own outcome.
+ */
+function reportConnection(
+  client: MllpClient,
+  target: SendTarget,
+  tls: NodeSocketOptions["tls"],
+  sink: NodeJS.WritableStream
+): void {
+  const security = securityOf(tls);
+  const dialedAt = performance.now();
+  client.on("connect", () => {
+    const durationMs = performance.now() - dialedAt;
+    sink.write(`${renderConnected(target, durationMs, security)}\n`);
+  });
+}
+
+/**
+ * Maps a failed exchange to its outcome. A NAK, a message the client could
+ * not prepare, and a transport failure are outcomes; anything else is a bug
+ * and propagates.
  */
 function sendErrorOutcome(
   error: unknown,
@@ -313,9 +434,19 @@ function sendErrorOutcome(
       text: error.text,
     };
   }
+  if (error instanceof MllpInvalidMessageError) {
+    return {
+      cause: causeMessage(error.cause),
+      code: error.code,
+      kind: "invalid",
+      message: error.message,
+      request,
+      target,
+    };
+  }
   if (error instanceof MllpClientError) {
     return {
-      cause: causeOf(error),
+      cause: causeMessage(error.cause),
       code: error.code,
       delivery: error.delivery,
       kind: "transport",
@@ -327,6 +458,12 @@ function sendErrorOutcome(
   throw error;
 }
 
+/**
+ * `glion send` handler. Resolves the target, reads and structurally gates the
+ * message, sends it over MLLP, and renders the outcome — the human exchange
+ * view on a TTY, otherwise a single JSON line. Returns the process exit code;
+ * it never calls process.exit, mirroring runDev/runStart.
+ */
 export async function runSend(opts: RunSendOptions): Promise<number> {
   const stdout = opts.stdout ?? process.stdout;
   const stderr = opts.stderr ?? process.stderr;
@@ -353,20 +490,24 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
     return exitCodeFor(outcome);
   };
 
-  const resolved = await resolveTarget(args, opts.cwd);
-  if (!resolved.ok) {
-    return emit({ kind: "invalid", message: resolved.reason });
-  }
-  const target = { host: resolved.host, port: resolved.port };
-
-  let text: string;
-  try {
-    text = await readMessageText(args, opts);
-  } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
+  const destination = await resolveDestination(args);
+  if (!destination.ok) {
     return emit({
+      cause: destination.cause,
+      hint: destination.hint,
       kind: "invalid",
-      message: `Could not read the message: ${reason}`,
+      message: destination.reason,
+      target: destination.target,
+    });
+  }
+  const { target, tls } = destination;
+
+  const read = await readMessageText(args, opts);
+  if (!read.ok) {
+    return emit({
+      cause: read.cause,
+      kind: "invalid",
+      message: read.reason,
       target,
     });
   }
@@ -375,14 +516,13 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   // parser is lenient — it never rejects — so this only normalizes the wire
   // bytes (line endings in particular); whether the message is a *valid* HL7v2
   // message is the receiver's call, surfaced as a NAK. We do not pre-validate.
-  const tree = parseHL7v2(text);
-  const canonical = toHl7v2(tree);
+  const tree = parseHL7v2(read.text);
+  const prepared = prepareRequest(tree);
+  if (!prepared.ok) {
+    return emit({ kind: "invalid", message: prepared.reason, target });
+  }
+  const { request } = prepared;
   const timeoutMs = args.timeoutMs ?? DEFAULT_SEND_TIMEOUT_MS;
-  const request = {
-    byteCount: ENCODER.encode(canonical).length,
-    controlId: value(tree, "MSH-10.1")?.value ?? "",
-    segmentCount: tree.children.length,
-  };
 
   let client: MllpClient | undefined;
   let startedAt = performance.now();
@@ -392,19 +532,23 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
       reconnect: opts.reconnect,
       sendTimeoutMs: timeoutMs,
       socket:
-        opts.socket ?? nodeSocket({ host: target.host, port: target.port }),
+        opts.socket ??
+        nodeSocket({ host: target.host, port: target.port, tls }),
     });
+    if (!useJson) {
+      reportConnection(client, target, tls, stderr);
+    }
     await client.connect();
     startedAt = performance.now();
     const res = await client.send(tree, { timeoutMs });
     return emit({
-      ackControlId: request.controlId,
+      ackControlId: res.controlId,
       code: res.code,
       durationMs: performance.now() - startedAt,
       kind: "accept",
       request,
       target,
-      text: ackText(res.tree),
+      text: res.text,
     });
   } catch (error) {
     return emit(sendErrorOutcome(error, { request, startedAt, target }));
@@ -413,12 +557,32 @@ export async function runSend(opts: RunSendOptions): Promise<number> {
   }
 }
 
-/** The text of `error.cause`, when there is one. */
-function causeOf(error: Error): string | undefined {
-  if (error.cause === undefined) {
-    return undefined;
+/** The request a message becomes on the wire, or why it cannot be sent. */
+type RequestResult =
+  | { ok: true; request: SendRequestSummary }
+  | { ok: false; reason: string };
+
+/**
+ * The request `tree` becomes on the wire, or why it cannot be sent.
+ *
+ * Writing the message is what can fail: the delimiters MSH-1 and MSH-2 declare
+ * may leave a character of its own with no escape sequence to write it.
+ */
+function prepareRequest(tree: Root): RequestResult {
+  try {
+    const canonical = toHl7v2(tree);
+    return {
+      ok: true,
+      request: {
+        byteCount: ENCODER.encode(canonical).length,
+        controlId: value(tree, "MSH.10.1")?.value ?? "",
+        segmentCount: tree.children.length,
+      },
+    };
+  } catch (error) {
+    if (error instanceof EscapeSequenceError) {
+      return { ok: false, reason: error.message };
+    }
+    throw error;
   }
-  return error.cause instanceof Error
-    ? error.cause.message
-    : String(error.cause);
 }

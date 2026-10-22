@@ -1,6 +1,16 @@
+import type {
+  Component,
+  Field,
+  FieldRepetition,
+  Group,
+  Nodes,
+  Segment,
+  Subcomponent,
+} from "@glion/ast";
 import { f, g, m, s } from "@glion/builder";
 
 import { select } from "../src/select";
+import type { InferNodeType } from "../src/types";
 
 describe("type inference", () => {
   it("infers group types for group paths", () => {
@@ -22,10 +32,10 @@ describe("type inference", () => {
     );
 
     // Indexed access to specific ORDER groups
-    const seg1 = select(message1, "ORDER[1]-OBR");
+    const seg1 = select(message1, "ORDER[1].OBR");
     expect(seg1?.node.type).toBe("segment");
 
-    const seg2 = select(message1, "ORDER[2]-TIMING-TQ1");
+    const seg2 = select(message1, "ORDER[2].TIMING.TQ1");
     expect(seg2?.node.type).toBe("segment");
 
     // Test with single ORDER group containing both segments and nested groups
@@ -35,10 +45,10 @@ describe("type inference", () => {
     );
 
     // Without index, finds first match
-    const seg3 = select(message2, "ORDER-OBR");
+    const seg3 = select(message2, "ORDER.OBR");
     expect(seg3?.node.type).toBe("segment");
 
-    const seg4 = select(message2, "ORDER-TIMING-TQ1");
+    const seg4 = select(message2, "ORDER.TIMING.TQ1");
     expect(seg4?.node.type).toBe("segment");
   });
 
@@ -46,7 +56,7 @@ describe("type inference", () => {
     const message = m(s("MSH", f("|")), s("PID", f("Value")));
 
     // This should infer as Field type
-    const field = select(message, "PID-1");
+    const field = select(message, "PID.1");
     expect(field?.node.type).toBe("field");
   });
 
@@ -57,7 +67,7 @@ describe("type inference", () => {
     );
 
     // This should infer as Field type (ends with number)
-    const field = select(message, "ORDER-OBR-2");
+    const field = select(message, "ORDER.OBR.2");
     expect(field?.node.type).toBe("field");
   });
 
@@ -68,15 +78,15 @@ describe("type inference", () => {
     );
 
     // OBR is a segment name, not field number
-    const seg1 = select(message, "ORDER-OBR");
+    const seg1 = select(message, "ORDER.OBR");
     expect(seg1?.node.type).toBe("segment");
 
     // OBX is a segment name, not field number
-    const seg2 = select(message, "ORDER-OBX");
+    const seg2 = select(message, "ORDER.OBX");
     expect(seg2?.node.type).toBe("segment");
 
     // But OBR-1 is a field
-    const field = select(message, "ORDER-OBR-1");
+    const field = select(message, "ORDER.OBR.1");
     expect(field?.node.type).toBe("field");
   });
 
@@ -91,7 +101,7 @@ describe("type inference", () => {
     expect(groupResult?.node.type).toBe("group");
 
     // Groups also serve as navigation to reach segments within
-    const segmentResult = select(message, "ORDER-ORC");
+    const segmentResult = select(message, "ORDER.ORC");
     expect(segmentResult?.node.type).toBe("segment");
 
     // The ancestors include the group as part of the navigation path
@@ -112,11 +122,11 @@ describe("type inference", () => {
     expect(orderResult?.node.type).toBe("group");
 
     // Navigate through ORDER group to ORC segment
-    const orcResult = select(message, "ORDER-ORC");
+    const orcResult = select(message, "ORDER.ORC");
     expect(orcResult?.node.type).toBe("segment");
 
     // Field access definitively indicates we're accessing a segment
-    const fieldResult = select(message, "ORDER-ORC-1");
+    const fieldResult = select(message, "ORDER.ORC.1");
     expect(fieldResult?.node.type).toBe("field");
 
     // Standard 3-character segment names work
@@ -132,5 +142,42 @@ describe("type inference", () => {
     const messageWithOrderSegment = m(s("MSH", f("|")), s("ORDER", f("X")));
     const orderSegmentResult = select(messageWithOrderSegment, "ORDER");
     expect(orderSegmentResult?.node.type).toBe("segment");
+  });
+});
+
+describe("InferNodeType", () => {
+  it("infers a segment or a group from a path without a field", () => {
+    expectTypeOf<InferNodeType<"PID">>().toEqualTypeOf<Segment | Group>();
+    expectTypeOf<InferNodeType<"ORDER[2]">>().toEqualTypeOf<Segment | Group>();
+    expectTypeOf<
+      InferNodeType<"PATIENT_RESULT.ORDER_OBSERVATION[2].OBX">
+    >().toEqualTypeOf<Segment | Group>();
+  });
+
+  it("infers the node a field reference names", () => {
+    expectTypeOf<InferNodeType<"PID.5">>().toEqualTypeOf<Field>();
+    expectTypeOf<InferNodeType<"PID.5[2]">>().toEqualTypeOf<FieldRepetition>();
+    expectTypeOf<InferNodeType<"PID.5.2">>().toEqualTypeOf<Component>();
+    expectTypeOf<InferNodeType<"PID.5[1].2">>().toEqualTypeOf<Component>();
+    expectTypeOf<InferNodeType<"PID.5.2.1">>().toEqualTypeOf<Subcomponent>();
+    expectTypeOf<InferNodeType<"PID.4[1].1.1">>().toEqualTypeOf<Subcomponent>();
+  });
+
+  it("infers the node a field reference names inside a group", () => {
+    expectTypeOf<InferNodeType<"ORDER.OBR.5">>().toEqualTypeOf<Field>();
+    expectTypeOf<
+      InferNodeType<"PATIENT_RESULT.ORDER_OBSERVATION[2].OBX.5.1">
+    >().toEqualTypeOf<Component>();
+  });
+
+  it("infers the node a path that starts with the field names", () => {
+    expectTypeOf<InferNodeType<"5">>().toEqualTypeOf<Field>();
+    expectTypeOf<InferNodeType<"5[2]">>().toEqualTypeOf<FieldRepetition>();
+    expectTypeOf<InferNodeType<"5.1">>().toEqualTypeOf<Component>();
+    expectTypeOf<InferNodeType<"5[1].1.2">>().toEqualTypeOf<Subcomponent>();
+  });
+
+  it("infers every node type from a path that is not a literal", () => {
+    expectTypeOf<InferNodeType<string>>().toEqualTypeOf<Nodes>();
   });
 });

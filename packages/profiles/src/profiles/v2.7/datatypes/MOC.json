@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "MOC",
   "version": "2.7",
   "kind": "composite",
@@ -7,14 +8,14 @@
     {
       "sequence": 1,
       "name": "Monetary Amount",
-      "datatypeId": "MO",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "MO"
     },
     {
       "sequence": 2,
       "name": "Charge Code",
-      "datatypeId": "CWE",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "CWE"
     }
   ]
 }

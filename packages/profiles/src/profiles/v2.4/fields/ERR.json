@@ -1,11 +1,12 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Fields",
   "segmentId": "ERR",
   "fields": [
     {
       "sequence": 1,
       "id": "ERR-1",
-      "required": true,
-      "repeatable": true,
+      "optionality": "R",
+      "repetitions": "unbounded",
       "datatype": "ELD",
       "maxLength": 80,
       "name": "Error Code and Location",

@@ -1,12 +1,9 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Table",
   "id": "0550",
   "description": "Body Parts",
   "type": "hl7",
   "codes": [
-    {
-      "name": " ",
-      "description": "External Jugular"
-    },
     {
       "name": "ACET",
       "description": "Acetabulum"

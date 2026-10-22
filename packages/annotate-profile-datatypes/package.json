@@ -1,6 +1,6 @@
 {
   "name": "@glion/annotate-profile-datatypes",
-  "version": "0.22.0",
+  "version": "0.29.0",
   "description": "Unified plugin to annotate HL7v2 field repetition, component, and subcomponent nodes with datatype profile metadata",
   "keywords": [
     "annotate",
@@ -47,14 +47,15 @@
     "publint": "publint --strict"
   },
   "dependencies": {
+    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/ast": "workspace:*",
     "@glion/util-visit": "workspace:*",
+    "@glion/utils": "workspace:*",
     "unified": "11.0.5",
     "vfile": "6.0.3"
   },
   "devDependencies": {
     "@glion/annotate-profile-context": "workspace:*",
-    "@glion/annotate-profile-fields": "workspace:*",
     "@glion/builder": "workspace:*",
     "@glion/check-readme": "workspace:*",
     "@glion/testing": "workspace:*",

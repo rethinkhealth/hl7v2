@@ -1,5 +1,102 @@
 # @rethinkhealth/hl7v2-lint-profile-events-segments-order
 
+## 0.29.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/profiles@0.29.0
+  - @glion/util-query@0.29.0
+  - @glion/util-visit@0.29.0
+  - @glion/ast@0.29.0
+
+## 0.28.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/util-query@0.28.0
+  - @glion/util-visit@0.28.0
+  - @glion/profiles@0.28.0
+  - @glion/ast@0.28.0
+
+## 0.27.1
+
+### Patch Changes
+
+- Updated dependencies [[`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0), [`0e0383e`](https://github.com/rethinkhealth/glion/commit/0e0383e86df9e189aeea76c7d468fd7812230cb0)]:
+  - @glion/profiles@0.27.1
+  - @glion/util-visit@0.27.1
+  - @glion/ast@0.27.1
+  - @glion/util-query@0.27.1
+
+## 0.27.0
+
+### Patch Changes
+
+- [#987](https://github.com/rethinkhealth/glion/pull/987) [`4a8da16`](https://github.com/rethinkhealth/glion/commit/4a8da1634fa33ed941699a6f9fbe88950af0983d) Thanks [@meleksomai](https://github.com/meleksomai)! - Lint findings describe the node they are placed on, never name it, and never contain content from the message (ADR 0030). ``Field `PID-5` (Patient Name) is 300 characters long; it allows at most 250.`` is now `The value is 300 characters long; the field allows at most 250.` The finding's `place` and `ancestors` locate the node, and `actual` carries the content. Findings about a field, component, or segment the message does not contain still name it from the profile or event schema. The `ruleId` of every finding is unchanged; only the text changes.
+
+  - No value, part of a value, version, or Segment ID from the message appears in a finding's text: `lint-profile-withdrawn`, `lint-profile-backward-compatible`, `lint-profile-table-values`, `lint-profile-timestamps`, `lint-message-version`, `lint-required-message-header`, and `lint-segment-header-length` describe the content instead (`The day is past the end of its month; …`, `The Segment ID is 4 characters long; …`).
+  - `lint-profile-segment-order` reports every out-of-place segment with one message, whatever its Segment ID or segment group.
+  - `lint-no-trailing-empty-field` and `lint-required-message-header` report a segment with an empty Segment ID with the same message as any other.
+  - `lint-profile-field-max-length`, `lint-profile-field-repetition`, `lint-profile-extra-components`, `lint-profile-withdrawn`, and `lint-profile-backward-compatible` check an element whose data has no `id`, such as one a site's own annotator sets.
+  - `annotate-profile-fields-code-systems` reports a code system it cannot load in one sentence.
+
+- Updated dependencies [[`7c24dbc`](https://github.com/rethinkhealth/glion/commit/7c24dbce0ae8ce90b04e69f5c4d6da290ba43650), [`d702f6a`](https://github.com/rethinkhealth/glion/commit/d702f6a31ff95af55b3850e18d1d3f13f3accce7), [`799a57c`](https://github.com/rethinkhealth/glion/commit/799a57c8dd6bab65c3c655cef2515be4c0eb45d0), [`3dfa36e`](https://github.com/rethinkhealth/glion/commit/3dfa36e5ba03ad7bfe4ce037cc1bd12c53d42a1d), [`ac05055`](https://github.com/rethinkhealth/glion/commit/ac05055ab3348054d3c98429e53e7c105a82c02f), [`58c6ab6`](https://github.com/rethinkhealth/glion/commit/58c6ab6b4052d68c3361a9aa56c4057f7b034728), [`34d8e21`](https://github.com/rethinkhealth/glion/commit/34d8e217a9655cee2fdf42202ed58168c3ed72ed), [`dd82064`](https://github.com/rethinkhealth/glion/commit/dd82064b0b388051ca25852afda01527ddade891)]:
+  - @glion/profiles@0.27.0
+  - @glion/util-query@0.27.0
+  - @glion/util-visit@0.27.0
+  - @glion/ast@0.27.0
+
+## 0.26.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @glion/ast@0.26.0
+  - @glion/profiles@0.26.0
+  - @glion/util-query@0.26.0
+  - @glion/util-visit@0.26.0
+
+## 0.25.0
+
+### Patch Changes
+
+- Updated dependencies [[`ddc5c76`](https://github.com/rethinkhealth/glion/commit/ddc5c769720e9ef6689c53baa6b379d4c8525283)]:
+  - @glion/profiles@0.25.0
+  - @glion/ast@0.25.0
+  - @glion/util-query@0.25.0
+  - @glion/util-visit@0.25.0
+
+## 0.24.0
+
+### Minor Changes
+
+- [#896](https://github.com/rethinkhealth/glion/pull/896) [`1fc821c`](https://github.com/rethinkhealth/glion/commit/1fc821c7d8c337d83faf289bcbc67c774d158b20) Thanks [@meleksomai](https://github.com/meleksomai)! - When a message does not fit its event schema, the rule reports each edit of the repair with the fewest edits, where it reported the first segment that did not fit. A segment the schema requires and the message does not have is reported as ``Segment `OBR` of segment group `PATIENT_RESULT > ORDER_OBSERVATION` is missing; the event schema requires it at this point.``, placed at the point where it would be inserted, with `expected` its ID. A segment the schema does not allow there is reported as ``Segment `PV1` is out of place; the event schema does not allow it at this point.``, or ``Segment `ZPI` is out of place; the event schema does not allow it at this point in segment group `PATIENT_RESULT > PATIENT`.`` when it is read in a segment group, on that segment, with `actual` its ID. A missing slot the schema fills with any segment (`Hxx`) or any Z-segment is described in words, with no `expected`. The `Expected:` lists and `Message ended prematurely` are gone. The rule's `url` points to its README.
+
+  An `ADT_A01` with only `MSH` and `PID` now reports both `EVN` and `PV1` missing. A segment after the end of the message is reported as out of place. A segment in place of a required one is reported as out of place, next to the required one it displaces, reported as missing: `MSH PIDX PV` against `ADT_A01` reports `EVN` missing and `PIDX` out of place, then `PID` missing and `PV` out of place, then `PV1` missing at the end.
+
+  The rule reports at most 20 edits for a message, or 21 when the 21st is the out-of-place segment standing where the 20th, a missing one, belongs, then `The message has 6 more missing or out-of-place segments; the rule reports the first 20.` A message of more than 1,000 segments gets one report, in the new wording: the first segment that does not fit, or the end of the message when it ends early, with `expected` the segment IDs valid there and a `note` that says why. Through the preset, `parseHL7v2` from `@glion/hl7v2` reports the same.
+
+### Patch Changes
+
+- Updated dependencies [[`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`84e2713`](https://github.com/rethinkhealth/glion/commit/84e2713a43047a3234d0ce3addd959b6b76bdf68), [`e21c0a0`](https://github.com/rethinkhealth/glion/commit/e21c0a0e51db47f36e42926d9ec5a7a5f730b4d8)]:
+  - @glion/profiles@0.24.0
+  - @glion/util-query@0.24.0
+  - @glion/util-visit@0.24.0
+  - @glion/ast@0.24.0
+
+## 0.23.0
+
+### Patch Changes
+
+- [#889](https://github.com/rethinkhealth/glion/pull/889) [`0783f74`](https://github.com/rethinkhealth/glion/commit/0783f740cd35d4c74f8900ec616aafe7f3e229d3) Thanks [@meleksomai](https://github.com/meleksomai)! - A segment after the end of the message is reported as `Unexpected segment 'PID'`, without an empty `Expected:` list.
+- Updated dependencies [[`a8aec03`](https://github.com/rethinkhealth/glion/commit/a8aec03333d5b24570145043ff4d2c99a5dde28b)]:
+  - @glion/util-visit@0.23.0
+  - @glion/ast@0.23.0
+  - @glion/profiles@0.23.0
+  - @glion/util-query@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

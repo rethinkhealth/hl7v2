@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "PT",
   "version": "2.6",
   "kind": "composite",
@@ -7,14 +8,16 @@
     {
       "sequence": 1,
       "name": "Processing ID",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70103"
     },
     {
       "sequence": 2,
       "name": "Processing Mode",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70207"
     }
   ]
 }

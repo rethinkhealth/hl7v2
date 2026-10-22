@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "MSG",
   "version": "2.4",
   "kind": "composite",
@@ -7,20 +8,17 @@
     {
       "sequence": 1,
       "name": "message type",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 2,
       "name": "trigger event",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     },
     {
       "sequence": 3,
       "name": "message structure",
-      "datatypeId": "ID",
-      "required": false
+      "datatypeId": "ID"
     }
   ]
 }

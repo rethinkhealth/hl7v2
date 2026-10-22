@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "CP",
   "version": "2.7.1",
   "kind": "composite",
@@ -7,38 +8,40 @@
     {
       "sequence": 1,
       "name": "Price",
-      "datatypeId": "MO",
-      "required": true
+      "optionality": "R",
+      "datatypeId": "MO"
     },
     {
       "sequence": 2,
       "name": "Price Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70205"
     },
     {
       "sequence": 3,
       "name": "From Value",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 4,
       "name": "To Value",
-      "datatypeId": "NM",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "NM"
     },
     {
       "sequence": 5,
       "name": "Range Units",
-      "datatypeId": "CWE",
-      "required": false
+      "optionality": "C",
+      "datatypeId": "CWE"
     },
     {
       "sequence": 6,
       "name": "Range Type",
+      "optionality": "O",
       "datatypeId": "ID",
-      "required": false
+      "table": "HL70298"
     }
   ]
 }

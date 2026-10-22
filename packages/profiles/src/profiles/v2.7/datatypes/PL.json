@@ -1,4 +1,5 @@
 {
+  "$schema": "https://glion.dev/schemas/hl7v2/v1.json#/definitions/Datatype",
   "id": "PL",
   "version": "2.7",
   "kind": "composite",
@@ -7,68 +8,76 @@
     {
       "sequence": 1,
       "name": "Point of Care",
+      "optionality": "C",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70302"
     },
     {
       "sequence": 2,
       "name": "Room",
+      "optionality": "O",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70303"
     },
     {
       "sequence": 3,
       "name": "Bed",
+      "optionality": "O",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70304"
     },
     {
       "sequence": 4,
       "name": "Facility",
-      "datatypeId": "HD",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "HD"
     },
     {
       "sequence": 5,
       "name": "Location Status",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70306"
     },
     {
       "sequence": 6,
       "name": "Person Location Type",
+      "optionality": "O",
       "datatypeId": "IS",
-      "required": false
+      "table": "HL70305"
     },
     {
       "sequence": 7,
       "name": "Building",
+      "optionality": "O",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70307"
     },
     {
       "sequence": 8,
       "name": "Floor",
+      "optionality": "O",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70308"
     },
     {
       "sequence": 9,
       "name": "Location Description",
-      "datatypeId": "ST",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "ST"
     },
     {
       "sequence": 10,
       "name": "Comprehensive Location Identifier",
-      "datatypeId": "EI",
-      "required": false
+      "optionality": "O",
+      "datatypeId": "EI"
     },
     {
       "sequence": 11,
       "name": "Assigning Authority for Location",
+      "optionality": "O",
       "datatypeId": "HD",
-      "required": false
+      "table": "HL70363"
     }
   ]
 }
