@@ -2,6 +2,7 @@
 // oxlint-disable no-empty-function
 // oxlint-disable promise/avoid-new
 import net from "node:net";
+import type { TlsOptions } from "node:tls";
 
 import { parseHL7v2 } from "@glion/hl7v2";
 import { CR, frame, FS } from "@glion/mllp-codec";
@@ -182,6 +183,29 @@ describe("serve() integration", () => {
     expect(server.port).toBeGreaterThan(0);
     // Verify we can connect
     await waitForReady(server.port);
+  });
+
+  it("listens on plain TCP with Node's socket options beside its own", async () => {
+    server = serve(createApp(), { keepAlive: false, noDelay: false, port: 0 });
+
+    await waitForReady(server.port);
+  });
+
+  it("listens on plain TCP when tls is undefined", async () => {
+    const tls: TlsOptions | undefined = undefined;
+    server = serve(createApp(), { port: 0, tls });
+
+    await waitForReady(server.port);
+  });
+
+  it("takes socket options over TLS inside tls only", () => {
+    const app = createApp();
+    // Type-checked, never called: socket options beside `tls` do not compile.
+    const mixed = () =>
+      // @ts-expect-error -- over TLS, Node's socket options go in `tls`.
+      serve(app, { keepAlive: false, port: 0, tls: {} });
+
+    expect(mixed).toBeTypeOf("function");
   });
 
   it("receives a message and sends a response", async () => {
