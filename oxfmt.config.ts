@@ -3,7 +3,13 @@ import base from "ultracite/oxfmt";
 
 export default defineConfig({
   ...base,
-  ignorePatterns: [...(base.ignorePatterns ?? []), "**/*.hbs"],
+  // Skills installed by `npx skills` stay byte-identical to the hash in skills-lock.json.
+  ignorePatterns: [
+    ...(base.ignorePatterns ?? []),
+    "**/*.hbs",
+    ".agents/skills/gh-stack/**",
+    ".agents/skills/security-audit/**",
+  ],
   jsdoc: {
     commentLineStrategy: "keep",
     lineWrappingStyle: "balance",
