@@ -70,15 +70,16 @@ describe("nodeSocket over net.Socket", () => {
   });
 
   it("rejects with the socket's error when it fails before connecting", async () => {
-    // Binding to an address the host does not have fails at once:
-    // Node emits EADDRNOTAVAIL on the next tick after the socket is created.
+    // Binding to an address the host does not have fails at once: Node
+    // emits the error on the next tick after the socket is created
+    // (EADDRNOTAVAIL on macOS, EINVAL on Linux).
     const socket = nodeSocket(() =>
       connectTcp({ host: "127.0.0.1", localAddress: UNASSIGNED, port: 9 })
     );
 
     await expect(
       socket.connect(new AbortController().signal)
-    ).rejects.toMatchObject({ code: "EADDRNOTAVAIL" });
+    ).rejects.toMatchObject({ address: UNASSIGNED, syscall: "bind" });
   });
 
   it("rejects a dial that returns a promise, and leaves nothing open", async () => {
