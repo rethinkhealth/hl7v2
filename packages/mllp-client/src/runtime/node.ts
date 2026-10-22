@@ -8,8 +8,8 @@
 
 import type { Socket } from "node:net";
 import { Duplex } from "node:stream";
-import { TLSSocket } from "node:tls";
 
+import { assertDial } from "../assertions";
 import type { MllpSocket, MllpStreams } from "../types";
 
 /** Default time a socket gets to end gracefully before it is destroyed. */
@@ -45,9 +45,9 @@ function open(dial: NodeDial, signal: AbortSignal): Promise<Socket> {
     signal.throwIfAborted();
 
     const socket = dial();
-    const opened = socket instanceof TLSSocket ? "secureConnect" : "connect";
+    // `encrypted` is how Node tells a `tls.TLSSocket` from a `net.Socket`.
+    const opened = "encrypted" in socket ? "secureConnect" : "connect";
     const done = () => {
-      socket.removeListener(opened, onOpened);
       socket.removeListener("error", onError);
       signal.removeEventListener("abort", onAbort);
     };
@@ -104,11 +104,14 @@ function end(socket: Socket, gracefulCloseMs: number): Promise<void> {
  *
  * Each `connect()` calls `dial` for a fresh socket: Node cannot reconnect one
  * that has been destroyed.
+ *
+ * @throws {MllpInvalidOptionError} `dial` is not a function.
  */
 export function nodeSocket(
   dial: NodeDial,
   opts: NodeSocketOptions = {}
 ): MllpSocket {
+  assertDial(dial);
   const gracefulCloseMs = opts.gracefulCloseMs ?? DEFAULT_GRACEFUL_CLOSE_MS;
   /** Ends whatever `connect()` last opened. Nothing is open to begin with. */
   let closeOpen = (): Promise<void> => Promise.resolve();

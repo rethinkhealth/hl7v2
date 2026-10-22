@@ -3,11 +3,12 @@ import type { AddressInfo } from "node:net";
 import { createServer } from "node:tls";
 import type { Server, TLSSocket } from "node:tls";
 
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import type { SendArgs } from "../../src/commands/send";
 import { dialTarget, resolveTarget } from "../../src/commands/send-target";
 import { issue, SERVERNAME } from "../fixtures/pki";
+import type { Pki } from "../fixtures/pki";
 
 function args(overrides: Partial<SendArgs> = {}): SendArgs {
   return { help: false, json: false, ...overrides };
@@ -39,6 +40,11 @@ describe("resolveTarget", () => {
 describe("dialTarget", () => {
   const servers: Server[] = [];
   const sockets: TLSSocket[] = [];
+  let pki: Pki;
+
+  beforeAll(async () => {
+    pki = await issue();
+  });
 
   afterEach(() => {
     for (const socket of sockets.splice(0)) {
@@ -51,7 +57,6 @@ describe("dialTarget", () => {
 
   /** A TLS server on `host`, with a certificate for `localhost`. */
   async function listen(host: string): Promise<Server> {
-    const pki = await issue();
     const server = createServer({
       cert: pki.selfSignedCert,
       key: pki.selfSignedKey,
@@ -67,13 +72,15 @@ describe("dialTarget", () => {
     const { port } = server.address() as AddressInfo;
     const accepted = once(server, "secureConnection");
 
-    sockets.push(
-      dialTarget(
-        { host: SERVERNAME, port },
-        { rejectUnauthorized: false }
-      ) as TLSSocket
-    );
-    const [remote] = (await accepted) as [TLSSocket];
+    const local = dialTarget(
+      { host: SERVERNAME, port },
+      { rejectUnauthorized: false }
+    ) as TLSSocket;
+    sockets.push(local);
+    const [[remote]] = (await Promise.all([
+      accepted,
+      once(local, "secureConnect"),
+    ])) as [[TLSSocket], unknown[]];
     sockets.push(remote);
 
     expect(remote.servername).toBe(SERVERNAME);
@@ -84,13 +91,15 @@ describe("dialTarget", () => {
     const { port } = server.address() as AddressInfo;
     const accepted = once(server, "secureConnection");
 
-    sockets.push(
-      dialTarget(
-        { host: "127.0.0.1", port },
-        { rejectUnauthorized: false }
-      ) as TLSSocket
-    );
-    const [remote] = (await accepted) as [TLSSocket];
+    const local = dialTarget(
+      { host: "127.0.0.1", port },
+      { rejectUnauthorized: false }
+    ) as TLSSocket;
+    sockets.push(local);
+    const [[remote]] = (await Promise.all([
+      accepted,
+      once(local, "secureConnect"),
+    ])) as [[TLSSocket], unknown[]];
     sockets.push(remote);
 
     // Each runtime spells "no server name" its own way: `false` on Node,

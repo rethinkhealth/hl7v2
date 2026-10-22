@@ -7,6 +7,7 @@
 
 import type { connect } from "cloudflare:sockets";
 
+import { assertDial } from "../assertions";
 import type { MllpSocket, MllpStreams } from "../types";
 
 type Socket = ReturnType<typeof connect>;
@@ -23,8 +24,11 @@ export type WorkersDial = () => Socket;
  * A socket to one remote system, over the socket `dial` returns.
  *
  * Each `connect()` calls `dial` for a fresh socket.
+ *
+ * @throws {MllpInvalidOptionError} `dial` is not a function.
  */
 export function workersSocket(dial: WorkersDial): MllpSocket {
+  assertDial(dial);
   let open: Socket | undefined;
 
   return {

@@ -19,6 +19,14 @@ export function assertTimeoutMs(option: string, ms: number): void {
   }
 }
 
+export function assertDial(dial: unknown): void {
+  if (typeof dial !== "function") {
+    throw new MllpInvalidOptionError(
+      "dial must be a function that opens a connection to the remote system."
+    );
+  }
+}
+
 export function assertByteCap(bytes: number): void {
   if (!Number.isInteger(bytes) || bytes <= 0) {
     throw new MllpInvalidOptionError(

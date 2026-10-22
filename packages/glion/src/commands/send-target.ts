@@ -85,9 +85,9 @@ export async function resolveDestination(
 }
 
 /**
- * Opens a connection to `target`: over TLS with `tls`, sending the host as the
- * server name (SNI) unless it is an IP address or `tls` names one, and over
- * plain TCP without it.
+ * Opens a connection to `target`, with Nagle's algorithm off: over TLS with
+ * `tls`, sending the host as the server name (SNI) unless it is an IP address
+ * or `tls` names one, and over plain TCP without it.
  */
 export function dialTarget(
   target: SendTarget,
@@ -95,10 +95,10 @@ export function dialTarget(
 ): Socket {
   const { host, port } = target;
   if (tls === undefined) {
-    return connectTcp({ host, port });
+    return connectTcp({ host, port }).setNoDelay(true);
   }
   // `tls.connect()` sends SNI only when `servername` is set. An IP address is
   // never a server name (RFC 6066 §3).
   const servername = isIP(host) ? undefined : host;
-  return connectTls({ servername, ...tls, host, port });
+  return connectTls({ servername, ...tls, host, port }).setNoDelay(true);
 }

@@ -365,7 +365,7 @@ import { workersSocket } from "@glion/mllp-client/workers";
 workersSocket(dial: () => Socket): MllpSocket
 ```
 
-A socket over the one `dial` returns: `connect()` from `cloudflare:sockets`, or a binding's `connect()`, with the runtime's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is open. `secureTransport: "starttls"` is not supported. The adapter resolves only inside the Workers runtime; import it from the `./workers` subpath, never from `.`.
+A socket over the one `dial` returns: `connect()` from `cloudflare:sockets`, or a binding's `connect()`, with the runtime's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is open. `secureTransport: "starttls"` is not supported. Import it from the `./workers` subpath.
 
 ```ts
 import { connect } from "cloudflare:sockets";

@@ -110,7 +110,7 @@ describe("nodeSocket over net.Socket", () => {
 describe("nodeSocket over tls.TLSSocket", () => {
   const { acknowledging } = tls;
 
-  it("rejects CONNECTION_FAILED when the handshake fails", async () => {
+  it("rejects CONNECTION_FAILED when the certificate is not from a trusted CA", async () => {
     const client = new MllpClient({
       reconnect: false,
       socket: nodeSocket(() =>
