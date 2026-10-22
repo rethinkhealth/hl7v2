@@ -22,8 +22,6 @@ describe("makeGlionConfigSchema", () => {
       entry: "./src/app.ts",
       gracefulCloseMs: 5000,
       hostname: "0.0.0.0",
-      keepAlive: true,
-      keepAliveInitialDelay: 60_000,
       port: 2575,
       socketTimeout: 0,
       tls: {
