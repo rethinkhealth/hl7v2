@@ -325,15 +325,11 @@ A socket over the `net.Socket` or `tls.TLSSocket` that `dial` returns: `net.conn
 import { connect } from "node:net";
 
 const client = new MllpClient({
-  socket: nodeSocket(() =>
-    connect({ host: "hl7.example.org", port: 2575 })
-      .setNoDelay(true)
-      .setKeepAlive(true, 30_000)
-  ),
+  socket: nodeSocket(() => connect({ host: "hl7.example.org", port: 2575 })),
 });
 ```
 
-`setNoDelay(true)` sends each message at once rather than waiting on Nagle's algorithm. `setKeepAlive(true, 30_000)` starts keepalive probes after 30 seconds idle; once they fail, the OS ends the socket, and the next send fails at once with `CONNECTION_LOST` instead of waiting out `sendTimeoutMs`. The adapter sets neither. `tls.connect()` ignores the `noDelay` and `keepAlive` options `net.connect()` takes, so set them on the socket.
+The adapter configures nothing on the socket. `dial` sets what the connection needs, with the runtime's API. A receiver that goes away without closing the connection while it is idle ends the socket only when the socket's keepalive probes fail; without keepalive, the next `send()` waits out `sendTimeoutMs` and rejects with `SEND_TIMEOUT`.
 
 Deno needs `--allow-net` for the receiver's host and port.
 
