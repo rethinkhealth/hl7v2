@@ -1,7 +1,9 @@
 // oxlint-disable typescript/no-non-null-assertion
 // oxlint-disable no-empty-function
 import type { Server } from "node:net";
+import { createServer } from "node:net";
 import { Readable } from "node:stream";
+import { createServer as createTlsServer } from "node:tls";
 
 import { nodeAdapter } from "../../src/node/adapter";
 
@@ -24,8 +26,6 @@ function createMockSocket() {
     localPort: 2575,
     remoteAddress: "127.0.0.1",
     remotePort: 54_321,
-    setKeepAlive: vi.fn(),
-    setNoDelay: vi.fn(),
     setTimeout: vi.fn(),
     write: vi.fn(() => true),
   });
@@ -35,8 +35,6 @@ function createMockSocket() {
     localPort: number;
     remoteAddress: string;
     remotePort: number;
-    setKeepAlive: ReturnType<typeof vi.fn>;
-    setNoDelay: ReturnType<typeof vi.fn>;
     setTimeout: ReturnType<typeof vi.fn>;
     write: ReturnType<typeof vi.fn>;
   };
@@ -77,10 +75,33 @@ const mockServer = {
     const actual = (await importOriginal()) as Record<string, unknown>;
     return {
       ...actual,
-      createServer: vi.fn((handler: (socket: MockSocket) => void) => {
-        connectionHandler = handler;
-        return mockServer as unknown as Server;
-      }),
+      createServer: vi.fn(
+        (_options: unknown, handler: (socket: MockSocket) => void) => {
+          connectionHandler = handler;
+          return mockServer as unknown as Server;
+        }
+      ),
+    };
+  }
+);
+
+// oxlint-disable-next-line typescript/no-explicit-any
+(vi as any).mock(
+  import("node:tls"),
+  async (
+    importOriginal: () =>
+      | Record<string, unknown>
+      | PromiseLike<Record<string, unknown>>
+  ) => {
+    const actual = (await importOriginal()) as Record<string, unknown>;
+    return {
+      ...actual,
+      createServer: vi.fn(
+        (_options: unknown, handler: (socket: MockSocket) => void) => {
+          connectionHandler = handler;
+          return mockServer as unknown as Server;
+        }
+      ),
     };
   }
 );
@@ -110,16 +131,36 @@ afterEach(() => {
 });
 
 describe("nodeAdapter", () => {
-  it("sets keepAlive(true, 60000) and noDelay(true) by default, does NOT set timeout", () => {
+  it("listens with keep-alive after 60000 ms and Nagle off by default, and sets no timeout", () => {
     const adapter = nodeAdapter();
     adapter.listen({ port: 2575 }, noop);
 
     const socket = createMockSocket();
     connectionHandler?.(socket);
 
-    expect(socket.setKeepAlive).toHaveBeenCalledWith(true, 60_000);
-    expect(socket.setNoDelay).toHaveBeenCalledWith(true);
+    expect(createServer).toHaveBeenLastCalledWith(
+      { keepAlive: true, keepAliveInitialDelay: 60_000, noDelay: true },
+      expect.any(Function)
+    );
     expect(socket.setTimeout).not.toHaveBeenCalled();
+  });
+
+  it("lets tls replace keepAlive, keepAliveInitialDelay, and noDelay", () => {
+    const adapter = nodeAdapter({
+      tls: { cert: "cert", keepAlive: false, key: "key", noDelay: false },
+    });
+    adapter.listen({ port: 2575 }, noop);
+
+    expect(createTlsServer).toHaveBeenLastCalledWith(
+      {
+        cert: "cert",
+        keepAlive: false,
+        keepAliveInitialDelay: 60_000,
+        key: "key",
+        noDelay: false,
+      },
+      expect.any(Function)
+    );
   });
 
   it("calls setTimeout when socketTimeout option is provided", () => {
@@ -144,15 +185,14 @@ describe("nodeAdapter", () => {
     expect(socket.destroy).toHaveBeenCalled();
   });
 
-  it("does NOT call setKeepAlive when keepAlive is false", () => {
+  it("listens without keep-alive when keepAlive is false", () => {
     const adapter = nodeAdapter({ keepAlive: false });
     adapter.listen({ port: 2575 }, noop);
 
-    const socket = createMockSocket();
-    connectionHandler?.(socket);
-
-    expect(socket.setKeepAlive).not.toHaveBeenCalled();
-    expect(socket.setNoDelay).toHaveBeenCalledWith(true);
+    expect(createServer).toHaveBeenLastCalledWith(
+      { keepAlive: false, keepAliveInitialDelay: 60_000, noDelay: true },
+      expect.any(Function)
+    );
   });
 
   it("handle.port returns correct port and handle.close() resolves", async () => {

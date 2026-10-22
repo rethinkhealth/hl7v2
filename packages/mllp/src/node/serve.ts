@@ -10,6 +10,8 @@
  * @module
  */
 
+import type { TlsOptions } from "node:tls";
+
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
 import { CharsetError, decodeBytes, encodeBytes } from "@glion/util-charset";
 
@@ -19,7 +21,6 @@ import type { MessageInfo, Mllp } from "../server/mllp";
 import { getMessageInfo } from "../server/mllp";
 import type { ConnectionInfo } from "../server/types";
 import { nodeAdapter } from "./adapter";
-import type { ServeTlsOptions } from "./adapter";
 
 /** Monotonically-increasing connection ID counter. */
 // oxlint-disable-next-line prefer-const
@@ -122,10 +123,10 @@ export interface ServeOptions {
 
   /**
    * TLS for the listener, passed to Node's `tls.createServer()` unchanged.
-   * Plain TCP when `undefined`. `keepAlive`, `keepAliveInitialDelay`, and
-   * `noDelay` are set by the options above.
+   * Plain TCP when `undefined`. Its `keepAlive` and `keepAliveInitialDelay`
+   * replace the options above, and its `noDelay` replaces the default `true`.
    */
-  tls?: ServeTlsOptions;
+  tls?: TlsOptions;
 }
 
 /**

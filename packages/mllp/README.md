@@ -57,17 +57,17 @@ The server class. Built with a fluent chainable API:
 
 Start a Node.js or Bun TCP server that dispatches incoming MLLP frames through the `Mllp` instance.
 
-| Option                  | Type                                   | Description                                                                                    |
-| ----------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `port`                  | `number`                               | TCP port to listen on.                                                                         |
-| `hostname`              | `string`, optional                     | Interface to bind. Defaults to all interfaces.                                                 |
-| `tls`                   | `TlsOptions` from `node:tls`, optional | MLLP over TLS. Passed to `tls.createServer()` unchanged.                                       |
-| `keepAlive`             | `boolean`, optional                    | Enable TCP keep-alive on accepted sockets. Defaults to `true`.                                 |
-| `keepAliveInitialDelay` | `number`, optional                     | Delay in ms before the first keep-alive probe on an idle socket. Defaults to `60000`.          |
-| `socketTimeout`         | `number`, optional                     | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables. |
-| `onConnect`             | `ConnectionCallback`, optional         | Called when a new TCP connection is accepted.                                                  |
-| `onDisconnect`          | `ConnectionCallback`, optional         | Called when a connection closes — always fires, even if `onConnect` threw.                     |
-| `onError`               | `ErrorCallback`, optional              | Called when a handler error goes unhandled or a lifecycle callback throws.                     |
+| Option                  | Type                                   | Description                                                                                                                           |
+| ----------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `port`                  | `number`                               | TCP port to listen on.                                                                                                                |
+| `hostname`              | `string`, optional                     | Interface to bind. Defaults to all interfaces.                                                                                        |
+| `tls`                   | `TlsOptions` from `node:tls`, optional | MLLP over TLS. Passed to `tls.createServer()` unchanged; its `keepAlive`, `keepAliveInitialDelay`, and `noDelay` replace `serve()`'s. |
+| `keepAlive`             | `boolean`, optional                    | Enable TCP keep-alive on accepted sockets. Defaults to `true`.                                                                        |
+| `keepAliveInitialDelay` | `number`, optional                     | Delay in ms before the first keep-alive probe on an idle socket. Defaults to `60000`.                                                 |
+| `socketTimeout`         | `number`, optional                     | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.                                        |
+| `onConnect`             | `ConnectionCallback`, optional         | Called when a new TCP connection is accepted.                                                                                         |
+| `onDisconnect`          | `ConnectionCallback`, optional         | Called when a connection closes — always fires, even if `onConnect` threw.                                                            |
+| `onError`               | `ErrorCallback`, optional              | Called when a handler error goes unhandled or a lifecycle callback throws.                                                            |
 
 ### Wire framing
 

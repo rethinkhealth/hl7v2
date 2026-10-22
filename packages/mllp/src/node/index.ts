@@ -12,7 +12,6 @@
  */
 
 // biome-ignore-all lint/performance/noBarrelFile: node subpath barrel
-export type { ServeTlsOptions } from "./adapter";
 export { serve } from "./serve";
 export type {
   ConnectionCallback,
