@@ -1,49 +1,30 @@
 /**
- * Cloudflare Workers runtime adapter for `MllpClient`: one socket over
- * `cloudflare:sockets`. Framing and stream ownership belong to the layer
- * above.
+ * Cloudflare Workers runtime adapter for `MllpClient`: the socket a dial
+ * function returns. Framing and stream ownership belong to the layer above.
  *
  * @module
  */
 
-import { connect } from "cloudflare:sockets";
+import type { connect } from "cloudflare:sockets";
 
-import { MllpInvalidOptionError } from "../errors/mllp-invalid-option-error";
 import type { MllpSocket, MllpStreams } from "../types";
 
 type Socket = ReturnType<typeof connect>;
 
-export interface WorkersSocketOptions {
-  /** Host name or address of the remote system. */
-  readonly host: string;
-  /** TCP port of the remote system. */
-  readonly port: number;
-  /**
-   * TLS for the connection. `true`: verify the remote system's certificate
-   * against the public CAs Workers trusts, for `host`. `false`: plain TCP.
-   *
-   * Workers takes no CA, client certificate, or server name. A remote system
-   * MUST present a publicly trusted certificate for `host`.
-   *
-   * @default false
-   */
-  readonly tls?: boolean;
-}
+/**
+ * Opens a connection to the remote system: `connect()` from
+ * `cloudflare:sockets`, or a binding's `connect()`, with the runtime's
+ * options. MUST return a fresh socket on every call. `secureTransport:
+ * "starttls"` is not supported.
+ */
+export type WorkersDial = () => Socket;
 
 /**
- * A TCP socket to one remote system, over `cloudflare:sockets`.
+ * A socket to one remote system, over the socket `dial` returns.
  *
- * Each `connect()` opens a fresh socket.
- *
- * @throws {MllpInvalidOptionError} `tls` is not a boolean.
+ * Each `connect()` calls `dial` for a fresh socket.
  */
-export function workersSocket(opts: WorkersSocketOptions): MllpSocket {
-  const { tls = false } = opts;
-  if (typeof tls !== "boolean") {
-    throw new MllpInvalidOptionError(
-      "tls must be true or false on Workers, which applies no CA, client certificate, or server name."
-    );
-  }
+export function workersSocket(dial: WorkersDial): MllpSocket {
   let open: Socket | undefined;
 
   return {
@@ -55,12 +36,9 @@ export function workersSocket(opts: WorkersSocketOptions): MllpSocket {
 
     async connect(signal: AbortSignal): Promise<MllpStreams> {
       signal.throwIfAborted();
-      // `connect()` returns at once with the dial in progress; `opened`
+      // `dial()` returns at once with the connection still opening; `opened`
       // settles when the handshake does.
-      const socket = connect(
-        { hostname: opts.host, port: opts.port },
-        { allowHalfOpen: false, secureTransport: tls ? "on" : "off" }
-      );
+      const socket = dial();
       // Raced, not awaited: `opened` alone would hold a cancelled attempt
       // until the dial times out. `listener` is the abort listener's
       // lifetime: aborting it removes the listener once the race is decided,

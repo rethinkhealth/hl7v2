@@ -1,7 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { once } from "node:events";
+import type { AddressInfo } from "node:net";
+import { createServer } from "node:tls";
+import type { Server, TLSSocket } from "node:tls";
+
+import { afterEach, describe, expect, it } from "vitest";
 
 import type { SendArgs } from "../../src/commands/send";
-import { resolveTarget } from "../../src/commands/send-target";
+import { dialTarget, resolveTarget } from "../../src/commands/send-target";
+import { issue, SERVERNAME } from "../fixtures/pki";
 
 function args(overrides: Partial<SendArgs> = {}): SendArgs {
   return { help: false, json: false, ...overrides };
@@ -27,5 +33,68 @@ describe("resolveTarget", () => {
         expect(result.hint).toBe("Pass `--host` with the system to send to.");
       }
     }
+  });
+});
+
+describe("dialTarget", () => {
+  const servers: Server[] = [];
+  const sockets: TLSSocket[] = [];
+
+  afterEach(() => {
+    for (const socket of sockets.splice(0)) {
+      socket.destroy();
+    }
+    for (const server of servers.splice(0)) {
+      server.close();
+    }
+  });
+
+  /** A TLS server on `host`, with a certificate for `localhost`. */
+  async function listen(host: string): Promise<Server> {
+    const pki = await issue();
+    const server = createServer({
+      cert: pki.selfSignedCert,
+      key: pki.selfSignedKey,
+    });
+    servers.push(server);
+    server.listen(0, host);
+    await once(server, "listening");
+    return server;
+  }
+
+  it("sends the host as the TLS server name", async () => {
+    const server = await listen(SERVERNAME);
+    const { port } = server.address() as AddressInfo;
+    const accepted = once(server, "secureConnection");
+
+    sockets.push(
+      dialTarget(
+        { host: SERVERNAME, port },
+        { rejectUnauthorized: false }
+      ) as TLSSocket
+    );
+    const [remote] = (await accepted) as [TLSSocket];
+    sockets.push(remote);
+
+    expect(remote.servername).toBe(SERVERNAME);
+  });
+
+  it("sends no server name when the host is an IP address", async () => {
+    const server = await listen("127.0.0.1");
+    const { port } = server.address() as AddressInfo;
+    const accepted = once(server, "secureConnection");
+
+    sockets.push(
+      dialTarget(
+        { host: "127.0.0.1", port },
+        { rejectUnauthorized: false }
+      ) as TLSSocket
+    );
+    const [remote] = (await accepted) as [TLSSocket];
+    sockets.push(remote);
+
+    // Each runtime spells "no server name" its own way: `false` on Node,
+    // `undefined` on Bun, `null` on Deno.
+    expect(remote.servername).toBeFalsy();
   });
 });
