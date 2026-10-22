@@ -31,16 +31,21 @@ describeMllpSocketContract("workersSocket", overTcp, {
 
 describeMllpClientScenarios("workersSocket", overTcp, tcp);
 
-describeMllpSocketContract(
-  "workersSocket with an asynchronous dial",
-  ({ host, port }) =>
-    workersSocket(async () => {
+describe("workersSocket", () => {
+  it("rejects a dial that returns a promise", async () => {
+    const { host, port } = tcp.acknowledging;
+    const dial = async () => {
       // Setup that waits first, as a certificate lookup would.
       await Promise.resolve();
       return connect({ hostname: host, port });
-    }),
-  { closeBoundMs: CLOSE_BOUND_MS, remotes: tcp }
-);
+    };
+    const socket = workersSocket(dial as never);
+
+    await expect(socket.connect(new AbortController().signal)).rejects.toThrow(
+      "`dial` returned a promise; it must return the socket."
+    );
+  });
+});
 
 describe("workersSocket over TLS", () => {
   it("rejects CONNECTION_FAILED when the remote system does not speak TLS", async () => {

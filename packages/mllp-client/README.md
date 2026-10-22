@@ -312,13 +312,10 @@ Every adapter runs the same conformance suite: the [`MllpSocket` contract](#cust
 ```ts
 import { nodeSocket } from "@glion/mllp-client/node";
 
-nodeSocket(
-  dial: (signal: AbortSignal) => net.Socket | Promise<net.Socket>,
-  options?: NodeSocketOptions
-): MllpSocket
+nodeSocket(dial: () => net.Socket, options?: NodeSocketOptions): MllpSocket
 ```
 
-A socket over the `net.Socket` or `tls.TLSSocket` that `dial` returns: `net.connect()` or `tls.connect()`, with Node's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is connected, or once the TLS handshake completes for a `tls.TLSSocket`. `dial` must return a socket that is still connecting. It may return a promise of the socket, for setup that has to wait; it receives the attempt's signal, which aborts on the connect timeout or `close()`. `nodeSocket()` throws [`INVALID_OPTION`](#invalid_option) when `dial` is not a function. The same adapter runs on Bun and Deno through their `node:net` and `node:tls` compatibility; no separate import is needed there.
+A socket over the `net.Socket` or `tls.TLSSocket` that `dial` returns: `net.connect()` or `tls.connect()`, with Node's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is connected, or once the TLS handshake completes for a `tls.TLSSocket`. `dial` must return the socket itself, still connecting, not a promise of it; setup that has to wait first, such as a proxy, belongs in a [custom socket](#custom-socket). `nodeSocket()` throws [`INVALID_OPTION`](#invalid_option) when `dial` is not a function. The same adapter runs on Bun and Deno through their `node:net` and `node:tls` compatibility; no separate import is needed there.
 
 | Option            | Type     | Default | Description                                                   |
 | ----------------- | -------- | ------- | ------------------------------------------------------------- |
@@ -365,12 +362,10 @@ A receiver that refuses the client certificate over TLS 1.2 fails the handshake:
 ```ts
 import { workersSocket } from "@glion/mllp-client/workers";
 
-workersSocket(
-  dial: (signal: AbortSignal) => Socket | Promise<Socket>
-): MllpSocket
+workersSocket(dial: () => Socket): MllpSocket
 ```
 
-A socket over the one `dial` returns: `connect()` from `cloudflare:sockets`, or a binding's `connect()`, with the runtime's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is open. `dial` may return a promise of the socket, and receives the attempt's signal. `secureTransport: "starttls"` is not supported. `workersSocket()` throws [`INVALID_OPTION`](#invalid_option) when `dial` is not a function. Import it from the `./workers` subpath.
+A socket over the one `dial` returns: `connect()` from `cloudflare:sockets`, or a binding's `connect()`, with the runtime's options as given. Each `connect()` calls `dial` for a fresh socket, and resolves once the socket is open. `dial` must return the socket itself, not a promise of it. `secureTransport: "starttls"` is not supported. `workersSocket()` throws [`INVALID_OPTION`](#invalid_option) when `dial` is not a function. Import it from the `./workers` subpath.
 
 ```ts
 import { connect } from "cloudflare:sockets";

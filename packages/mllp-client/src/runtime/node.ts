@@ -17,12 +17,12 @@ export const DEFAULT_GRACEFUL_CLOSE_MS = 1000;
 
 /**
  * Opens a connection to the remote system: `net.connect()` or
- * `tls.connect()`, with Node's options. Returns the socket, or a promise of
- * it. MUST return a socket that is still connecting, and a fresh one on
- * every call. An asynchronous `dial` SHOULD stop when `signal`, the
- * attempt's signal, aborts.
+ * `tls.connect()`, with Node's options. MUST return the socket itself, not a
+ * promise of it: Node can emit the socket's first error before a promise
+ * settles, with no listener yet attached. MUST return a socket that is still
+ * connecting, and a fresh one on every call.
  */
-export type NodeDial = (signal: AbortSignal) => Socket | Promise<Socket>;
+export type NodeDial = () => Socket;
 
 export interface NodeSocketOptions {
   /**
@@ -39,22 +39,24 @@ export interface NodeSocketOptions {
  * handshake for a `tls.TLSSocket`, once connected for a `net.Socket`.
  *
  * Rejects with the socket's error, or with `signal.reason` when cancelled.
- * Destroys the socket before rejecting.
+ * Destroys the socket before rejecting. Rejects with a `TypeError` when `dial`
+ * returned a promise, once the socket it resolves with is destroyed.
  */
 async function open(dial: NodeDial, signal: AbortSignal): Promise<Socket> {
   signal.throwIfAborted();
-  const dialed = dial(signal);
-  // A socket returned directly gets its listeners before Node can emit its
-  // first error; awaiting it would defer them past that.
-  const socket = dialed instanceof Promise ? await dialed : dialed;
+  // The listeners below are attached in the same synchronous run as `dial()`,
+  // before Node can emit anything on the socket.
+  const socket: Socket | Promise<Socket> = dial();
+  if (socket instanceof Promise) {
+    const resolved = await socket;
+    resolved.destroy();
+    throw new TypeError(
+      "`dial` returned a promise; it must return the socket."
+    );
+  }
 
   // oxlint-disable-next-line promise/avoid-new -- wrapping a Node event emitter
   return new Promise<Socket>((resolve, reject) => {
-    if (signal.aborted) {
-      socket.destroy();
-      reject(signal.reason);
-      return;
-    }
     // `encrypted` is how Node tells a `tls.TLSSocket` from a `net.Socket`.
     const opened = "encrypted" in socket ? "secureConnect" : "connect";
     const done = () => {

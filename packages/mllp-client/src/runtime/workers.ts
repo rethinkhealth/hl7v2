@@ -15,11 +15,10 @@ type Socket = ReturnType<typeof connect>;
 /**
  * Opens a connection to the remote system: `connect()` from
  * `cloudflare:sockets`, or a binding's `connect()`, with the runtime's
- * options. Returns the socket, or a promise of it. MUST return a fresh socket
- * on every call. An asynchronous `dial` SHOULD stop when `signal`, the
- * attempt's signal, aborts. `secureTransport: "starttls"` is not supported.
+ * options. MUST return the socket itself, not a promise of it, and a fresh
+ * one on every call. `secureTransport: "starttls"` is not supported.
  */
-export type WorkersDial = (signal: AbortSignal) => Socket | Promise<Socket>;
+export type WorkersDial = () => Socket;
 
 /**
  * A socket to one remote system, over the socket `dial` returns.
@@ -45,17 +44,23 @@ export function workersSocket(dial: WorkersDial): MllpSocket {
 
     async connect(signal: AbortSignal): Promise<MllpStreams> {
       signal.throwIfAborted();
-      // The socket comes back with the connection still opening; `opened`
+      // `dial()` returns at once with the connection still opening; `opened`
       // settles when the handshake does.
-      const socket = await dial(signal);
+      const socket: Socket | Promise<Socket> = dial();
+      if (socket instanceof Promise) {
+        const resolved = await socket;
+        // oxlint-disable-next-line promise/prefer-await-to-then -- awaiting would wait out the dial
+        resolved.close().catch(() => {});
+        throw new TypeError(
+          "`dial` returned a promise; it must return the socket."
+        );
+      }
       // Raced, not awaited: `opened` alone would hold a cancelled attempt
       // until the dial times out. `listener` is the abort listener's
       // lifetime: aborting it removes the listener once the race is decided,
       // so nothing stays subscribed to `signal`.
       const listener = new AbortController();
       try {
-        // `dial` may have resolved after the attempt was cancelled.
-        signal.throwIfAborted();
         await Promise.race([socket.opened, aborted(signal, listener.signal)]);
       } catch (error) {
         // Two ways here: the dial failed (`opened` rejected), or the caller

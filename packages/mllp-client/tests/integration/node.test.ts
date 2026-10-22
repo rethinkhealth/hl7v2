@@ -21,6 +21,9 @@ import type { Address } from "./remote-tcp";
 /** Slack on top of the grace window for the destroy to be observed. */
 const CLOSE_SLACK_MS = 500;
 
+/** An address no test host has, from TEST-NET-1 (RFC 5737). */
+const UNASSIGNED = "192.0.2.1";
+
 /** Time for the remote system to observe the client's close. */
 const SETTLE_MS = 50;
 
@@ -53,16 +56,6 @@ describeMllpSocketContract("nodeSocket over TLS", overTls, {
 
 describeMllpClientScenarios("nodeSocket over TLS", overTls, tls);
 
-describeMllpSocketContract(
-  "nodeSocket with an asynchronous dial",
-  ({ host, port }) =>
-    nodeSocket(async () => {
-      await sleep(1);
-      return connectTcp({ host, port });
-    }),
-  { closeBoundMs: DEFAULT_GRACEFUL_CLOSE_MS + CLOSE_SLACK_MS, remotes: tcp }
-);
-
 describe("nodeSocket over net.Socket", () => {
   it("does not dial when the signal is already aborted", async () => {
     await using remote = await listen();
@@ -76,32 +69,28 @@ describe("nodeSocket over net.Socket", () => {
     expect(remote.connections).toBe(0);
   });
 
-  it("passes the attempt's signal to dial", async () => {
-    await using remote = await listen();
-    const signals: AbortSignal[] = [];
-    const socket = nodeSocket((signal) => {
-      signals.push(signal);
-      return connectTcp({ host: remote.host, port: remote.port });
-    });
-    const attempt = new AbortController();
+  it("rejects with the socket's error when it fails before connecting", async () => {
+    // Binding to an address the host does not have fails at once:
+    // Node emits EADDRNOTAVAIL on the next tick after the socket is created.
+    const socket = nodeSocket(() =>
+      connectTcp({ host: "127.0.0.1", localAddress: UNASSIGNED, port: 9 })
+    );
 
-    await socket.connect(attempt.signal);
-    await socket.close();
-
-    expect(signals).toEqual([attempt.signal]);
+    await expect(
+      socket.connect(new AbortController().signal)
+    ).rejects.toMatchObject({ code: "EADDRNOTAVAIL" });
   });
 
-  it("leaves nothing open when an asynchronous dial resolves after the attempt was cancelled", async () => {
+  it("rejects a dial that returns a promise, and leaves nothing open", async () => {
     await using remote = await listen();
-    const attempt = new AbortController();
-    const socket = nodeSocket(async () => {
+    const dial = async () => {
       await sleep(1);
-      attempt.abort(new Error("the caller gave up"));
       return connectTcp({ host: remote.host, port: remote.port });
-    });
+    };
+    const socket = nodeSocket(dial as never);
 
-    await expect(socket.connect(attempt.signal)).rejects.toThrow(
-      "the caller gave up"
+    await expect(socket.connect(new AbortController().signal)).rejects.toThrow(
+      "`dial` returned a promise; it must return the socket."
     );
     await sleep(SETTLE_MS);
 
