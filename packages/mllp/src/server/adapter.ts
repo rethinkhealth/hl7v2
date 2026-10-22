@@ -38,6 +38,10 @@ export interface AdapterSocket {
   readonly secure: boolean;
   readonly readable: ReadableStream<Uint8Array>;
   readonly writable: WritableStream<Uint8Array>;
+  /**
+   * Ends the socket: a FIN first, then destroys it if the remote system has
+   * not closed its side within a grace period. Idempotent.
+   */
   close(): void;
 }
 

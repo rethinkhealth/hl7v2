@@ -52,6 +52,9 @@ export interface NodeAdapterOptions {
   tls?: TlsOptions;
 }
 
+/** Time a socket gets to close after its FIN before it is destroyed. */
+const CLOSE_GRACE_MS = 1000;
+
 /**
  * Write a chunk to a Node.js socket, waiting for backpressure to clear.
  *
@@ -103,12 +106,18 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
 
   return {
     close() {
+      if (socket.writableEnded || socket.destroyed) {
+        return;
+      }
       // Graceful teardown: `resume()` drains any unread inbound bytes so the
       // following `end()` can send a clean FIN. A bare `destroy()` while data
       // sits unread in the RX buffer (e.g. tearing down after `onConnect`
       // rejects, before the peer's first frame is consumed) makes the kernel
       // send an RST, surfacing as ECONNRESET on the peer.
       socket.resume();
+      // A remote system that never closes its side would hold the socket open.
+      const grace = setTimeout(() => socket.destroy(), CLOSE_GRACE_MS);
+      socket.once("close", () => clearTimeout(grace));
       socket.end();
     },
     get localPort() {
