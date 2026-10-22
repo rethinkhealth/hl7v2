@@ -175,20 +175,39 @@ export function serve(app: Mllp, options: ServeOptions): Server {
   };
 
   const connections = new Set<OpenConnection>();
+  let closing = false;
+
+  /** Lists `connection` among the open connections until it has closed. */
+  const track = async (connection: OpenConnection) => {
+    connections.add(connection);
+    await connection.closed;
+    connections.delete(connection);
+  };
 
   const handle = adapter.listen(
     {
       hostname: options.hostname,
       port: options.port,
     },
-    (socket) => handleConnection(app, socket, lifecycle, connections)
+    (socket) => {
+      // A TLS connection can finish its handshake after `close()` started.
+      if (closing) {
+        socket.close();
+        return;
+      }
+      // oxlint-disable-next-line no-void
+      void track(handleConnection(app, socket, lifecycle));
+    }
   );
 
   return {
     async close() {
-      const closed = handle.close();
-      await Promise.all([...connections].map((connection) => connection.end()));
-      await closed;
+      closing = true;
+      for (const connection of connections) {
+        connection.end();
+      }
+      await handle.close();
+      await Promise.all([...connections].map(({ closed }) => closed));
     },
     listening: handle.listening,
     get port() {
@@ -197,14 +216,19 @@ export function serve(app: Mllp, options: ServeOptions): Server {
   };
 }
 
-/** A connection the server has accepted and not yet closed. */
+/** A connection the server has accepted. */
 interface OpenConnection {
   /**
-   * Stop reading once the message in progress, if any, has been answered.
-   *
+   * Ends the connection once the message in progress, if any, has been
+   * answered. A message read after `end()` is not handled. Idempotent.
+   */
+  end(): void;
+
+  /**
+   * Resolves once the connection has closed and `onDisconnect` has settled.
    * Never rejects.
    */
-  end(): Promise<void>;
+  readonly closed: Promise<void>;
 }
 
 /** Lifecycle callback options extracted from ServeOptions. */
@@ -258,9 +282,9 @@ async function reportError(
  *    are MLLP-encoded (wrapped in start/end block characters) and written back
  *    to the socket.
  *
- * The loop runs until the remote end closes the connection or an
- * unrecoverable error occurs. Stream locks are released in a `finally`
- * block to prevent resource leaks.
+ * The loop runs until the remote end closes the connection, an
+ * unrecoverable error occurs, or {@link OpenConnection.end} is called. Stream
+ * locks are released in a `finally` block to prevent resource leaks.
  *
  * Lifecycle callbacks fire at connection boundaries:
  *
@@ -271,35 +295,25 @@ async function reportError(
  * @param app - The MLLP application to dispatch messages to.
  * @param socket - The adapter socket wrapping the underlying TCP connection.
  * @param lifecycle - Optional lifecycle callbacks from ServeOptions.
- * @param connections - The server's open connections; this one is listed
- *   until it closes.
+ * @returns The connection, to end it and to wait for it to close.
  */
 function handleConnection(
   app: Mllp,
   socket: AdapterSocket,
-  lifecycle: LifecycleOptions,
-  connections: Set<OpenConnection>
-): void {
+  lifecycle: LifecycleOptions
+): OpenConnection {
   const reader = socket.readable.pipeThrough(unframe()).getReader();
   const writer = socket.writable.getWriter();
 
   let handling = false;
   let ending = false;
-  const open: OpenConnection = {
-    async end() {
-      ending = true;
-      if (handling) {
-        return;
-      }
-      try {
-        // Settles the pending read as done.
-        await reader.cancel();
-      } catch {
-        // The stream has already errored; the read loop reports that error.
-      }
-    },
+  const end = () => {
+    ending = true;
+    // Mid-message, the loop ends the socket once the reply is written.
+    if (!handling) {
+      socket.close();
+    }
   };
-  connections.add(open);
 
   const connection: ConnectionInfo = {
     id: nextConnectionId++,
@@ -325,7 +339,7 @@ function handleConnection(
       try {
         while (true) {
           const { done, value: payload } = await reader.read();
-          if (done) {
+          if (done || ending) {
             break;
           }
           handling = true;
@@ -334,7 +348,7 @@ function handleConnection(
           // Decode failures and handler errors both route to onError and the
           // connection survives; stream errors (connection reset) flow to the
           // outer catch for cleanup.
-          let response: Awaited<ReturnType<Mllp["handle"]>> | undefined;
+          let response: Awaited<ReturnType<Mllp["handle"]>>;
           try {
             // unframe() emits the de-framed payload bytes; decode them to
             // text (UTF-8) for the handler, which also receives the raw bytes.
@@ -386,7 +400,6 @@ function handleConnection(
     } finally {
       // ── Cleanup & onDisconnect ─────────────────────────────────────
       // Always runs, even if onConnect threw.
-      connections.delete(open);
       reader.releaseLock();
       writer.releaseLock();
 
@@ -400,8 +413,7 @@ function handleConnection(
     }
   };
 
-  // oxlint-disable-next-line no-void
-  void processMessages();
+  return { closed: processMessages(), end };
 }
 
 /**
