@@ -13,6 +13,7 @@
 
 import { once } from "node:events";
 import { connect } from "node:tls";
+import type { TLSSocket } from "node:tls";
 
 import { parseHL7v2 } from "@glion/hl7v2";
 import { frame } from "@glion/mllp-codec";
@@ -26,13 +27,19 @@ import { Mllp } from "../../src/server/mllp";
 
 const SERVERNAME = "localhost";
 
+/** X.509 GeneralName tag for a DNS name (RFC 5280 §4.2.1.6). */
+const DNS_NAME = 2;
+
 const ADT_A01 =
   "MSH|^~\\&|SendApp|SendFac|RecvApp|RecvFac|20240101120000||ADT^A01^ADT_A01|MSG001|P|2.5.1";
 
 const ACK =
   "MSH|^~\\&|RecvApp|RecvFac|SendApp|SendFac|20240101120000||ACK|ACK001|P|2.5.1\rMSA|AA|MSG001";
 
-/** A CA, a server certificate for `localhost`, and a client certificate. */
+/**
+ * A CA, a server certificate for `localhost`, a client certificate the CA
+ * issued, and a self-signed client certificate it did not.
+ */
 async function issue() {
   const ca = await generate([{ name: "commonName", value: "glion test CA" }], {
     algorithm: "sha256",
@@ -42,12 +49,15 @@ async function issue() {
     ],
   });
   const signedBy = { cert: ca.cert, key: ca.private };
-  const [server, client] = await Promise.all([
+  const [server, client, stranger] = await Promise.all([
     generate([{ name: "commonName", value: SERVERNAME }], {
       algorithm: "sha256",
       ca: signedBy,
       extensions: [
-        { altNames: [{ type: 2, value: SERVERNAME }], name: "subjectAltName" },
+        {
+          altNames: [{ type: DNS_NAME, value: SERVERNAME }],
+          name: "subjectAltName",
+        },
         { name: "extKeyUsage", serverAuth: true },
       ],
     }),
@@ -56,21 +66,31 @@ async function issue() {
       ca: signedBy,
       extensions: [{ clientAuth: true, name: "extKeyUsage" }],
     }),
+    generate([{ name: "commonName", value: "stranger" }], {
+      algorithm: "sha256",
+      extensions: [{ clientAuth: true, name: "extKeyUsage" }],
+    }),
   ]);
-  return { ca: ca.cert, client, server };
+  return { ca: ca.cert, client, server, stranger };
 }
 
 describe("serve() with tls.requestCert", () => {
   let pki: Awaited<ReturnType<typeof issue>>;
   let server: Server | undefined;
+  let connections = 0;
+  const remotes: TLSSocket[] = [];
 
   beforeAll(async () => {
     pki = await issue();
   });
 
   afterEach(async () => {
+    for (const remote of remotes.splice(0)) {
+      remote.destroy();
+    }
     await server?.close();
     server = undefined;
+    connections = 0;
   });
 
   const listen = async () => {
@@ -78,6 +98,9 @@ describe("serve() with tls.requestCert", () => {
       .parser(parseHL7v2)
       .on("ADT^A01", () => ({ raw: ACK }));
     server = serve(app, {
+      onConnect: () => {
+        connections += 1;
+      },
       port: 0,
       tls: {
         ca: pki.ca,
@@ -94,13 +117,31 @@ describe("serve() with tls.requestCert", () => {
     const port = await listen();
 
     const remote = connect({ ca: pki.ca, port, servername: SERVERNAME });
-    remote.on("data", () => {});
-    remote.write(frame(encodeBytes(ADT_A01)));
+    remotes.push(remote);
+    remote.resume();
     const [error] = await once(remote, "error");
 
     expect(error).toMatchObject({
       code: "ERR_SSL_TLSV13_ALERT_CERTIFICATE_REQUIRED",
     });
+    expect(connections).toBe(0);
+  });
+
+  it("disconnects a remote system whose certificate the CA did not issue", async () => {
+    const port = await listen();
+
+    const remote = connect({
+      ca: pki.ca,
+      cert: pki.stranger.cert,
+      key: pki.stranger.private,
+      port,
+      servername: SERVERNAME,
+    });
+    remotes.push(remote);
+    remote.resume();
+    await once(remote, "close");
+
+    expect(connections).toBe(0);
   });
 
   it("answers a remote system that presents a certificate the CA issued", async () => {
@@ -113,10 +154,10 @@ describe("serve() with tls.requestCert", () => {
       port,
       servername: SERVERNAME,
     });
+    remotes.push(remote);
     await once(remote, "secureConnect");
     remote.write(frame(encodeBytes(ADT_A01)));
     const [reply] = await once(remote, "data");
-    remote.end();
 
     expect(reply).toEqual(Buffer.from(frame(encodeBytes(ACK))));
   });

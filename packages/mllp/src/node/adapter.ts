@@ -29,6 +29,16 @@ import type {
 } from "../server/adapter";
 
 /**
+ * TLS for the listener, as `tls.createServer()` takes it, without the socket
+ * settings {@link NodeAdapterOptions} owns: `keepAlive`,
+ * `keepAliveInitialDelay`, and `noDelay`.
+ */
+export type ServeTlsOptions = Omit<
+  TlsOptions,
+  "keepAlive" | "keepAliveInitialDelay" | "noDelay"
+>;
+
+/**
  * Options specific to the Node.js adapter.
  *
  * @internal
@@ -69,7 +79,7 @@ export interface NodeAdapterOptions {
    * TLS for the listener, passed to `tls.createServer()` unchanged. Plain
    * TCP when `undefined`.
    */
-  tls?: TlsOptions;
+  tls?: ServeTlsOptions;
 }
 
 /**
@@ -204,12 +214,13 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
 
   return {
     listen(listenOpts: ListenOptions, handler: ConnectionHandler): TcpHandle {
+      const secure = tls !== undefined;
       const onConnection = (socket: Socket) => {
         configureSocket(socket);
-        handler(wrapNodeSocket(socket, tls !== undefined));
+        handler(wrapNodeSocket(socket, secure));
       };
 
-      const server: Server = tls
+      const server: Server = secure
         ? createTlsServer(tls, onConnection)
         : createServer(onConnection);
 

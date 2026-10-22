@@ -269,7 +269,7 @@ const server = serve(app, {
 });
 ```
 
-Mutual TLS is `requestCert` with the `ca` that issued the client certificates. A remote system that presents no certificate, or one `ca` does not verify, is refused during the handshake:
+Mutual TLS is `requestCert` with the `ca` that issued the client certificates. A remote system that presents no certificate is refused during the handshake. One with a certificate `ca` does not verify is disconnected once the handshake completes, before any message is read:
 
 ```ts
 const server = serve(app, {
