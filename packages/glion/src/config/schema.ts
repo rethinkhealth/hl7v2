@@ -68,8 +68,6 @@ export function makeGlionConfigSchema(ctx: SchemaContext) {
       // the decision of the command that binds — `dev` serves loopback,
       // `start` serves every interface — so the schema does not make it.
       hostname: z.string().optional(),
-      keepAlive: z.boolean().optional(),
-      keepAliveInitialDelay: z.number().int().nonnegative().optional(),
       // Polymorphic — accepts boolean, LogLevel string, or full object.
       // The .transform() below collapses all four cases into the flat
       // `ResolvedLogging` shape so downstream code (the file logger)
