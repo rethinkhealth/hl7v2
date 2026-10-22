@@ -10,6 +10,8 @@
  * @module
  */
 
+import type { TlsOptions } from "node:tls";
+
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
 import { CharsetError, decodeBytes, encodeBytes } from "@glion/util-charset";
 
@@ -65,19 +67,6 @@ export interface ServeOptions {
   hostname?: string;
 
   /**
-   * Whether to enable TCP keep-alive on accepted sockets.
-   * Defaults to the adapter default (`true`).
-   */
-  keepAlive?: boolean;
-
-  /**
-   * The initial delay in milliseconds before the first TCP keep-alive probe
-   * is sent on an idle socket. Only meaningful when `keepAlive` is `true`.
-   * Defaults to the adapter default (`60 000`).
-   */
-  keepAliveInitialDelay?: number;
-
-  /**
    * Called when a new TCP connection is accepted. Receives the connection
    * metadata including the unique connection ID and mutable state map.
    *
@@ -120,19 +109,10 @@ export interface ServeOptions {
   socketTimeout?: number;
 
   /**
-   * TLS configuration. When provided the server will create a TLS socket
-   * instead of a plain TCP socket.
+   * TLS for the listener, passed to `tls.createServer()` unchanged. Without
+   * it, the server listens on plain TCP.
    */
-  tls?: {
-    /** Optional CA certificate(s) for client certificate verification. */
-    ca?: string | Buffer;
-    /** The server certificate. */
-    cert: string | Buffer;
-    /** The private key for the server certificate. */
-    key: string | Buffer;
-    /** Optional passphrase for the private key. */
-    passphrase?: string;
-  };
+  tls?: TlsOptions;
 }
 
 /**
@@ -149,8 +129,9 @@ export interface Server {
   readonly listening: Promise<void>;
 
   /**
-   * Gracefully close the server. No new connections will be accepted and the
-   * returned promise resolves once all underlying resources are released.
+   * Gracefully close the server. No new connections are accepted, and every
+   * open connection is ended once the message it is handling, if any, has
+   * been answered. Resolves once every connection has closed.
    */
   close(): Promise<void>;
 }
@@ -177,15 +158,14 @@ export interface Server {
  *   ```
  *
  * @param app - The {@link Mllp} application that will handle each message.
- * @param options - Server configuration (port, TLS, timeouts, etc.).
+ * @param options - Server configuration: port, TLS, timeouts, and callbacks.
  * @returns A {@link Server} handle that exposes the bound port and a `close()`
  *   method for graceful shutdown.
  */
 export function serve(app: Mllp, options: ServeOptions): Server {
   const adapter = nodeAdapter({
-    keepAlive: options.keepAlive,
-    keepAliveInitialDelay: options.keepAliveInitialDelay,
     socketTimeout: options.socketTimeout,
+    tls: options.tls,
   });
 
   const lifecycle: LifecycleOptions = {
@@ -194,24 +174,61 @@ export function serve(app: Mllp, options: ServeOptions): Server {
     onError: options.onError,
   };
 
+  const connections = new Set<OpenConnection>();
+  let closing = false;
+
+  /** Lists `connection` among the open connections until it has closed. */
+  const track = async (connection: OpenConnection) => {
+    connections.add(connection);
+    await connection.closed;
+    connections.delete(connection);
+  };
+
   const handle = adapter.listen(
     {
       hostname: options.hostname,
       port: options.port,
-      tls: options.tls,
     },
-    (socket) => handleConnection(app, socket, lifecycle)
+    (socket) => {
+      // A TLS connection can finish its handshake after `close()` started.
+      if (closing) {
+        socket.close();
+        return;
+      }
+      // oxlint-disable-next-line no-void
+      void track(handleConnection(app, socket, lifecycle));
+    }
   );
 
   return {
     async close() {
+      closing = true;
+      for (const connection of connections) {
+        connection.end();
+      }
       await handle.close();
+      await Promise.all([...connections].map(({ closed }) => closed));
     },
     listening: handle.listening,
     get port() {
       return handle.port;
     },
   };
+}
+
+/** A connection the server has accepted. */
+interface OpenConnection {
+  /**
+   * Ends the connection once the message in progress, if any, has been
+   * answered. A message read after `end()` is not handled. Idempotent.
+   */
+  end(): void;
+
+  /**
+   * Resolves once the connection has closed and `onDisconnect` has settled.
+   * Never rejects.
+   */
+  readonly closed: Promise<void>;
 }
 
 /** Lifecycle callback options extracted from ServeOptions. */
@@ -265,9 +282,9 @@ async function reportError(
  *    are MLLP-encoded (wrapped in start/end block characters) and written back
  *    to the socket.
  *
- * The loop runs until the remote end closes the connection or an
- * unrecoverable error occurs. Stream locks are released in a `finally`
- * block to prevent resource leaks.
+ * The loop runs until the remote end closes the connection, an
+ * unrecoverable error occurs, or {@link OpenConnection.end} is called. Stream
+ * locks are released in a `finally` block to prevent resource leaks.
  *
  * Lifecycle callbacks fire at connection boundaries:
  *
@@ -278,14 +295,25 @@ async function reportError(
  * @param app - The MLLP application to dispatch messages to.
  * @param socket - The adapter socket wrapping the underlying TCP connection.
  * @param lifecycle - Optional lifecycle callbacks from ServeOptions.
+ * @returns The connection, to end it and to wait for it to close.
  */
 function handleConnection(
   app: Mllp,
   socket: AdapterSocket,
   lifecycle: LifecycleOptions
-): void {
+): OpenConnection {
   const reader = socket.readable.pipeThrough(unframe()).getReader();
   const writer = socket.writable.getWriter();
+
+  let handling = false;
+  let ending = false;
+  const end = () => {
+    ending = true;
+    // Mid-message, the loop ends the socket once the reply is written.
+    if (!handling) {
+      socket.close();
+    }
+  };
 
   const connection: ConnectionInfo = {
     id: nextConnectionId++,
@@ -311,9 +339,10 @@ function handleConnection(
       try {
         while (true) {
           const { done, value: payload } = await reader.read();
-          if (done) {
+          if (done || ending) {
             break;
           }
+          handling = true;
 
           // Inner try/catch separates per-message errors from stream errors.
           // Decode failures and handler errors both route to onError and the
@@ -335,13 +364,16 @@ function handleConnection(
               lifecycle,
               getMessageInfo(error)
             );
-            continue;
           }
 
           // Write is outside the handler error catch — write failures
           // are transport errors and flow to the outer catch.
           if (response) {
             await writer.write(frame(encodeBytes(response.raw)));
+          }
+          handling = false;
+          if (ending) {
+            break;
           }
         }
       } catch (streamError) {
@@ -368,16 +400,8 @@ function handleConnection(
     } finally {
       // ── Cleanup & onDisconnect ─────────────────────────────────────
       // Always runs, even if onConnect threw.
-      try {
-        reader.releaseLock();
-      } catch {
-        /* lock may already be released */
-      }
-      try {
-        writer.releaseLock();
-      } catch {
-        /* lock may already be released */
-      }
+      reader.releaseLock();
+      writer.releaseLock();
 
       try {
         await lifecycle.onDisconnect?.(connection);
@@ -389,8 +413,7 @@ function handleConnection(
     }
   };
 
-  // oxlint-disable-next-line no-void
-  void processMessages();
+  return { closed: processMessages(), end };
 }
 
 /**

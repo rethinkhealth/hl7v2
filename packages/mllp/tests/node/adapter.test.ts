@@ -1,7 +1,9 @@
 // oxlint-disable typescript/no-non-null-assertion
 // oxlint-disable no-empty-function
 import type { Server } from "node:net";
+import { createServer } from "node:net";
 import { Readable } from "node:stream";
+import { createServer as createTlsServer } from "node:tls";
 
 import { nodeAdapter } from "../../src/node/adapter";
 
@@ -24,8 +26,6 @@ function createMockSocket() {
     localPort: 2575,
     remoteAddress: "127.0.0.1",
     remotePort: 54_321,
-    setKeepAlive: vi.fn(),
-    setNoDelay: vi.fn(),
     setTimeout: vi.fn(),
     write: vi.fn(() => true),
   });
@@ -35,8 +35,6 @@ function createMockSocket() {
     localPort: number;
     remoteAddress: string;
     remotePort: number;
-    setKeepAlive: ReturnType<typeof vi.fn>;
-    setNoDelay: ReturnType<typeof vi.fn>;
     setTimeout: ReturnType<typeof vi.fn>;
     write: ReturnType<typeof vi.fn>;
   };
@@ -51,10 +49,9 @@ const mockServer = {
     done?.();
   }),
   listen: vi.fn(),
-  // Persistent listener for server-level errors. The adapter registers
-  // `on("error", ...)` to keep later errors handled; tests do not need
-  // to fire it but the mock must accept the registration.
-  on: vi.fn(() => {}),
+  // The adapter registers `on("error", ...)` to keep later errors handled;
+  // tests do not need to fire it but the mock must accept the registration.
+  on: vi.fn(),
   // Simulate the "listening" event firing synchronously so that the
   // listening promise resolves and tests do not hang.
   // oxlint-disable-next-line eslint-plugin-promise/prefer-await-to-callbacks
@@ -85,6 +82,27 @@ const mockServer = {
   }
 );
 
+// oxlint-disable-next-line typescript/no-explicit-any
+(vi as any).mock(
+  import("node:tls"),
+  async (
+    importOriginal: () =>
+      | Record<string, unknown>
+      | PromiseLike<Record<string, unknown>>
+  ) => {
+    const actual = (await importOriginal()) as Record<string, unknown>;
+    return {
+      ...actual,
+      createServer: vi.fn(
+        (_options: unknown, handler: (socket: MockSocket) => void) => {
+          connectionHandler = handler;
+          return mockServer as unknown as Server;
+        }
+      ),
+    };
+  }
+);
+
 const noop = () => {
   /* noop */
 };
@@ -110,16 +128,31 @@ afterEach(() => {
 });
 
 describe("nodeAdapter", () => {
-  it("sets keepAlive(true, 60000) and noDelay(true) by default, does NOT set timeout", () => {
+  it("listens on plain TCP by default, and sets no timeout", () => {
+    vi.mocked(createTlsServer).mockClear();
+    const accepted: boolean[] = [];
     const adapter = nodeAdapter();
-    adapter.listen({ port: 2575 }, noop);
+    adapter.listen({ port: 2575 }, (socket) => accepted.push(socket.secure));
 
     const socket = createMockSocket();
     connectionHandler?.(socket);
 
-    expect(socket.setKeepAlive).toHaveBeenCalledWith(true, 60_000);
-    expect(socket.setNoDelay).toHaveBeenCalledWith(true);
+    expect(createServer).toHaveBeenLastCalledWith(expect.any(Function));
+    expect(createTlsServer).not.toHaveBeenCalled();
+    expect(accepted).toEqual([false]);
     expect(socket.setTimeout).not.toHaveBeenCalled();
+  });
+
+  it("passes tls to tls.createServer() unchanged, and marks its sockets secure", () => {
+    const tls = { ca: "ca", cert: "cert", key: "key", requestCert: true };
+    const accepted: boolean[] = [];
+    const adapter = nodeAdapter({ tls });
+    adapter.listen({ port: 2575 }, (socket) => accepted.push(socket.secure));
+
+    connectionHandler?.(createMockSocket());
+
+    expect(createTlsServer).toHaveBeenLastCalledWith(tls, expect.any(Function));
+    expect(accepted).toEqual([true]);
   });
 
   it("calls setTimeout when socketTimeout option is provided", () => {
@@ -142,17 +175,6 @@ describe("nodeAdapter", () => {
     expect(socket.destroy).not.toHaveBeenCalled();
     socket.emit("timeout");
     expect(socket.destroy).toHaveBeenCalled();
-  });
-
-  it("does NOT call setKeepAlive when keepAlive is false", () => {
-    const adapter = nodeAdapter({ keepAlive: false });
-    adapter.listen({ port: 2575 }, noop);
-
-    const socket = createMockSocket();
-    connectionHandler?.(socket);
-
-    expect(socket.setKeepAlive).not.toHaveBeenCalled();
-    expect(socket.setNoDelay).toHaveBeenCalledWith(true);
   });
 
   it("handle.port returns correct port and handle.close() resolves", async () => {

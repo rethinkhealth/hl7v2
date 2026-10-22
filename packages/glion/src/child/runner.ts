@@ -157,8 +157,6 @@ async function main(): Promise<void> {
   // parent to display in the TUI or log as JSON lines.
   const server: Server = serve(app, {
     hostname: manifest.hostname,
-    keepAlive: manifest.keepAlive,
-    keepAliveInitialDelay: manifest.keepAliveInitialDelay,
     onConnect: (conn: ConnectionInfo) => {
       emit({
         id: conn.id,
