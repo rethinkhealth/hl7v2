@@ -16,7 +16,7 @@ Several connections to one port are ordinary:
 
 - **Several sending systems.** A laboratory system, a registration system, and a radiology system each hold their own connection.
 - **One sending system, several connections.** Integration engines open one connection per outbound channel.
-- **A reconnect.** A sending system whose network drops opens a new connection while the server still holds the old one. TCP reports a peer that vanished without closing only when keepalive probes or an idle timeout find it, which with Node's defaults is never.
+- **A reconnect.** A sending system whose network drops opens a new connection while the server still holds the old one. TCP reports a peer that vanished without closing only when keep-alive probes or an idle timeout find it; with neither, never.
 
 The reconnect decides the question. A server that holds one connection at a time refuses the reconnect, and the interface is down until the stale connection ends. A server that closes the old connection when a new one arrives lets two misconfigured senders knock each other off in turn. So the server accepts more than one connection, and the questions are what holds across them.
 
@@ -34,13 +34,13 @@ Interface engines take the same position: they accept several connections on one
 
 4. **A limit on connections is optional, and refuses connections past it.** `serve()` takes `maxConnections`, unset by default, and sets Node's `server.maxConnections`: a connection past the limit is closed as soon as it is accepted, before any message is read. The server never closes an open connection to make room, because that connection may be in the middle of a message, and two senders would take the slot from each other in turn.
 
-5. **A stale connection ends by idle timeout.** `socketTimeout` destroys a connection that has received no bytes for that long. It is off by default. With `maxConnections` set and `socketTimeout` off, stale connections can fill the limit and lock out a reconnecting sender until they end on their own; the reference documentation says so next to both options. Over TLS, TCP keepalive is also available through Node's options in `tls`; plain TCP has no keepalive setting on `serve()` (ADR 0011, #909).
+5. **A stale connection ends by keep-alive; an idle connection ends only by choice.** The server listens with TCP keep-alive on by default, probing after 60 s idle (`DEFAULT_SOCKET_OPTIONS`, #1073), so a connection whose remote system is gone ends while a quiet remote system that is still there keeps its connection. MLLP feeds can be quiet for hours, so an idle timeout is not the default: `socketTimeout` ends any connection idle past it, and is off unless set. A caller who turns keep-alive off with `socketTimeout` also off accepts that stale connections can fill `maxConnections` and lock out a reconnecting sender; the reference documentation says so next to both options.
 
 6. **Closing the server ends every connection after its message.** `close()` stops accepting connections, ends each open connection once the message it is handling, if any, has been answered, and resolves when every connection has closed (#906).
 
 ## Consequences
 
 - The `@glion/mllp` README states decisions 2 and 3: order holds within a connection, and `connection.state` is per connection.
-- `maxConnections` is new on `serve()` and in `glion.config.ts`. It is the one listener setting `serve()` takes outside `tls`, because Node sets it on the server object, not through `createServer()` options.
+- `maxConnections` is new on `serve()` and in `glion.config.ts`. It is a `serve()` option of its own, not one of Node's listener options, because Node sets it on the server object rather than through `createServer()`.
 - A handler that keeps state across connections (a cache, a counter) does so in its own module, and owns the concurrency that comes with it.
 - Per-system rules (ordering across a system's connections, an allowlist, the client certificate facts in #1065) need a remote system identity first, and are out of scope here.
