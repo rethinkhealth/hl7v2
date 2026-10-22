@@ -91,7 +91,7 @@ export async function resolveDestination(
  */
 export function dialTarget(
   target: SendTarget,
-  tls: ConnectionOptions | undefined
+  tls?: ConnectionOptions
 ): Socket {
   const { host, port } = target;
   if (tls === undefined) {
