@@ -41,6 +41,6 @@ Interface engines take the same position: they accept several connections on one
 ## Consequences
 
 - The `@glion/mllp` README states decisions 2 and 3: order holds within a connection, and `connection.state` is per connection.
-- `maxConnections` is new on `serve()` and in `glion.config.ts`. It is a `serve()` option of its own, not one of Node's listener options, because Node sets it on the server object rather than through `createServer()`.
+- `maxConnections` is new on `serve()` and in `glion.config.ts`.
 - A handler that keeps state across connections (a cache, a counter) does so in its own module, and owns the concurrency that comes with it.
 - Per-system rules (ordering across a system's connections, an allowlist, the client certificate facts in #1065) need a remote system identity first, and are out of scope here.
