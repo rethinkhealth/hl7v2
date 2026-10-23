@@ -11,15 +11,17 @@ import type { PartialEvent } from "../../src/events";
  */
 function makeCtx(overrides: Partial<Context> = {}): Context {
   return {
-    connection: {
-      id: 1,
-      localPort: 2575,
-      remoteAddress: "127.0.0.1",
-      remotePort: 41_376,
-      secure: false,
-      state: new Map(),
-    },
     controlId: "MSG001",
+    env: {
+      connection: {
+        id: 1,
+        localPort: 2575,
+        remoteAddress: "127.0.0.1",
+        remotePort: 41_376,
+        secure: false,
+        state: new Map(),
+      },
+    },
     messageType: "ADT",
     res: undefined,
     triggerEvent: "A01",

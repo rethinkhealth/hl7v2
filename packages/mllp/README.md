@@ -1,10 +1,10 @@
 # @glion/mllp
 
-Transport-agnostic MLLP engine and middleware-driven MLLP server for HL7v2 messaging.
+Routes and middleware that reply to HL7v2 messages, on any runtime, with an MLLP server for Node.js and Bun.
 
 ## What it does
 
-`@glion/mllp` provides everything you need to send and receive HL7v2 messages over MLLP/TCP: frame encoding and decoding primitives, streaming TransformStreams for chunked TCP, and an `Mllp` class with pattern-based routing, composable middleware, and first-class `unified` processor integration. The server is transport-agnostic at its core and ships with a `serve()` helper for Node.js and Bun.
+An `Mllp` app routes each HL7v2 message to a handler by message type and trigger event, runs middleware around it, and replies with its acknowledgment. `app.handle(payload, env?)` replies to one message and depends on no runtime: a Cloudflare Worker or an AWS Lambda function calls it with each message it receives. `handleConnection()` runs the MLLP exchange over any socket that exposes Web Streams, and `serve()` from `@glion/mllp/node` listens on a TCP or TLS port and runs it on every connection.
 
 ## Install
 
@@ -14,10 +14,10 @@ npm install @glion/mllp
 
 ### Package exports
 
-| Subpath            | Description                       |
-| ------------------ | --------------------------------- |
-| `@glion/mllp`      | Core `Mllp` class and primitives  |
-| `@glion/mllp/node` | `serve()` helper for Node and Bun |
+| Subpath            | Description                                                  |
+| ------------------ | ------------------------------------------------------------ |
+| `@glion/mllp`      | `Mllp`, `handleConnection()`, `acknowledge()`; Web APIs only |
+| `@glion/mllp/node` | `serve()`, the TCP and TLS server for Node.js and Bun        |
 
 ## Use
 
@@ -43,7 +43,7 @@ const app = new Mllp()
   });
 // Any other message type is answered AR.
 
-const server = serve(app, { port: 2575 });
+const server = serve({ handle: app.handle, port: 2575 });
 ```
 
 To run the app with live reload during development and a production start command, use the `@glion/cli` package — it provides the `glion dev` / `glion start` binary and configuration loader. This README focuses on the server primitives themselves.
@@ -52,14 +52,33 @@ To run the app with live reload during development and a production start comman
 
 ### `Mllp`
 
-The server class. Built with a fluent chainable API:
+The app. `Mllp<E>` types `ctx.env` as `E`; it defaults to `unknown`.
 
-| Method                      | Description                                                                 |
-| --------------------------- | --------------------------------------------------------------------------- |
-| `.parser(processor)`        | Attach a `unified` processor (or `@glion/parser` alone) as the parse stage. |
-| `.use(middleware)`          | Register global middleware that runs for every message.                     |
-| `.use(pattern, middleware)` | Register scoped middleware that runs only for matching message types.       |
-| `.on(pattern, handler)`     | Register a terminal route handler for a message type or trigger event.      |
+| Method                      | Description                                                                                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.parser(processor)`        | Attach a `unified` processor (or `@glion/parser` alone) as the parse stage.                                                                                                                               |
+| `.use(middleware)`          | Register global middleware that runs for every message.                                                                                                                                                   |
+| `.use(pattern, middleware)` | Register scoped middleware that runs only for matching message types.                                                                                                                                     |
+| `.on(pattern, handler)`     | Register a terminal route handler for a message type or trigger event.                                                                                                                                    |
+| `.handle(payload, env?)`    | Reply to one message, given as bytes without MLLP framing; resolves to the `Response`, or `undefined` for none. `env` becomes `ctx.env`, and is required when `E` excludes `undefined`. Bound to the app. |
+
+### `handleConnection(handle, socket, options?)`
+
+Reply to every message on one connection. Reads MLLP frames from `socket.readable`, calls `handle` with each message, one at a time, and writes each reply to `socket.writable` with MLLP framing. Resolves once the remote system closes or resets the connection, or `options.signal` aborts; then the message in progress, if any, is answered first. Closes `socket` either way. Rejects with `MllpServerError` `PROTOCOL_VIOLATION` when the bytes break MLLP framing, and with what `handle` throws.
+
+| Argument         | Type                                                      | Description                                                                                 |
+| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `handle`         | `(payload: Uint8Array) => Promise<Response \| undefined>` | Replies to one message; `app.handle`, or a function that calls it with an `env`.            |
+| `socket`         | `MllpSocket`                                              | `readable` and `writable` Web Streams, and a `close()` that never throws and is idempotent. |
+| `options.signal` | `AbortSignal`, optional                                   | Ends the connection.                                                                        |
+
+```ts
+import { handleConnection } from "@glion/mllp";
+
+await handleConnection((payload) => app.handle(payload, env), socket, {
+  signal,
+});
+```
 
 ### `acknowledge(origin, options?)`
 
@@ -88,19 +107,20 @@ toHl7v2(
 // MSA|AR|MSG001|Message rejected
 ```
 
-### `serve(app, options)` — from `@glion/mllp/node`
+### `serve(options)` — from `@glion/mllp/node`
 
-Start a Node.js or Bun TCP server that dispatches incoming MLLP frames through the `Mllp` instance.
+Start a Node.js or Bun TCP server that runs `handleConnection()` on every connection it accepts. Each message reaches `handle` with a `NodeEnv`, `{ connection }`, where `connection` is a `ConnectionInfo`: `id`, `remoteAddress`, `remotePort`, `localPort`, `secure`, and a `state` map kept across the messages of the connection.
 
-| Option          | Type                           | Description                                                                                                                                                                          |
-| --------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `port`          | `number`                       | TCP port to listen on.                                                                                                                                                               |
-| `hostname`      | `string`, optional             | Interface to bind. Defaults to all interfaces.                                                                                                                                       |
-| `tls`           | `tls.TlsOptions`, optional     | Node's TLS server options, passed to `tls.createServer()` unchanged. Plain TCP without it. See [TLS](#tls).                                                                          |
-| `socketTimeout` | `number`, optional             | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.                                                                                       |
-| `onConnect`     | `ConnectionCallback`, optional | Called when a new TCP connection is accepted.                                                                                                                                        |
-| `onDisconnect`  | `ConnectionCallback`, optional | Called when a connection closes — always fires, even if `onConnect` threw.                                                                                                           |
-| `onError`       | `ErrorCallback`, optional      | Called when a lifecycle callback throws, `app.handle()` rejects (`NO_PARSER`, a second middleware error, a `next()` called twice), or the byte stream breaks (`PROTOCOL_VIOLATION`). |
+| Option          | Type                                                        | Description                                                                                                                                                                                                              |
+| --------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `handle`        | `(payload, env: NodeEnv) => Promise<Response \| undefined>` | Replies to each message; `app.handle`.                                                                                                                                                                                   |
+| `port`          | `number`                                                    | TCP port to listen on.                                                                                                                                                                                                   |
+| `hostname`      | `string`, optional                                          | Interface to bind. Defaults to all interfaces.                                                                                                                                                                           |
+| `tls`           | `tls.TlsOptions`, optional                                  | Node's TLS server options, passed to `tls.createServer()` unchanged. Plain TCP without it. See [TLS](#tls).                                                                                                              |
+| `socketTimeout` | `number`, optional                                          | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.                                                                                                                           |
+| `onConnect`     | `ConnectionCallback`, optional                              | Called when a new TCP connection is accepted.                                                                                                                                                                            |
+| `onDisconnect`  | `ConnectionCallback`, optional                              | Called when a connection closes — always fires, even if `onConnect` threw.                                                                                                                                               |
+| `onError`       | `ErrorCallback`, optional                                   | Called when a lifecycle callback throws, `handle` rejects (`NO_PARSER`, a second middleware error, a `next()` called twice), or the byte stream breaks (`PROTOCOL_VIOLATION`); the connection closes after the last two. |
 
 ### Wire framing
 
@@ -108,27 +128,31 @@ MLLP framing lives in [`@glion/mllp-codec`](https://github.com/rethinkhealth/gli
 
 ### Types
 
-| Type               | Description                                                                                                                                                                                 |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Context`          | Request context with message data and routing fields.                                                                                                                                       |
-| `Response`         | Response object `{ raw: string }`.                                                                                                                                                          |
-| `Hl7v2Processor`   | Unified `Processor` type for HL7v2 (`Processor<Root, Root \| undefined, Root \| undefined>` — head/tail admit `undefined` so the bare `unified().use(hl7v2Parser).freeze()` is assignable). |
-| `Middleware`       | Middleware function `(ctx, next) => ...`.                                                                                                                                                   |
-| `Handler`          | Terminal route handler `(ctx) => Response \| void`; returning nothing replies `AA`.                                                                                                         |
-| `RouteFilter`      | Filter function `(ctx) => boolean` used for routing.                                                                                                                                        |
-| `MiddlewareReturn` | Return type of middleware functions.                                                                                                                                                        |
-| `ConnectionInfo`   | Connection metadata (remote/local address, TLS flag).                                                                                                                                       |
-| `RoutePattern`     | Parsed route pattern.                                                                                                                                                                       |
+| Type                      | Description                                                                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Context`                 | Request context with message data and routing fields.                                                                                                                                       |
+| `Response`                | Response object `{ raw: string }`.                                                                                                                                                          |
+| `Hl7v2Processor`          | Unified `Processor` type for HL7v2 (`Processor<Root, Root \| undefined, Root \| undefined>` — head/tail admit `undefined` so the bare `unified().use(hl7v2Parser).freeze()` is assignable). |
+| `Middleware`              | Middleware function `(ctx, next) => ...`.                                                                                                                                                   |
+| `Handler`                 | Terminal route handler `(ctx) => Response \| void`; returning nothing replies `AA`.                                                                                                         |
+| `RouteFilter`             | Filter function `(ctx) => boolean` used for routing.                                                                                                                                        |
+| `MiddlewareReturn`        | Return type of middleware functions.                                                                                                                                                        |
+| `RoutePattern`            | Parsed route pattern.                                                                                                                                                                       |
+| `EnvArgs`                 | The `env` argument of `handle()`: optional when `E` admits `undefined`.                                                                                                                     |
+| `MllpSocket`              | The socket `handleConnection()` takes.                                                                                                                                                      |
+| `HandleConnectionOptions` | The options `handleConnection()` takes.                                                                                                                                                     |
+| `NodeEnv`                 | From `@glion/mllp/node`: `ctx.env` under `serve()`.                                                                                                                                         |
+| `ConnectionInfo`          | From `@glion/mllp/node`: a connection `serve()` accepted.                                                                                                                                   |
 
 ### Errors
 
 Server-side failures are raised (or passed to `onError`) as `MllpServerError` — branch on its stable `code`; the underlying codec or charset error rides on `cause`:
 
-| Code                   | Meaning                                                                                           |
-| ---------------------- | ------------------------------------------------------------------------------------------------- |
-| `NO_PARSER`            | `app.handle()` ran before a parser was registered via `app.parser()`.                             |
-| `INCOMPATIBLE_CHARSET` | An inbound message could not be decoded as UTF-8 (the `CharsetError` is on `cause`).              |
-| `PROTOCOL_VIOLATION`   | The MLLP byte stream was violated and the connection closed (the `MllpCodecError` is on `cause`). |
+| Code                   | Meaning                                                                                                                           |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `NO_PARSER`            | `app.handle()` ran before a parser was registered via `app.parser()`.                                                             |
+| `INCOMPATIBLE_CHARSET` | An inbound message could not be decoded as UTF-8 (the `CharsetError` is on `cause`).                                              |
+| `PROTOCOL_VIOLATION`   | The MLLP byte stream was violated and the connection closed (the `MllpCodecError` is on `cause`). Raised by `handleConnection()`. |
 
 ## Routing
 
@@ -183,7 +207,7 @@ app.use("ADT^*", async (ctx, next) => {
 
 // Short-circuit: return a response without calling next().
 app.use(async (ctx, next) => {
-  if (!isAuthorized(ctx.connection.remoteAddress)) {
+  if (!isAuthorized(ctx.ast)) {
     return ctx.ack({ code: AckCode.ApplicationReject, text: "Unauthorized" });
   }
   await next();
@@ -208,7 +232,7 @@ Available in every middleware and handler. The pipeline is lazy: only the decode
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `ctx.req.raw`          | The payload decoded as UTF-8; empty when it is not UTF-8.                                                   |
 | `ctx.req.bytes`        | Raw bytes from the MLLP frame.                                                                              |
-| `ctx.connection`       | `{ remoteAddress, remotePort, localPort, secure }`.                                                         |
+| `ctx.env`              | What the runtime passed to `handle()`: a `NodeEnv` under `serve()`, a Workers environment, or `undefined`.  |
 | `ctx.messageType`      | MSH-9.1 (e.g. `"ADT"`). The routing fields are read from the MSH when the payload does not decode or parse. |
 | `ctx.triggerEvent`     | MSH-9.2 (e.g. `"A01"`).                                                                                     |
 | `ctx.messageStructure` | MSH-9.3 (e.g. `"ADT_A01"`).                                                                                 |
@@ -270,7 +294,7 @@ Most middleware only needs routing fields or raw MSH data — both available syn
 // Good — sync, fast, no pipeline cost.
 function authMiddleware(): Middleware {
   return (ctx, next) => {
-    if (!isAuthorized(ctx.connection.remoteAddress)) {
+    if (!isAuthorized(ctx.ast)) {
       return ctx.ack({ code: AckCode.ApplicationReject, text: "Unauthorized" });
     }
     return next();
@@ -310,7 +334,7 @@ app.use(async (ctx, next) => {
 });
 ```
 
-Register it with `app.use()` before other middleware so it wraps them all. A second error, thrown by a middleware once `ctx.error` holds one, makes `app.handle()` reject with it: `serve()` reports it to `onError` and sends no reply. `onError` sees no other error a message raised.
+Register it with `app.use()` before other middleware so it wraps them all. A second error, thrown by a middleware once `ctx.error` holds one, makes `app.handle()` reject with it: `serve()` reports it to `onError`, sends no reply, and closes the connection. `onError` sees no other error a message raised.
 
 ## Socket options
 
@@ -328,7 +352,8 @@ import { serve } from "@glion/mllp/node";
 
 const app = new Mllp().parser(parseHL7v2);
 
-const server = serve(app, {
+const server = serve({
+  handle: app.handle,
   port: 2575,
   tls: {
     cert: fs.readFileSync("cert.pem"),
@@ -340,7 +365,8 @@ const server = serve(app, {
 Mutual TLS is `requestCert` with the `ca` that issued the client certificates. A remote system that presents no certificate is refused during the handshake. One with a certificate `ca` does not verify is disconnected once the handshake completes, before any message is read:
 
 ```ts
-const server = serve(app, {
+const server = serve({
+  handle: app.handle,
   port: 2575,
   tls: {
     ca: fs.readFileSync("ca.pem"),
@@ -349,6 +375,37 @@ const server = serve(app, {
     requestCert: true,
   },
 });
+```
+
+## Runtimes
+
+`@glion/mllp` uses Web APIs only; `@glion/mllp/node` holds everything specific to Node.js.
+
+| Runtime                        | Entry point                                                        |
+| ------------------------------ | ------------------------------------------------------------------ |
+| Node.js, Bun                   | `serve({ handle: app.handle, port })`                              |
+| A Web Streams socket           | `handleConnection(app.handle, socket)`                             |
+| Cloudflare Workers, AWS Lambda | `app.handle(payload, env)`, once per message the function receives |
+
+A Worker passes its bindings as `env`, typed by `Mllp<Env>`:
+
+```ts
+import { parseHL7v2 } from "@glion/hl7v2";
+import { Mllp } from "@glion/mllp";
+
+const app = new Mllp<Env>().parser(parseHL7v2).on("ADT^A01", async (ctx) => {
+  await ctx.env.ADMISSIONS.send(await ctx.result());
+});
+
+export default {
+  async fetch(request: Request, env: Env) {
+    const reply = await app.handle(
+      new Uint8Array(await request.arrayBuffer()),
+      env
+    );
+    return new Response(reply?.raw ?? null);
+  },
+};
 ```
 
 ## Design notes

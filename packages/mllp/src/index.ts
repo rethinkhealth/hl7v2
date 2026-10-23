@@ -10,10 +10,12 @@
 export { MllpServerError, MllpServerErrorCode } from "./errors";
 export { acknowledge } from "./server/acknowledge";
 export type { AcknowledgeOptions } from "./server/acknowledge";
+export { handleConnection } from "./server/connection";
+export type { HandleConnectionOptions, MllpSocket } from "./server/connection";
 export { Mllp } from "./server/mllp";
 export type {
-  ConnectionInfo,
   Context,
+  EnvArgs,
   Handler,
   Hl7v2Processor,
   Middleware,

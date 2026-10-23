@@ -115,7 +115,7 @@ describe("non-UTF-8 feed is rejected loudly, not silently corrupted (regression 
       };
     });
 
-    server = serve(app, { port: 0 });
+    server = serve({ handle: app.handle, port: 0 });
     await waitForReady(server.port);
 
     // PID-5 family name "José" with "é" as the single Latin-1 byte 0xE9 (invalid

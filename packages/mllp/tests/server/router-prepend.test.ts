@@ -5,18 +5,9 @@ import { createContext } from "../../src/server/context";
 import { Router } from "../../src/server/router";
 import type { Context, Middleware } from "../../src/server/types";
 
-const CONNECTION = {
-  id: 1,
-  localPort: 2575,
-  remoteAddress: "127.0.0.1",
-  remotePort: 12_345,
-  secure: false,
-  state: new Map(),
-};
-
 function makeCtx(raw: string): Context {
   return createContext({
-    connection: CONNECTION,
+    env: undefined,
     payload: new TextEncoder().encode(raw),
     processor: parseHL7v2,
   });

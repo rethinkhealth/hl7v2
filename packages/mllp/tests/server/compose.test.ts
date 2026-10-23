@@ -9,14 +9,7 @@ const SAMPLE_MESSAGE = "MSH|^~\\&|S|F|R|RF|20240101||ADT^A01|CTL1|P|2.5.1";
 
 function makeCtx(): Context {
   return createContext({
-    connection: {
-      id: 1,
-      localPort: 2575,
-      remoteAddress: "127.0.0.1",
-      remotePort: 12_345,
-      secure: false,
-      state: new Map(),
-    },
+    env: undefined,
     payload: new TextEncoder().encode(SAMPLE_MESSAGE),
     processor: parseHL7v2,
   });
