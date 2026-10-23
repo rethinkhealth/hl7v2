@@ -112,7 +112,11 @@ describe("dialTarget", () => {
     servers.push(tcp);
     tcp.listen(0, "127.0.0.1");
     await once(tcp, "listening");
-    const tls = await listen(SERVERNAME, pki.selfSignedCert, pki.selfSignedKey);
+    const tls = await listen(
+      "127.0.0.1",
+      pki.selfSignedCert,
+      pki.selfSignedKey
+    );
     // A `tls.TLSSocket` is a `net.Socket`, so one spy sees both.
     const setNoDelay = vi.spyOn(NetSocket.prototype, "setNoDelay");
 
@@ -131,8 +135,10 @@ describe("dialTarget", () => {
   });
 
   it("sends the host as the TLS server name", async () => {
+    // Bound to 127.0.0.1, not `localhost`: where `localhost` resolves to both
+    // ::1 and 127.0.0.1, Node may listen on one and dial the other.
     const server = await listen(
-      SERVERNAME,
+      "127.0.0.1",
       pki.selfSignedCert,
       pki.selfSignedKey
     );
