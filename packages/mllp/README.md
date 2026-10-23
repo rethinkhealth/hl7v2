@@ -57,16 +57,15 @@ The server class. Built with a fluent chainable API:
 
 Start a Node.js or Bun TCP server that dispatches incoming MLLP frames through the `Mllp` instance.
 
-| Option                  | Type                           | Description                                                                                                                                                               |
-| ----------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `port`                  | `number`                       | TCP port to listen on.                                                                                                                                                    |
-| `hostname`              | `string`, optional             | Interface to bind. Defaults to all interfaces.                                                                                                                            |
-| `tls`                   | `tls.TlsOptions`, optional     | Node's TLS server options, passed to `tls.createServer()` unchanged. Plain TCP without it. See [TLS](#tls).                                                               |
-| Node's `net.ServerOpts` | optional                       | On plain TCP, Node's `net.createServer()` options sit beside these: `keepAlive`, `keepAliveInitialDelay`, `noDelay`, and the rest. See [Socket options](#socket-options). |
-| `socketTimeout`         | `number`, optional             | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.                                                                            |
-| `onConnect`             | `ConnectionCallback`, optional | Called when a new TCP connection is accepted.                                                                                                                             |
-| `onDisconnect`          | `ConnectionCallback`, optional | Called when a connection closes — always fires, even if `onConnect` threw.                                                                                                |
-| `onError`               | `ErrorCallback`, optional      | Called when a handler error goes unhandled or a lifecycle callback throws.                                                                                                |
+| Option          | Type                           | Description                                                                                                 |
+| --------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `port`          | `number`                       | TCP port to listen on.                                                                                      |
+| `hostname`      | `string`, optional             | Interface to bind. Defaults to all interfaces.                                                              |
+| `tls`           | `tls.TlsOptions`, optional     | Node's TLS server options, passed to `tls.createServer()` unchanged. Plain TCP without it. See [TLS](#tls). |
+| `socketTimeout` | `number`, optional             | Socket inactivity timeout in ms — an idle socket past it is destroyed. `0` (default) disables.              |
+| `onConnect`     | `ConnectionCallback`, optional | Called when a new TCP connection is accepted.                                                               |
+| `onDisconnect`  | `ConnectionCallback`, optional | Called when a connection closes — always fires, even if `onConnect` threw.                                  |
+| `onError`       | `ErrorCallback`, optional      | Called when a handler error goes unhandled or a lifecycle callback throws.                                  |
 
 ### Wire framing
 
@@ -249,26 +248,11 @@ Without an error handler, errors are absorbed and no response is sent. The sendi
 
 ## Socket options
 
-The server listens with these socket options unless they are set, exported as `DEFAULT_SOCKET_OPTIONS` from `@glion/mllp/node`:
-
-| Option                  | Default  | Effect                                                                                                                    |
-| ----------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `keepAlive`             | `true`   | Keep-alive probes on an idle connection: a remote system that vanished without closing is found, and its connection ends. |
-| `keepAliveInitialDelay` | `60_000` | Idle time in ms before the first probe.                                                                                   |
-| `noDelay`               | `true`   | Nagle's algorithm off: an acknowledgment is written at once.                                                              |
-
-On plain TCP, Node's [`net.createServer()` options](https://nodejs.org/api/net.html#netcreateserveroptions-connectionlistener) sit beside `serve()`'s own and replace a default by name. Over TLS they go inside `tls`, which takes them as Node's `tls.createServer()` does; beside `tls` they do not compile.
-
-```ts
-serve(app, { port: 2575, keepAliveInitialDelay: 300_000 });
-serve(app, { port: 2575, tls: { cert, key, keepAliveInitialDelay: 300_000 } });
-```
-
-`socketTimeout` ends any connection idle past it, a quiet remote system that is still there included. Keep-alive ends only a connection whose remote system is gone.
+Every connection has TCP keep-alive, with the first probe after 60 s idle, and Nagle's algorithm off. Keep-alive ends a connection whose remote system is gone without closing it; `socketTimeout` also ends one whose remote system is there but quiet.
 
 ## TLS
 
-`tls` takes Node's [TLS server options](https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener) and passes them to `tls.createServer()`, over the [socket option defaults](#socket-options). Each connection reaches the app once its TLS handshake completes. Without `tls`, the server listens with `net.createServer()`. A `tls` that is `undefined` is plain TCP.
+`tls` takes Node's [TLS server options](https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener) and passes them to `tls.createServer()` unchanged; a [socket option](#socket-options) set in `tls` replaces the server's. Each connection reaches the app once its TLS handshake completes. Without `tls`, the server listens with `net.createServer()`.
 
 ```ts
 import fs from "node:fs";

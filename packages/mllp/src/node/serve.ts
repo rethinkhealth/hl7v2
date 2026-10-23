@@ -10,7 +10,6 @@
  * @module
  */
 
-import type { ServerOpts } from "node:net";
 import type { TlsOptions } from "node:tls";
 
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
@@ -108,18 +107,13 @@ export interface ServeOptions {
    * to disable the timeout.
    */
   socketTimeout?: number;
-}
 
-/**
- * Node's options for the listener. On plain TCP, `net.createServer()`'s
- * options. Over TLS, `tls`: `tls.createServer()`'s options, socket options
- * included; socket options beside it do not compile. A `tls` that is
- * `undefined` is plain TCP. Both are passed unchanged over
- * {@link DEFAULT_SOCKET_OPTIONS}.
- */
-export type ListenerOptions =
-  | (ServerOpts & { tls?: undefined })
-  | { tls: TlsOptions | undefined };
+  /**
+   * TLS for the listener, passed to `tls.createServer()` unchanged. Without
+   * it, the server listens on plain TCP.
+   */
+  tls?: TlsOptions;
+}
 
 /**
  * A running MLLP server handle returned by {@link serve}.
@@ -164,28 +158,21 @@ export interface Server {
  *   ```
  *
  * @param app - The {@link Mllp} application that will handle each message.
- * @param options - Server configuration: port, timeouts, callbacks, and
- *   Node's options for the listener.
+ * @param options - Server configuration: port, TLS, timeouts, and callbacks.
  * @returns A {@link Server} handle that exposes the bound port and a `close()`
  *   method for graceful shutdown.
  */
-export function serve(
-  app: Mllp,
-  options: ServeOptions & ListenerOptions
-): Server {
-  const {
-    hostname,
-    onConnect,
-    onDisconnect,
-    onError,
-    port,
-    socketTimeout,
-    tls,
-    ...server
-  } = options;
-  const adapter = nodeAdapter({ server, socketTimeout, tls });
+export function serve(app: Mllp, options: ServeOptions): Server {
+  const adapter = nodeAdapter({
+    socketTimeout: options.socketTimeout,
+    tls: options.tls,
+  });
 
-  const lifecycle: LifecycleOptions = { onConnect, onDisconnect, onError };
+  const lifecycle: LifecycleOptions = {
+    onConnect: options.onConnect,
+    onDisconnect: options.onDisconnect,
+    onError: options.onError,
+  };
 
   const connections = new Set<OpenConnection>();
   let closing = false;
@@ -197,15 +184,21 @@ export function serve(
     connections.delete(connection);
   };
 
-  const handle = adapter.listen({ hostname, port }, (socket) => {
-    // A TLS connection can finish its handshake after `close()` started.
-    if (closing) {
-      socket.close();
-      return;
+  const handle = adapter.listen(
+    {
+      hostname: options.hostname,
+      port: options.port,
+    },
+    (socket) => {
+      // A TLS connection can finish its handshake after `close()` started.
+      if (closing) {
+        socket.close();
+        return;
+      }
+      // oxlint-disable-next-line no-void
+      void track(handleConnection(app, socket, lifecycle));
     }
-    // oxlint-disable-next-line no-void
-    void track(handleConnection(app, socket, lifecycle));
-  });
+  );
 
   return {
     async close() {

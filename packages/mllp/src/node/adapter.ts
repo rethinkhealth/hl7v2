@@ -46,25 +46,17 @@ export interface NodeAdapterOptions {
   socketTimeout?: number;
 
   /**
-   * Options for `net.createServer()`, over {@link DEFAULT_SOCKET_OPTIONS}.
-   * Ignored when `tls` is set.
-   */
-  server?: ServerOpts;
-
-  /**
-   * Options for `tls.createServer()`, over {@link DEFAULT_SOCKET_OPTIONS}.
-   * Without it, the adapter listens with `net.createServer()`.
+   * Options for `tls.createServer()`, over {@link SOCKET_OPTIONS}. Without
+   * it, the adapter listens with `net.createServer()`.
    */
   tls?: TlsOptions;
 }
 
 /**
- * The socket options a server listens with unless the caller sets them:
- * keep-alive probes after 60 s idle, so a remote system that vanished
- * without closing is found and its connection ended, and Nagle's algorithm
- * off, so an acknowledgment is written at once.
+ * Socket options every listener is created with: keep-alive probes after
+ * 60 s idle, and Nagle's algorithm off.
  */
-export const DEFAULT_SOCKET_OPTIONS = {
+const SOCKET_OPTIONS = {
   keepAlive: true,
   keepAliveInitialDelay: 60_000,
   noDelay: true,
@@ -155,9 +147,9 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
 
 /**
  * Create a Node.js {@link TcpAdapter} that listens with `tls.createServer()`
- * when `tls` is set, and with `net.createServer()` otherwise, each given its
- * options over {@link DEFAULT_SOCKET_OPTIONS}. A TLS socket is handed on once
- * its TLS handshake completes.
+ * when `tls` is set, and with `net.createServer()` otherwise, both with
+ * {@link SOCKET_OPTIONS}. A TLS socket is handed on once its TLS handshake
+ * completes.
  *
  * Each accepted socket gets the idle timeout via {@link configureSocket} and
  * is wrapped into an {@link AdapterSocket} before being handed to the
@@ -176,7 +168,7 @@ function wrapNodeSocket(socket: Socket, secure: boolean): AdapterSocket {
  * @internal
  */
 export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
-  const { server: serverOptions, socketTimeout = 0, tls } = options ?? {};
+  const { socketTimeout = 0, tls } = options ?? {};
 
   /**
    * Apply the idle timeout to an accepted connection: if `socketTimeout > 0`,
@@ -200,11 +192,8 @@ export function nodeAdapter(options?: NodeAdapterOptions): TcpAdapter {
       };
 
       const server: Server = secure
-        ? createTlsServer({ ...DEFAULT_SOCKET_OPTIONS, ...tls }, onConnection)
-        : createServer(
-            { ...DEFAULT_SOCKET_OPTIONS, ...serverOptions },
-            onConnection
-          );
+        ? createTlsServer({ ...SOCKET_OPTIONS, ...tls }, onConnection)
+        : createServer(SOCKET_OPTIONS, onConnection);
 
       let resolveListening!: (value: true) => void;
       let rejectListening!: (reason: unknown) => void;

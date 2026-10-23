@@ -12,12 +12,10 @@
  */
 
 // biome-ignore-all lint/performance/noBarrelFile: node subpath barrel
-export { DEFAULT_SOCKET_OPTIONS } from "./adapter";
 export { serve } from "./serve";
 export type {
   ConnectionCallback,
   ErrorCallback,
-  ListenerOptions,
   Server,
   ServeOptions,
 } from "./serve";

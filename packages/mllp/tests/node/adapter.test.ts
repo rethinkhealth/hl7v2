@@ -5,7 +5,7 @@ import { createServer } from "node:net";
 import { Readable } from "node:stream";
 import { createServer as createTlsServer } from "node:tls";
 
-import { DEFAULT_SOCKET_OPTIONS, nodeAdapter } from "../../src/node/adapter";
+import { nodeAdapter } from "../../src/node/adapter";
 
 // oxlint-disable-next-line prefer-await-to-callbacks
 type CloseCallback = (err?: Error) => void;
@@ -130,7 +130,7 @@ afterEach(() => {
 });
 
 describe("nodeAdapter", () => {
-  it("listens on plain TCP with keep-alive after 60 s and Nagle's algorithm off by default, and sets no timeout", () => {
+  it("listens on plain TCP with keep-alive after 60 s and Nagle's algorithm off, and sets no timeout", () => {
     vi.mocked(createTlsServer).mockClear();
     const accepted: boolean[] = [];
     const adapter = nodeAdapter();
@@ -148,23 +148,7 @@ describe("nodeAdapter", () => {
     expect(socket.setTimeout).not.toHaveBeenCalled();
   });
 
-  it("passes the server options to net.createServer() over the defaults", () => {
-    nodeAdapter({ server: { allowHalfOpen: false, keepAlive: false } }).listen(
-      { port: 2575 },
-      noop
-    );
-
-    expect(createServer).toHaveBeenLastCalledWith(
-      {
-        ...DEFAULT_SOCKET_OPTIONS,
-        allowHalfOpen: false,
-        keepAlive: false,
-      },
-      expect.any(Function)
-    );
-  });
-
-  it("passes tls to tls.createServer() over the defaults, and marks its sockets secure", () => {
+  it("passes tls to tls.createServer() with keep-alive and Nagle's algorithm off, and marks its sockets secure", () => {
     const tls = { ca: "ca", cert: "cert", key: "key", requestCert: true };
     const accepted: boolean[] = [];
     const adapter = nodeAdapter({ tls });
@@ -173,20 +157,26 @@ describe("nodeAdapter", () => {
     connectionHandler?.(createMockSocket());
 
     expect(createTlsServer).toHaveBeenLastCalledWith(
-      { ...DEFAULT_SOCKET_OPTIONS, ...tls },
+      { keepAlive: true, keepAliveInitialDelay: 60_000, noDelay: true, ...tls },
       expect.any(Function)
     );
     expect(accepted).toEqual([true]);
   });
 
-  it("lets tls replace a default", () => {
+  it("lets tls replace a socket option", () => {
     nodeAdapter({ tls: { cert: "cert", key: "key", noDelay: false } }).listen(
       { port: 2575 },
       noop
     );
 
     expect(createTlsServer).toHaveBeenLastCalledWith(
-      { ...DEFAULT_SOCKET_OPTIONS, cert: "cert", key: "key", noDelay: false },
+      {
+        cert: "cert",
+        keepAlive: true,
+        keepAliveInitialDelay: 60_000,
+        key: "key",
+        noDelay: false,
+      },
       expect.any(Function)
     );
   });
