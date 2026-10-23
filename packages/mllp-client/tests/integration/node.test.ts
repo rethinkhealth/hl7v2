@@ -70,16 +70,22 @@ describe("nodeSocket over net.Socket", () => {
   });
 
   it("rejects with the socket's error when it fails before connecting", async () => {
-    // Binding to an address the host does not have fails at once: Node
-    // emits the error on the next tick after the socket is created
-    // (EADDRNOTAVAIL on macOS, EINVAL on Linux).
+    // Binding to an address the host does not have fails at once: the
+    // socket emits its error just after it is created. The error's code and
+    // syscall differ by OS and runtime (Node on Linux: EINVAL from bind; Bun:
+    // EADDRNOTAVAIL from connect), so the test compares the error itself.
+    const emitted = Promise.withResolvers<Error>();
     const socket = nodeSocket(() =>
-      connectTcp({ host: "127.0.0.1", localAddress: UNASSIGNED, port: 9 })
+      connectTcp({
+        host: "127.0.0.1",
+        localAddress: UNASSIGNED,
+        port: 9,
+      }).once("error", emitted.resolve)
     );
 
-    await expect(
-      socket.connect(new AbortController().signal)
-    ).rejects.toMatchObject({ address: UNASSIGNED, syscall: "bind" });
+    await expect(socket.connect(new AbortController().signal)).rejects.toBe(
+      await emitted.promise
+    );
   });
 
   it("rejects a dial that returns a promise, and leaves nothing open", async () => {
