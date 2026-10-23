@@ -1,5 +1,23 @@
 # @glion/cli
 
+## 0.30.0
+
+### Minor Changes
+
+- [#909](https://github.com/rethinkhealth/glion/pull/909) [`c087d18`](https://github.com/rethinkhealth/glion/commit/c087d18208df74fb5b9cf174edba828ee8545e66) Thanks [@meleksomai](https://github.com/meleksomai)! - Breaking: `glion.config.ts` no longer takes `keepAlive` or `keepAliveInitialDelay`. A config that sets either fails validation as an unknown key. `glion start` and `glion dev` listen as before: keep-alive probes after 60 s idle, and Nagle's algorithm off.
+
+### Patch Changes
+
+- [#1062](https://github.com/rethinkhealth/glion/pull/1062) [`97513a4`](https://github.com/rethinkhealth/glion/commit/97513a48c1c918c9e21774a0825418f64f02782d) Thanks [@meleksomai](https://github.com/meleksomai)! - `glion send` opens its connection itself, now that `@glion/mllp-client`'s `nodeSocket` takes a dial function. It sends the host as the TLS server name (SNI) unless the host is an IP address, and turns Nagle's algorithm off, as before. It no longer sets TCP keepalive, which a single send under its own timeout does not use.
+- Updated dependencies [[`97513a4`](https://github.com/rethinkhealth/glion/commit/97513a48c1c918c9e21774a0825418f64f02782d), [`fd4c862`](https://github.com/rethinkhealth/glion/commit/fd4c862de96c8faf8a45c89c879ac2e98fbe7d4c), [`c087d18`](https://github.com/rethinkhealth/glion/commit/c087d18208df74fb5b9cf174edba828ee8545e66)]:
+  - @glion/mllp-client@0.30.0
+  - @glion/mllp@0.30.0
+  - @glion/ack@0.30.0
+  - @glion/ast@0.30.0
+  - @glion/parser@0.30.0
+  - @glion/to-hl7v2@0.30.0
+  - @glion/util-query@0.30.0
+
 ## 0.29.0
 
 ### Minor Changes
