@@ -7,18 +7,9 @@ import type { Context, Middleware } from "../../src/server/types";
 
 const RESPONSE_OK = { raw: "MSA|AA|OK" };
 
-const CONNECTION = {
-  id: 1,
-  localPort: 2575,
-  remoteAddress: "127.0.0.1",
-  remotePort: 12_345,
-  secure: false,
-  state: new Map(),
-};
-
 function makeCtx(raw: string): Context {
   return createContext({
-    connection: CONNECTION,
+    env: undefined,
     payload: new TextEncoder().encode(raw),
     processor: parseHL7v2,
   });
@@ -137,15 +128,17 @@ describe("Router", () => {
       expect(router.match(makeCtx(ORU_R01)).handler).toBeUndefined();
     });
 
-    it("filter can inspect connection metadata", async () => {
-      const router = new Router();
+    it("filter can inspect ctx.env", async () => {
+      const router = new Router<{ region: string }>();
       const handler = async () => RESPONSE_OK;
-      router.add(
-        (ctx) => ctx.connection.remoteAddress === "127.0.0.1",
-        handler
-      );
+      router.add((ctx) => ctx.env.region === "north", handler);
 
-      expect(router.match(makeCtx(ADT_A01)).handler).toBe(handler);
+      const ctx = createContext({
+        env: { region: "north" },
+        payload: new TextEncoder().encode(ADT_A01),
+        processor: parseHL7v2,
+      });
+      expect(router.match(ctx).handler).toBe(handler);
     });
 
     it("filter can inspect the raw parsed AST", () => {

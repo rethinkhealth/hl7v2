@@ -27,14 +27,7 @@ const SAMPLE_BYTES = new TextEncoder().encode(SAMPLE_MESSAGE);
 
 function makeCtx(payload = SAMPLE_BYTES) {
   return createContext({
-    connection: {
-      id: 1,
-      localPort: 2575,
-      remoteAddress: "192.168.1.100",
-      remotePort: 54_321,
-      secure: false,
-      state: new Map(),
-    },
+    env: undefined,
     payload,
     processor: parseHL7v2,
   });
@@ -63,14 +56,7 @@ describe("createContext", () => {
   it("sets the parser's error and an empty tree when the parser throws", () => {
     const thrown = new Error("parser failed");
     const ctx = createContext({
-      connection: {
-        id: 1,
-        localPort: 2575,
-        remoteAddress: "192.168.1.100",
-        remotePort: 54_321,
-        secure: false,
-        state: new Map(),
-      },
+      env: undefined,
       payload: SAMPLE_BYTES,
       processor: unified().use(throwingParser(thrown)),
     });
@@ -79,12 +65,14 @@ describe("createContext", () => {
     expect(ctx.ast).toEqual({ children: [], type: "root" });
   });
 
-  it("exposes connection metadata", () => {
-    const ctx = makeCtx();
-    expect(ctx.connection.remoteAddress).toBe("192.168.1.100");
-    expect(ctx.connection.remotePort).toBe(54_321);
-    expect(ctx.connection.localPort).toBe(2575);
-    expect(ctx.connection.secure).toBe(false);
+  it("exposes what the runtime passed to handle() as ctx.env", () => {
+    const env = { region: "north" };
+    const ctx = createContext({
+      env,
+      payload: SAMPLE_BYTES,
+      processor: parseHL7v2,
+    });
+    expect(ctx.env).toBe(env);
   });
 
   it("extracts messageType from MSH-9.1", () => {
@@ -149,14 +137,7 @@ describe("createContext", () => {
       const parseOnly = unified().use(hl7v2Parser).freeze();
 
       const ctx = createContext({
-        connection: {
-          id: 1,
-          localPort: 2575,
-          remoteAddress: "192.168.1.100",
-          remotePort: 54_321,
-          secure: false,
-          state: new Map(),
-        },
+        env: undefined,
         payload: SAMPLE_BYTES,
         processor: parseOnly,
       });
@@ -181,14 +162,7 @@ describe("createContext", () => {
 
     it("works with full pipeline processor (parse + transform + compile)", async () => {
       const ctx = createContext({
-        connection: {
-          id: 1,
-          localPort: 2575,
-          remoteAddress: "192.168.1.100",
-          remotePort: 54_321,
-          secure: false,
-          state: new Map(),
-        },
+        env: undefined,
         payload: SAMPLE_BYTES,
         processor: parseHL7v2,
       });

@@ -19,11 +19,11 @@ const NEXT_CALLED_TWICE = "next() called multiple times";
  * throw. `next()` throws only when a middleware calls it a second time; the
  * composed function then rejects with that error once the chain has run.
  */
-export function compose(
-  middlewares: Middleware[],
+export function compose<E>(
+  middlewares: Middleware<E>[],
   onError: (error: Error) => Response | undefined
-): (ctx: Context) => Promise<void> {
-  return async (ctx: Context): Promise<void> => {
+): (ctx: Context<E>) => Promise<void> {
+  return async (ctx: Context<E>): Promise<void> => {
     let index = -1;
     let misused = false;
 
@@ -38,8 +38,8 @@ export function compose(
         return;
       }
 
-      const middleware = middlewares[i] as Middleware;
-      let result: Awaited<ReturnType<Middleware>>;
+      const middleware = middlewares[i] as Middleware<E>;
+      let result: Awaited<ReturnType<Middleware<E>>>;
       try {
         result = await middleware(ctx, () => dispatch(i + 1));
       } catch (error) {

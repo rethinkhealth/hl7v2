@@ -8,28 +8,23 @@ import { VFile } from "vfile";
 import { MllpServerError, MllpServerErrorCode } from "../errors";
 import { acknowledge } from "./acknowledge";
 import type { AcknowledgeOptions } from "./acknowledge";
-import type {
-  ConnectionInfo,
-  Context,
-  Hl7v2Processor,
-  Response,
-} from "./types";
+import type { Context, Hl7v2Processor, Response } from "./types";
 
 const SEGMENT_SEPARATOR = /[\r\n]/;
 
 /** A {@link Context} whose `error` the server records. */
-export type MessageContext = Omit<Context, "error"> & {
+export type MessageContext<E = unknown> = Omit<Context<E>, "error"> & {
   error: Error | undefined;
 };
 
 /**
  * Options for creating a Context instance.
  */
-export interface CreateContextOptions {
+export interface CreateContextOptions<E> {
   /** The MLLP frame payload. */
   payload: Uint8Array;
-  /** Connection metadata */
-  connection: ConnectionInfo;
+  /** What the runtime passed to `handle()`; becomes `ctx.env`. */
+  env: E;
   /** HL7v2 unified processor */
   processor: Hl7v2Processor;
 }
@@ -58,8 +53,10 @@ export interface CreateContextOptions {
  * If no handler matches or middleware short-circuits before accessing
  * the tree, the transform and compile steps never execute.
  */
-export function createContext(options: CreateContextOptions): MessageContext {
-  const { payload, connection, processor } = options;
+export function createContext<E>(
+  options: CreateContextOptions<E>
+): MessageContext<E> {
+  const { payload, env, processor } = options;
   const variables = new Map<string, unknown>();
   let varSnapshot: Readonly<Record<string, unknown>> | undefined;
 
@@ -149,14 +146,14 @@ export function createContext(options: CreateContextOptions): MessageContext {
   }
 
   // ── Build context ──────────────────────────────────────────────────
-  const ctx: MessageContext = {
+  const ctx: MessageContext<E> = {
     ack(ackOptions?: AcknowledgeOptions): Response {
       header ??= parseHL7v2(firstSegment(raw));
       return { raw: toHl7v2(acknowledge(header, ackOptions)) };
     },
     ast: parsed,
-    connection: Object.freeze(connection),
     controlId,
+    env,
     error,
     file,
     get<K extends string>(key: K): unknown {
