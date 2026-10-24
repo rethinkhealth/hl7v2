@@ -2,18 +2,18 @@
  * MLLP message telemetry middleware.
  *
  * Emits a structured "msg" event for every processed HL7v2 message,
- * capturing timing, trigger event, control ID, and ACK code. This
- * is the primary observability signal for message throughput and
- * latency — the TUI and JSON-line output both consume these events.
+ * capturing timing, trigger event, control ID, and ACK code, then an
+ * "error" event when the message raised one. This is the primary
+ * observability signal for message throughput and latency — the TUI and
+ * JSON-line output both consume these events.
  *
  * ## Middleware positioning
  *
- * This middleware must be PREPENDED via `app.use(mw, { prepend: true })` so it
- * sits at the outermost position in the middleware chain. Its `await next()`
- * then completes after all user middleware (including any acknowledgment
- * middleware) have run, ensuring `ctx.res` is populated with the ACK response
- * before telemetry reads it. `performance.now()` measures the full middleware +
- * handler time.
+ * This middleware is PREPENDED via `app.use(mw, { prepend: true })` so it sits
+ * at the outermost position in the middleware chain and `performance.now()`
+ * measures the full middleware + handler time. After `await next()`,
+ * `ctx.res` holds the reply, ACK or NAK, and `ctx.error` the error the
+ * message raised.
  *
  * ## ACK parsing
  *
@@ -56,6 +56,15 @@ export function createMsgTelemetry(
       t: "msg",
       trigger: `${ctx.messageType ?? "?"}^${ctx.triggerEvent ?? "?"}`,
     });
+    if (ctx.error) {
+      emit({
+        conn: ctx.connection.id,
+        message: ctx.error.message,
+        stack: ctx.error.stack,
+        t: "error",
+        trigger: `${ctx.messageType}^${ctx.triggerEvent}`,
+      });
+    }
   };
 }
 

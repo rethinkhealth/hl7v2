@@ -1,7 +1,13 @@
 import type { Root } from "@glion/ast";
+import { parseHL7v2 } from "@glion/parser";
+import { toHl7v2 } from "@glion/to-hl7v2";
+import { decodeBytes } from "@glion/util-charset";
 import { value as queryValue } from "@glion/util-query";
 import { VFile } from "vfile";
 
+import { MllpServerError, MllpServerErrorCode } from "../errors";
+import { acknowledge } from "./acknowledge";
+import type { AcknowledgeOptions } from "./acknowledge";
 import type {
   ConnectionInfo,
   Context,
@@ -9,14 +15,19 @@ import type {
   Response,
 } from "./types";
 
+const SEGMENT_SEPARATOR = /[\r\n]/;
+
+/** A {@link Context} whose `error` the server records. */
+export type MessageContext = Omit<Context, "error"> & {
+  error: Error | undefined;
+};
+
 /**
  * Options for creating a Context instance.
  */
 export interface CreateContextOptions {
-  /** Raw HL7 message string */
-  raw: string;
-  /** Raw bytes from the MLLP frame payload */
-  bytes: Uint8Array;
+  /** The MLLP frame payload. */
+  payload: Uint8Array;
   /** Connection metadata */
   connection: ConnectionInfo;
   /** HL7v2 unified processor */
@@ -26,10 +37,16 @@ export interface CreateContextOptions {
 /**
  * Create a new Context for an incoming message.
  *
- * Only the **parse** step runs eagerly (sync, fast). Routing fields are
+ * Only the **decode** and **parse** steps run eagerly (sync, fast). Never
+ * throws: a payload that is not UTF-8, or a parser that throws, gives an
+ * empty `Root` and sets `ctx.error`. Routing fields are
  * extracted as strings from the parsed tree immediately — these cached
  * strings are the values as parsed, before any transformer runs (see
- * ADR-0013).
+ * ADR-0013). When the message raised an error, they are read from its MSH,
+ * decoded with U+FFFD for each byte that is not UTF-8.
+ *
+ * `ctx.ack()` answers the MSH as received: a change to the tree does not
+ * change the acknowledgment.
  *
  * The expensive pipeline stages are lazy:
  *
@@ -41,24 +58,55 @@ export interface CreateContextOptions {
  * If no handler matches or middleware short-circuits before accessing
  * the tree, the transform and compile steps never execute.
  */
-export function createContext(options: CreateContextOptions): Context {
-  const { raw, bytes, connection, processor } = options;
+export function createContext(options: CreateContextOptions): MessageContext {
+  const { payload, connection, processor } = options;
   const variables = new Map<string, unknown>();
   let varSnapshot: Readonly<Record<string, unknown>> | undefined;
 
-  // ── Eager: parse (sync, fast) ──────────────────────────────────────
+  // ── Eager: decode + parse (sync, fast) ─────────────────────────────
   // VFile carries the input through the pipeline and collects diagnostics.
+  let raw = "";
+  let parsed: Root = { children: [], type: "root" };
+  let error: Error | undefined;
+  try {
+    raw = decodeBytes(payload);
+  } catch (decodeError) {
+    error = new MllpServerError(
+      MllpServerErrorCode.INCOMPATIBLE_CHARSET,
+      "The inbound message is not valid UTF-8; only UTF-8 is supported.",
+      { cause: decodeError }
+    );
+  }
   const file = new VFile(raw);
-  const parsed = processor.parse(file);
+  if (!error) {
+    try {
+      parsed = processor.parse(file);
+    } catch (parseError) {
+      error =
+        parseError instanceof Error
+          ? parseError
+          : new Error(String(parseError));
+    }
+  }
 
-  // Extract routing fields as strings from the parsed tree.
-  // These are cached immediately and keep the values as parsed, even
-  // after transformers enrich the tree in-place.
-  const controlId = queryValue(parsed, "MSH.10")?.value ?? "";
-  const messageType = queryValue(parsed, "MSH.9.1")?.value ?? "";
-  const triggerEvent = queryValue(parsed, "MSH.9.2")?.value ?? "";
-  const messageStructure = queryValue(parsed, "MSH.9.3")?.value ?? "";
-  const version = queryValue(parsed, "MSH.12.1")?.value ?? "";
+  // The MSH as received, which ctx.ack() answers, parsed from the text on
+  // first use so it never changes with the tree. A payload that is not
+  // UTF-8 is decoded with U+FFFD:
+  //
+  //   MSH|^~\&|A|B|C|D|…||ADT^A01|MSG001|P|2.5.1\rPID|…  →  MSH|^~\&|A|B|C|D|…
+  let header = error
+    ? parseHL7v2(firstSegment(new TextDecoder().decode(payload)))
+    : undefined;
+
+  // Routing fields keep the values as parsed, even after transformers
+  // enrich the tree in-place; from the header when the message raised an
+  // error before it had a tree.
+  const fields = header ?? parsed;
+  const controlId = queryValue(fields, "MSH.10")?.value ?? "";
+  const messageType = queryValue(fields, "MSH.9.1")?.value ?? "";
+  const triggerEvent = queryValue(fields, "MSH.9.2")?.value ?? "";
+  const messageStructure = queryValue(fields, "MSH.9.3")?.value ?? "";
+  const version = queryValue(fields, "MSH.12.1")?.value ?? "";
 
   // ── Lazy: transform (async, cached) ────────────────────────────────
   // run() applies all transformers: annotations, lint.
@@ -101,17 +149,22 @@ export function createContext(options: CreateContextOptions): Context {
   }
 
   // ── Build context ──────────────────────────────────────────────────
-  const ctx: Context = {
+  const ctx: MessageContext = {
+    ack(ackOptions?: AcknowledgeOptions): Response {
+      header ??= parseHL7v2(firstSegment(raw));
+      return { raw: toHl7v2(acknowledge(header, ackOptions)) };
+    },
     ast: parsed,
     connection: Object.freeze(connection),
     controlId,
+    error,
     file,
     get<K extends string>(key: K): unknown {
       return variables.get(key);
     },
     messageStructure,
     messageType,
-    req: Object.freeze({ bytes, raw }),
+    req: Object.freeze({ bytes: payload, raw }),
     res: undefined as Response | undefined,
     result: getResult,
     set<K extends string>(key: K, value: unknown): void {
@@ -130,4 +183,10 @@ export function createContext(options: CreateContextOptions): Context {
   };
 
   return ctx;
+}
+
+/** The text of the first segment of `text`. */
+function firstSegment(text: string): string {
+  const end = text.search(SEGMENT_SEPARATOR);
+  return end === -1 ? text : text.slice(0, end);
 }
