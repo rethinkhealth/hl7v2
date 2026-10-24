@@ -150,6 +150,26 @@ describe("parser", () => {
       expect(root).toMatchSnapshot(); // for control
     });
 
+    it("drops the trailing empty field after an empty field in a segment with a Segment ID", () => {
+      const seg = parseHL7v2("PID||").children[0] as Segment;
+
+      expect(seg.children).toHaveLength(1);
+    });
+
+    it("drops the trailing empty field of two field separators with an empty Segment ID", () => {
+      const seg = parseHL7v2("||").children[0] as Segment;
+
+      expect(seg.name).toBe("");
+      expect(seg.children).toHaveLength(2);
+    });
+
+    it("drops the trailing empty field after a first field with content and an empty Segment ID", () => {
+      const seg = parseHL7v2("~a|").children[0] as Segment;
+
+      expect(seg.name).toBe("");
+      expect(seg.children).toHaveLength(1);
+    });
+
     it("preserves multiple consecutive empty fields except final", () => {
       const input = "PID|1|||4";
       const root = parseHL7v2(input);

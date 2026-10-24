@@ -90,6 +90,7 @@ function createParserCore() {
     segmentHasContent = false;
     lastContentEnd = null;
     expectingSegmentName = true;
+    justSetSegmentName = false;
   };
 
   const openSegment = (name: string, position: Position) => {
@@ -367,9 +368,22 @@ function createParserCore() {
     const lastField = lastChild as Field;
     // A field like `|^|` is isEmpty (no leaf data) but has structural content
     // (component separators) and must be preserved.
-    if (isEmptyNode(lastField) && !hasStructuralContent(lastField)) {
-      seg.children.pop();
+    if (!isEmptyNode(lastField) || hasStructuralContent(lastField)) {
+      return;
     }
+    // In a segment with an empty Segment ID, the first field is the text before
+    // the first field separator. When that field is empty, the field after the
+    // separator is all that keeps the segment from having no text (#1088).
+    const firstField = seg.children[0] as Field;
+    const startsWithFieldSeparator =
+      !seg.name &&
+      seg.children.length === 2 &&
+      isEmptyNode(firstField) &&
+      !hasStructuralContent(firstField);
+    if (startsWithFieldSeparator) {
+      return;
+    }
+    seg.children.pop();
   }
 
   return { finalize, processToken, root };
