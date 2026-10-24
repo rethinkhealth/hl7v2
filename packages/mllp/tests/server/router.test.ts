@@ -1,11 +1,12 @@
 // oxlint-disable require-await
+import type { Root } from "@glion/ast";
 import { parseHL7v2 } from "@glion/hl7v2";
 
 import { createContext } from "../../src/server/context";
 import { Router } from "../../src/server/router";
 import type { Context, Middleware } from "../../src/server/types";
 
-const RESPONSE_OK = { raw: "MSA|AA|OK" };
+const RESPONSE_OK: Root = { children: [], type: "root" };
 
 function makeCtx(raw: string): Context {
   return createContext({
@@ -75,8 +76,8 @@ describe("Router", () => {
 
     it("uses first-match-wins ordering", async () => {
       const router = new Router();
-      const specific = async () => ({ raw: "specific" });
-      const catchAll = async () => ({ raw: "catchAll" });
+      const specific = async () => RESPONSE_OK;
+      const catchAll = async () => RESPONSE_OK;
       router.add("ADT^A01", specific);
       router.add("*", catchAll);
 
@@ -151,8 +152,8 @@ describe("Router", () => {
 
     it("filter respects first-match-wins with string patterns", async () => {
       const router = new Router();
-      const filterHandler = async () => ({ raw: "filter" });
-      const stringHandler = async () => ({ raw: "string" });
+      const filterHandler = async () => RESPONSE_OK;
+      const stringHandler = async () => RESPONSE_OK;
       router.add((ctx) => ctx.messageType === "ADT", filterHandler);
       router.add("ADT^A01", stringHandler);
 
@@ -162,8 +163,8 @@ describe("Router", () => {
 
     it("string pattern wins when registered before filter", async () => {
       const router = new Router();
-      const stringHandler = async () => ({ raw: "string" });
-      const filterHandler = async () => ({ raw: "filter" });
+      const stringHandler = async () => RESPONSE_OK;
+      const filterHandler = async () => RESPONSE_OK;
       router.add("ADT^A01", stringHandler);
       router.add((ctx) => ctx.messageType === "ADT", filterHandler);
 

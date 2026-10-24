@@ -11,7 +11,6 @@
 import type { TlsOptions } from "node:tls";
 
 import { handleConnection } from "../server/connection";
-import type { Response } from "../server/types";
 import { listen } from "./adapter";
 import type { NodeSocket } from "./adapter";
 
@@ -69,7 +68,10 @@ export interface ServeOptions {
    * Replies to each message: an app's `handle`. Called with the message
    * without MLLP framing, and the {@link NodeEnv} of its connection.
    */
-  handle: (payload: Uint8Array, env: NodeEnv) => Promise<Response | undefined>;
+  handle: (
+    payload: Uint8Array,
+    env: NodeEnv
+  ) => Promise<Uint8Array | undefined>;
 
   /**
    * The hostname or IP address to bind the server to.

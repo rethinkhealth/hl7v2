@@ -1,5 +1,7 @@
 // oxlint-disable require-await
+import type { Root } from "@glion/ast";
 import { parseHL7v2 } from "@glion/hl7v2";
+import { toHl7v2 } from "@glion/to-hl7v2";
 
 import { Mllp } from "../../src/server/mllp";
 
@@ -8,6 +10,9 @@ const SAMPLE_ADT = [
   "EVN|A01|20240101120000",
   "PID|1||12345^^^MRN||Doe^John",
 ].join("\r");
+
+const hl7 = (message: string): Root => parseHL7v2.parse(message);
+const text = (tree: Root | undefined) => (tree ? toHl7v2(tree) : undefined);
 
 function toBytes(msg: string): Uint8Array {
   return new TextEncoder().encode(msg);
@@ -30,8 +35,9 @@ describe("Mllp.use({ prepend })", () => {
       order.push("second");
       await next();
     });
-    app.on("*", async () => {
+    app.on("*", async (ctx) => {
       order.push("handler");
+      return ctx.ack();
     });
 
     await app.handle(toBytes(SAMPLE_ADT));
@@ -53,8 +59,9 @@ describe("Mllp.use({ prepend })", () => {
       },
       { prepend: true }
     );
-    app.on("*", async () => {
+    app.on("*", async (ctx) => {
       order.push("handler");
+      return ctx.ack();
     });
 
     await app.handle(toBytes(SAMPLE_ADT));
@@ -68,21 +75,19 @@ describe("Mllp.use({ prepend })", () => {
     // Register an inner middleware that sets ctx.res (simulates an acknowledgment middleware)
     app.use(async (ctx, next) => {
       await next();
-      ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001" };
+      ctx.res = hl7("MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001");
     });
 
     // Prepend an outer middleware that reads ctx.res after next() (simulates telemetry)
     app.use(
       async (ctx, next) => {
         await next();
-        capturedRes = ctx.res?.raw;
+        capturedRes = text(ctx.res);
       },
       { prepend: true }
     );
 
-    app.on("*", async () => {
-      // handler does nothing
-    });
+    app.on("*", (ctx) => ctx.ack());
 
     await app.handle(toBytes(SAMPLE_ADT));
     expect(capturedRes).toContain("MSA|AA");
@@ -95,19 +100,17 @@ describe("Mllp.use({ prepend })", () => {
     // Register outer middleware that sets ctx.res after next()
     app.use(async (ctx, next) => {
       await next();
-      ctx.res = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001|Outer" };
+      ctx.res = hl7("MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001|Outer");
     });
 
     // Append inner middleware (default) that reads ctx.res after next()
     // This runs INSIDE the outer middleware, so it finishes BEFORE outer sets ctx.res
     app.use(async (ctx, next) => {
       await next();
-      capturedRes = ctx.res?.raw;
+      capturedRes = text(ctx.res);
     });
 
-    app.on("*", async () => {
-      // handler does nothing
-    });
+    app.on("*", (ctx) => ctx.ack());
 
     await app.handle(toBytes(SAMPLE_ADT));
     // Inner middleware finishes before outer sets ctx.res → the handler's AA
@@ -134,8 +137,9 @@ describe("Mllp.use({ prepend })", () => {
       },
       { prepend: true }
     );
-    app.on("*", async () => {
+    app.on("*", async (ctx) => {
       order.push("handler");
+      return ctx.ack();
     });
 
     await app.handle(toBytes(SAMPLE_ADT));

@@ -10,14 +10,6 @@ import type { AcknowledgeOptions } from "./acknowledge";
 export type EnvArgs<E> = undefined extends E ? [env?: E] : [env: E];
 
 /**
- * The reply to a message: a raw HL7v2 string. A connection writes it back
- * with MLLP framing.
- */
-export interface Response {
-  readonly raw: string;
-}
-
-/**
  * The MLLP context object.
  *
  * Routing fields (messageType, triggerEvent, etc.) are extracted from
@@ -85,13 +77,22 @@ export interface Context<E = unknown> {
   result(): Promise<unknown | undefined>;
 
   /**
-   * The acknowledgment of this message as a reply: `acknowledge()` of its
-   * MSH as received, serialized. A change to the tree does not change it.
-   * MSA-1 defaults to `AA`.
+   * The acknowledgment of this message: `acknowledge()` of its MSH as
+   * received. A change to the tree does not change it.
+   *
+   * - `ack()`: `AA`.
+   * - `ack(text)`: `AA` with `text` in MSA-3.
+   * - `ack(options)`: the code and text `options` give.
+   * - `ack(error)`: the NAK a thrown `error` gets: an `AckException`'s `code` and
+   *   `text`, else `AE` with MSA-3 `Application internal error`. Does not set
+   *   `ctx.error`.
    */
-  ack(options?: AcknowledgeOptions): Response;
-  /** Response to send back. Set by middleware or handler. */
-  res: Response | undefined;
+  ack(input?: string | AcknowledgeOptions | Error): Root;
+  /**
+   * The reply: an HL7v2 message, serialized once the middleware have run.
+   * `undefined` for no reply.
+   */
+  res: Root | undefined;
 
   /** MSH-9.1 message type (e.g., "ADT") — from pre-transform parse */
   readonly messageType: string;
@@ -117,13 +118,14 @@ export interface Context<E = unknown> {
 export type { Hl7v2Processor } from "@glion/parser";
 
 /**
- * Middleware function signature (Hono/Koa onion model).
+ * Middleware function signature (Hono/Koa onion model). A returned HL7v2
+ * message is the reply.
  */
 export type MiddlewareReturn =
   // oxlint-disable-next-line typescript/no-invalid-void-type
-  | Promise<Response | undefined | void>
+  | Promise<Root | undefined | void>
   | Promise<void>
-  | Response
+  | Root
   | undefined
   // oxlint-disable-next-line typescript/no-invalid-void-type
   | void;
@@ -134,13 +136,12 @@ export type Middleware<E = unknown> = (
 ) => MiddlewareReturn;
 
 /**
- * Terminal route handler. A returned response is the reply; returning
- * nothing replies `AA`.
+ * Terminal route handler. Returns the reply: an HL7v2 message, such as
+ * `ctx.ack()`, or `null` for no reply.
  */
 export type Handler<E = unknown> = (
   ctx: Context<E>
-  // oxlint-disable-next-line typescript/no-invalid-void-type
-) => Promise<Response | undefined | void> | Response | undefined | void;
+) => Promise<Root | null> | Root | null;
 
 /**
  * A filter function for route or middleware matching.

@@ -1,4 +1,6 @@
-import type { Context, Middleware, Response } from "./types";
+import type { Root } from "@glion/ast";
+
+import type { Context, Middleware } from "./types";
 
 const NEXT_CALLED_TWICE = "next() called multiple times";
 
@@ -7,21 +9,20 @@ const NEXT_CALLED_TWICE = "next() called multiple times";
  * them in onion-model order (like Hono/Koa).
  *
  * Each middleware receives (ctx, next). Calling next() proceeds to the
- * next middleware. If a middleware returns a Response without
+ * next middleware. If a middleware returns an HL7v2 message without
  * calling next(), it short-circuits the chain.
  *
- * Response handling follows Hono's pattern: return values are written
- * to ctx.res, and middleware can also set ctx.res directly.
- * Last write wins.
+ * Replies follow Hono's pattern: a returned HL7v2 message is written to
+ * ctx.res, and middleware can also set ctx.res directly. Last write wins.
  *
  * A middleware that throws has its error passed to `onError`, and the
- * response `onError` returns is written to `ctx.res`. `onError` MUST NOT
+ * message `onError` returns is written to `ctx.res`. `onError` MUST NOT
  * throw. `next()` throws only when a middleware calls it a second time; the
  * composed function then rejects with that error once the chain has run.
  */
 export function compose<E>(
   middlewares: Middleware<E>[],
-  onError: (error: Error) => Response | undefined
+  onError: (error: Error) => Root | undefined
 ): (ctx: Context<E>) => Promise<void> {
   return async (ctx: Context<E>): Promise<void> => {
     let index = -1;
@@ -49,7 +50,7 @@ export function compose<E>(
       }
 
       // If middleware returned a response, set ctx.res (last write wins)
-      if (isResponse(result)) {
+      if (isRoot(result)) {
         ctx.res = result;
       }
     }
@@ -61,12 +62,12 @@ export function compose<E>(
   };
 }
 
-/** Whether `value` is a {@link Response}. */
-export function isResponse(value: unknown): value is Response {
+/** Whether `value` is an HL7v2 message: a `Root`. */
+export function isRoot(value: unknown): value is Root {
   return (
     typeof value === "object" &&
     value !== null &&
-    "raw" in value &&
-    typeof value.raw === "string"
+    "type" in value &&
+    value.type === "root"
   );
 }

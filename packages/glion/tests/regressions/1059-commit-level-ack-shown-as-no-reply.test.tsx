@@ -14,6 +14,7 @@
  */
 
 // oxlint-disable require-await, no-empty-function
+import { parseHL7v2 } from "@glion/hl7v2";
 import type { Context } from "@glion/mllp";
 import { render } from "ink-testing-library";
 import { describe, expect, it, vi } from "vitest";
@@ -49,7 +50,7 @@ async function msgEvent(raw: string): Promise<PartialEvent> {
     triggerEvent: "A01",
   } as unknown as Context;
   await createMsgTelemetry((event) => events.push(event))(ctx, async () => {
-    ctx.res = { raw };
+    ctx.res = parseHL7v2.parse(raw);
   });
   const [event] = events;
   if (!event) {

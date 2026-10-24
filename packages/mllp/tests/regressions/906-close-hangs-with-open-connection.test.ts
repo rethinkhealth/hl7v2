@@ -82,7 +82,7 @@ describe("server.close()", () => {
   it("resolves once a connection that has answered a message is idle again", async () => {
     const app = new Mllp()
       .parser(parseHL7v2)
-      .on("ADT^A01", () => ({ raw: ACK }));
+      .on("ADT^A01", () => parseHL7v2.parse(ACK));
     const server = serve({ handle: app.handle, port: 0 });
     await server.listening;
 
@@ -106,7 +106,7 @@ describe("server.close()", () => {
     const app = new Mllp().parser(parseHL7v2).on("ADT^A01", async () => {
       handling.resolve(true);
       await answer.promise;
-      return { raw: ACK };
+      return parseHL7v2.parse(ACK);
     });
     const server = serve({ handle: app.handle, port: 0 });
     await server.listening;

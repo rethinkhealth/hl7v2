@@ -10,10 +10,8 @@
  */
 
 import { frame, MllpCodecError, unframe } from "@glion/mllp-codec";
-import { encodeBytes } from "@glion/util-charset";
 
 import { MllpServerError, MllpServerErrorCode } from "../errors";
-import type { Response } from "./types";
 
 /** An accepted connection, as Web Streams. */
 export interface MllpSocket {
@@ -44,8 +42,8 @@ export interface HandleConnectionOptions {
  * Resolves once the connection has closed: the remote system closed or reset
  * it, or `signal` aborted. Closes `socket` either way.
  *
- * @param handle - Replies to one message, given without MLLP framing. Called
- *   once per message, never concurrently.
+ * @param handle - The reply to one message, both without MLLP framing, or
+ *   `undefined` for none. Called once per message, never concurrently.
  * @param socket - The accepted connection.
  * @param options - The signal that ends the connection.
  * @throws {MllpServerError} `PROTOCOL_VIOLATION` when the bytes break MLLP
@@ -53,7 +51,7 @@ export interface HandleConnectionOptions {
  * @throws What `handle` throws.
  */
 export async function handleConnection(
-  handle: (payload: Uint8Array) => Promise<Response | undefined>,
+  handle: (payload: Uint8Array) => Promise<Uint8Array | undefined>,
   socket: MllpSocket,
   options: HandleConnectionOptions = {}
 ): Promise<void> {
@@ -120,10 +118,10 @@ async function receive(
 /** Writes `reply` with MLLP framing; `false` when the transport has failed. */
 async function send(
   writer: WritableStreamDefaultWriter<Uint8Array>,
-  reply: Response
+  reply: Uint8Array
 ): Promise<boolean> {
   try {
-    await writer.write(frame(encodeBytes(reply.raw)));
+    await writer.write(frame(reply));
     return true;
   } catch (error) {
     if (error instanceof MllpCodecError) {
