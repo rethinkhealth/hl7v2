@@ -304,41 +304,27 @@ describe("QR4: round-trip data fidelity", () => {
   });
 
   describe("fuzz: adversarial inputs", () => {
-    it("any parseable adversarial input stabilizes after one round-trip", async () => {
-      let skipCount = 0;
-      let idempotentCount = 0;
-
+    // Any text is read as some message, and a second round trip of what was
+    // written changes nothing.
+    //
+    // Mutant: the parser drops the empty field after the field separator of a
+    // segment that is only the field separator (#1088). Fails on `"|\r^&"`.
+    it("any adversarial input stabilizes after one round-trip", async () => {
       await fc.assert(
         fc.asyncProperty(arbAdversarialInput, async (msg) => {
-          let firstPass: string;
-          try {
-            firstPass = String(await roundTripProcessorTrailing.process(msg));
-          } catch {
-            skipCount++;
-            return;
-          }
+          const firstPass = String(
+            await roundTripProcessorTrailing.process(msg)
+          );
+          const secondPass = String(
+            await roundTripProcessorTrailing.process(firstPass)
+          );
 
-          let secondPass: string;
-          try {
-            secondPass = String(
-              await roundTripProcessorTrailing.process(firstPass)
-            );
-          } catch {
-            skipCount++;
-            return;
-          }
-
-          if (normalizeTrailing(secondPass) === normalizeTrailing(firstPass)) {
-            idempotentCount++;
-          }
+          expect(normalizeTrailing(secondPass)).toBe(
+            normalizeTrailing(firstPass)
+          );
         }),
-        { numRuns: 300 }
+        { examples: [["|\r^&"]], numRuns: 300 }
       );
-
-      expect(skipCount).toBeLessThan(150);
-      // Most parseable adversarial inputs should be idempotent.
-      // Allow some non-idempotent edge cases (e.g., lone escape chars).
-      expect(idempotentCount).toBeGreaterThan(0);
     });
   });
 });
