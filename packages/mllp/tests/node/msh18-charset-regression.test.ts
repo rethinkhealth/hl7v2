@@ -110,9 +110,9 @@ describe("non-UTF-8 feed is rejected loudly, not silently corrupted (regression 
     });
     app.on("*", (ctx) => {
       handlerRan = true;
-      return {
-        raw: `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`,
-      };
+      return parseHL7v2.parse(
+        `MSH|^~\\&|||||||ACK|ACK001|P|2.5.1\rMSA|AA|${ctx.controlId}`
+      );
     });
 
     server = serve({ handle: app.handle, port: 0 });

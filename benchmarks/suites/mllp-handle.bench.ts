@@ -18,7 +18,7 @@ import { ORU_R01_LARGE, ADT_A01_MINIMAL } from "../fixtures/messages";
 // Fixtures
 // ---------------------------------------------------------------------------
 
-const RESPONSE_OK = { raw: "MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001" };
+const RESPONSE_OK = parseHL7v2.parse("MSH|^~\\&||||||||||2.5.1\rMSA|AA|MSG001");
 
 const textEncoder = new TextEncoder();
 const smallBytes = textEncoder.encode(ADT_A01_MINIMAL);

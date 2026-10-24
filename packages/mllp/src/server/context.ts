@@ -1,6 +1,6 @@
+import { AckCode, AckException } from "@glion/ack";
 import type { Root } from "@glion/ast";
 import { parseHL7v2 } from "@glion/parser";
-import { toHl7v2 } from "@glion/to-hl7v2";
 import { decodeBytes } from "@glion/util-charset";
 import { value as queryValue } from "@glion/util-query";
 import { VFile } from "vfile";
@@ -8,9 +8,12 @@ import { VFile } from "vfile";
 import { MllpServerError, MllpServerErrorCode } from "../errors";
 import { acknowledge } from "./acknowledge";
 import type { AcknowledgeOptions } from "./acknowledge";
-import type { Context, Hl7v2Processor, Response } from "./types";
+import type { Context, Hl7v2Processor } from "./types";
 
 const SEGMENT_SEPARATOR = /[\r\n]/;
+
+/** MSA-3 of the reply to an error that is not an `AckException`: Table 0357 code 207. */
+const APPLICATION_INTERNAL_ERROR = "Application internal error";
 
 /** A {@link Context} whose `error` the server records. */
 export type MessageContext<E = unknown> = Omit<Context<E>, "error"> & {
@@ -147,9 +150,9 @@ export function createContext<E>(
 
   // ── Build context ──────────────────────────────────────────────────
   const ctx: MessageContext<E> = {
-    ack(ackOptions?: AcknowledgeOptions): Response {
+    ack(input?: string | AcknowledgeOptions | Error): Root {
       header ??= parseHL7v2(firstSegment(raw));
-      return { raw: toHl7v2(acknowledge(header, ackOptions)) };
+      return acknowledge(header, acknowledgeOptions(input));
     },
     ast: parsed,
     controlId,
@@ -162,7 +165,7 @@ export function createContext<E>(
     messageStructure,
     messageType,
     req: Object.freeze({ bytes: payload, raw }),
-    res: undefined as Response | undefined,
+    res: undefined as Root | undefined,
     result: getResult,
     set<K extends string>(key: K, value: unknown): void {
       variables.set(key, value);
@@ -180,6 +183,22 @@ export function createContext<E>(
   };
 
   return ctx;
+}
+
+/** The `acknowledge()` options `ctx.ack(input)` stands for. */
+function acknowledgeOptions(
+  input: string | AcknowledgeOptions | Error | undefined
+): AcknowledgeOptions | undefined {
+  if (typeof input === "string") {
+    return { text: input };
+  }
+  if (input instanceof AckException) {
+    return { code: input.code, text: input.text };
+  }
+  if (input instanceof Error) {
+    return { code: AckCode.ApplicationError, text: APPLICATION_INTERNAL_ERROR };
+  }
+  return input;
 }
 
 /** The text of the first segment of `text`. */

@@ -16,6 +16,7 @@ const app = new Mllp<{ region: string }>()
   .parser(parseHL7v2)
   .on("ADT^A01", (ctx) => {
     ctx.set("region", ctx.env.region);
+    return ctx.ack();
   });
 
 describe("@glion/mllp in workerd", () => {
@@ -23,7 +24,7 @@ describe("@glion/mllp in workerd", () => {
     const reply = await app.handle(new TextEncoder().encode(ADT), {
       region: "north",
     });
-    expect(reply?.raw).toContain("\rMSA|AA|MSG001");
+    expect(new TextDecoder().decode(reply)).toContain("\rMSA|AA|MSG001");
   });
 
   it("replies with MLLP framing on a connection over Web Streams", async () => {

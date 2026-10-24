@@ -20,7 +20,6 @@ export type {
   Hl7v2Processor,
   Middleware,
   MiddlewareReturn,
-  Response,
   RouteFilter,
   RoutePattern,
 } from "./server/types";

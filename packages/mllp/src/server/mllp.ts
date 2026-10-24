@@ -1,13 +1,10 @@
-import {
-  AckApplicationReject,
-  AckCode,
-  AckException,
-  Hl7ErrorCode,
-  Severity,
-} from "@glion/ack";
+import { AckApplicationReject, Hl7ErrorCode, Severity } from "@glion/ack";
+import type { Root } from "@glion/ast";
+import { toHl7v2 } from "@glion/to-hl7v2";
+import { encodeBytes } from "@glion/util-charset";
 
 import { MllpServerError, MllpServerErrorCode } from "../errors";
-import { compose, isResponse } from "./compose";
+import { compose, isRoot } from "./compose";
 import { createContext } from "./context";
 import { Router } from "./router";
 import type {
@@ -16,12 +13,8 @@ import type {
   Handler,
   Hl7v2Processor,
   Middleware,
-  Response,
   RouteFilter,
 } from "./types";
-
-/** MSA-3 of the reply to an error that is not an `AckException`: Table 0357 code 207. */
-const APPLICATION_INTERNAL_ERROR = "Application internal error";
 
 /** MSA-3 of the reply to a message no route matches: Table 0357 code 200. */
 const UNSUPPORTED_MESSAGE_TYPE = "Unsupported message type";
@@ -41,7 +34,8 @@ const UNSUPPORTED_MESSAGE_TYPE = "Unsupported message type";
  *   const app = new Mllp()
  *     .parser(parseHL7v2)
  *     .on("ADT^A01", async (ctx) => {
- *       await save(await ctx.result()); // replies AA
+ *       await save(await ctx.result());
+ *       return ctx.ack();
  *     })
  *     .on("ORM^O01", (ctx) => ctx.ack({ code: AckCode.CommitAccept }));
  *   ```;
@@ -124,9 +118,9 @@ export class Mllp<E = unknown> {
 
   /**
    * Process one message through the middleware chain and router, and return
-   * the reply, or `undefined` for none. `payload` is the message without MLLP
-   * framing; `env` becomes `ctx.env`. Bound to the app, so it can be passed
-   * on as a function.
+   * the reply serialized as UTF-8, or `undefined` for none. `payload` is the
+   * message without MLLP framing; `env` becomes `ctx.env`. Bound to the app,
+   * so it can be passed on as a function.
    *
    * The pipeline is lazy (see ADR-0013):
    *
@@ -135,10 +129,12 @@ export class Mllp<E = unknown> {
    * 3. Middleware, then the route handler
    * 4. Transform/compile — only when handlers access ctx.tree()/ctx.result()
    *
-   * The reply is the acknowledgment the route handler's outcome describes:
+   * The reply is what the route handler's outcome describes:
    *
-   * - It returns a response, or sets `ctx.res`: that response.
-   * - It returns nothing, or a value that is not a response: `AA`.
+   * - It returns an HL7v2 message, such as `ctx.ack()`: that message.
+   * - It returns `null`: no reply.
+   * - It returns anything else: `AE` with MSA-3 `Application internal error`, and
+   *   `ctx.error` is an `MllpServerError` `INVALID_REPLY`.
    * - It throws an `AckException`: its `code` in MSA-1 and its `text` in MSA-3.
    * - It throws anything else: `AE` with MSA-3 `Application internal error`.
    * - No route matches: `AR` with MSA-3 `Unsupported message type`.
@@ -163,7 +159,7 @@ export class Mllp<E = unknown> {
   readonly handle = async (
     payload: Uint8Array,
     ...[env]: EnvArgs<E>
-  ): Promise<Response | undefined> => {
+  ): Promise<Uint8Array | undefined> => {
     if (!this.#processor) {
       throw new MllpServerError(
         MllpServerErrorCode.NO_PARSER,
@@ -206,22 +202,22 @@ export class Mllp<E = unknown> {
     // that was already processed. A second error has no place in ctx.error,
     // so handle() rejects with it.
     const unrecorded: Error[] = [];
-    const answer = (error: Error): Response | undefined => {
+    const answer = (error: Error): Root | undefined => {
       if (ctx.error && ctx.error !== error) {
         unrecorded.push(error);
       }
       ctx.error ??= error;
       return ctx.res ?? acknowledgeError(ctx, error);
     };
+    // The route handler's outcome is the reply, replacing any a middleware
+    // set before next(); `null` leaves none.
     const terminal: Middleware<E> = async () => {
-      const before = ctx.res;
       try {
-        const reply = await route(ctx, handler, messageError);
-        return reply ?? (ctx.res === before ? accept(ctx) : ctx.res);
+        ctx.res = await route(ctx, handler, messageError);
       } catch (error) {
         const thrown = toError(error);
         ctx.error ??= thrown;
-        return acknowledgeError(ctx, thrown);
+        ctx.res = acknowledgeError(ctx, thrown);
       }
     };
 
@@ -229,7 +225,8 @@ export class Mllp<E = unknown> {
     if (unrecorded.length > 0) {
       throw unrecorded[0];
     }
-    return received ? acknowledgeError(ctx, received) : ctx.res;
+    const reply = received ? acknowledgeError(ctx, received) : ctx.res;
+    return reply ? encodeBytes(toHl7v2(reply)) : undefined;
   };
 }
 
@@ -242,14 +239,13 @@ function withoutReply<E>(middleware: Middleware<E>): Middleware<E> {
 
 /**
  * Run the route handler, or raise the message's own error, or reject a
- * message no route matches. A handler result that is not a `Response` is no
- * reply.
+ * message no route matches.
  */
 async function route<E>(
   ctx: Context<E>,
   handler: Handler<E> | undefined,
   error: Error | undefined
-): Promise<Response | undefined> {
+): Promise<Root | undefined> {
   if (error) {
     throw error;
   }
@@ -266,30 +262,22 @@ async function route<E>(
       }
     );
   }
-  const result = await handler(ctx);
-  return isResponse(result) ? result : undefined;
-}
-
-/** `AA`, or no reply to an `ACK`. */
-function accept<E>(ctx: Context<E>): Response | undefined {
-  return ctx.messageType === "ACK" ? undefined : ctx.ack();
+  const reply: unknown = await handler(ctx);
+  if (reply === null) {
+    return undefined;
+  }
+  if (isRoot(reply)) {
+    return reply;
+  }
+  throw new MllpServerError(
+    MllpServerErrorCode.INVALID_REPLY,
+    "The route handler's return value is not an HL7v2 message; a route handler must return an HL7v2 message, such as `ctx.ack()`, or `null` for no reply."
+  );
 }
 
 /** The NAK `error` describes, or no reply to an `ACK`. */
-function acknowledgeError<E>(
-  ctx: Context<E>,
-  error: Error
-): Response | undefined {
-  if (ctx.messageType === "ACK") {
-    return undefined;
-  }
-  if (error instanceof AckException) {
-    return ctx.ack({ code: error.code, text: error.text });
-  }
-  return ctx.ack({
-    code: AckCode.ApplicationError,
-    text: APPLICATION_INTERNAL_ERROR,
-  });
+function acknowledgeError<E>(ctx: Context<E>, error: Error): Root | undefined {
+  return ctx.messageType === "ACK" ? undefined : ctx.ack(error);
 }
 
 function toError(value: unknown): Error {

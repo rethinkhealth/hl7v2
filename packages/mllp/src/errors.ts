@@ -18,6 +18,11 @@ export const MllpServerErrorCode = {
    */
   INCOMPATIBLE_CHARSET: "INCOMPATIBLE_CHARSET",
   /**
+   * A route handler returned a value that is not an HL7v2 message or
+   * `null`, such as `undefined`. The message is answered `AE`.
+   */
+  INVALID_REPLY: "INVALID_REPLY",
+  /**
    * `app.handle()` was called before a parser was registered via
    * `app.parser()`.
    */
@@ -25,8 +30,8 @@ export const MllpServerErrorCode = {
   /**
    * The MLLP byte stream itself was violated and the connection closed:
    * the remote system sent bytes outside a message, glued or unterminated
-   * messages, an over-cap message — or a handler's response contained a
-   * reserved VT/FS byte and could not be framed. The underlying
+   * messages, an over-cap message — or a reply given to the connection
+   * contained a reserved VT/FS byte and could not be framed. The underlying
    * `@glion/mllp-codec` `MllpCodecError` is kept on `cause`; branch on this
    * code without importing that package.
    */
